@@ -46,7 +46,6 @@ abstract class AutoTrackerPlugin : Plugin<Project> {
         LOG_ENABLE = autoTrackerExtension.logEnabled
         project.plugins.withType(AndroidBasePlugin::class.java) {
             inAndroidProject = true
-            info(SimpleAGPVersion.ANDROID_GRADLE_PLUGIN_VERSION.toString())
 
             if (SimpleAGPVersion.ANDROID_GRADLE_PLUGIN_VERSION < SimpleAGPVersion(4, 2)) {
                 // Configures bytecode transform using older APIs pre AGP 4.2

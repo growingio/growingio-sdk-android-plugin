@@ -1,5 +1,4 @@
 #!/bin/bash
 
-echo "准备上传 autotracker-gradle-plugin ..."
-cd buildSrc
-./../gradlew -Ppublish publish
+echo "packaging autotracker-gradle-plugin ..."
+./gradlew :autotracker-gradle-plugin:publish

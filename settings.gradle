@@ -15,4 +15,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "growingio-sdk-plugin"
+includeBuild("autotracker-gradle-plugin")
 include ':app'
