@@ -15,9 +15,6 @@
  */
 
 package com.growingio.android.plugin.utils
-
-import com.growingio.android.plugin.AutoTrackerExtension
-
 /**
  * <p>
  *
@@ -107,6 +104,7 @@ val EXCLUDED_PACKAGES = arrayListOf(
     "com.xiaomi.mipush.sdk",
     "com.heytap.msp.push",
     "com.tencent.tinker",
+    "com.amap.api",
 )
 
 fun isAndroidGenerated(className: String): Boolean {

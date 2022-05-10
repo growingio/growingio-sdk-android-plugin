@@ -125,7 +125,7 @@ internal class DesugarClassVisitor(
             }
         }
 
-        // 加个log,防止编译优化导致的无法正常编译
+        // 插个log,防止编译优化导致的无法正常编译
         adapter.visitLdcInsn("[GenerateMethod]")
         adapter.visitLdcInsn(methodBlock.methodName)
         adapter.visitInsn(Opcodes.ICONST_0)
@@ -192,7 +192,6 @@ internal class DesugarClassVisitor(
             }
 
             if (handle.owner == className.unNormalize()) {
-                super.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, *bootstrapMethodArguments)
 
                 // 实现方法在当前类中
                 // 示例参考1: 在类中生成相应的方法如 LambdaSample#print0 ==> 生成 lambda$print0$0，将其加入 injectMethods 中
@@ -205,6 +204,7 @@ internal class DesugarClassVisitor(
 
                 // 条件1，判断是否是生成的 lambda 表达式
                 if (handle.tag == Opcodes.H_INVOKESTATIC && handle.name.contains("lambda")) {
+                    super.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, *bootstrapMethodArguments)
                     val needInjectMethod = TargetMethod(handle.name, handle.desc)
                     needInjectMethod.addInjectMethods(targetMethod.injectMethods)
                     needInjectTargetMethods.add(needInjectMethod)

@@ -15,6 +15,8 @@
  */
 
 import com.google.common.truth.Truth.assertThat
+import org.gradle.testkit.runner.TaskOutcome
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -44,24 +46,22 @@ class GioGradlePluginTest {
         )
 
         val result = gradleRunner.buildAndFail()
-        print(result.getOutput())
         assertThat(result.getOutput()).contains(
             "The GrowingIO Gradle plugin is applied but no growingio autotracker sdk dependency was found."
         )
     }
 
-    // Verify plugin configuration fails when compiler dependency is missing but plugin is applied.
     @Test
-    fun test_missingCompilerDep() {
-//        gradleRunner.addDependencies(
-//            "implementation 'androidx.appcompat:appcompat:1.1.0'",
-//            "implementation 'com.google.dagger:hilt-android:LOCAL-SNAPSHOT'"
-//        )
-//
-//        val result = gradleRunner.buildAndFail()
-//        assertThat(result.getOutput()).contains(
-//            "The Hilt Android Gradle plugin is applied but no " +
-//                    "com.google.dagger:hilt-compiler dependency was found."
-//        )
+    fun testAssemble() {
+        gradleRunner.addDependencies(
+            "implementation 'androidx.appcompat:appcompat:1.1.0'",
+            "implementation 'com.growingio.android:autotracker-cdp:3.3.6'",
+        )
+        gradleRunner.addAndroidOption(
+            "buildFeatures.buildConfig = false"
+        )
+        val result = gradleRunner.build()
+        val assembleTask = result.getTask(":assembleDebug")
+        Assert.assertEquals(TaskOutcome.SUCCESS, assembleTask.outcome)
     }
 }

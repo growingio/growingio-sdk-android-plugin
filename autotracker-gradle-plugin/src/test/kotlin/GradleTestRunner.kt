@@ -33,12 +33,13 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
     private var appClassName: String? = null
     private var buildFile: File? = null
     private var gradlePropertiesFile: File? = null
+    private var localPropertiesFile: File? = null
     private var manifestFile: File? = null
     private var additionalTasks = mutableListOf<String>()
 
     init {
-        tempFolder.newFolder("src", "main", "java", "minimal")
-        tempFolder.newFolder("src", "test", "java", "minimal")
+        tempFolder.newFolder("src", "main", "java", "growingio")
+        tempFolder.newFolder("src", "test", "java", "growingio")
         tempFolder.newFolder("src", "main", "res")
     }
 
@@ -57,7 +58,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         additionalAndroidOptions.addAll(options)
     }
 
-    // Adds 'hilt' options to the project's build.gradle, e.g. "enableExperimentalClasspathAggregation = true"
+    // Adds 'gio' options to the project's build.gradle, e.g. "includePackages "com.xxxx""
     fun addGioOption(vararg options: String) {
         gioOptions.addAll(options)
     }
@@ -108,6 +109,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
     private fun setupFiles() {
         writeBuildFile()
         writeGradleProperties()
+        //writeLocalProperties()
         writeAndroidManifest()
     }
 
@@ -123,13 +125,13 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
             mavenCentral()
           }
           dependencies {
-            classpath 'com.android.tools.build:gradle:4.2.0'
+            classpath 'com.android.tools.build:gradle:4.2.2'
           }
         }
 
         plugins {
           id 'com.android.application'
-          id 'com.growingio.autotracker'
+          id 'com.growingio.android.autotracker'
         }
 
         android {
@@ -143,8 +145,8 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
           }
 
           compileOptions {
-              sourceCompatibility 11
-              targetCompatibility 11
+              sourceCompatibility 1.8
+              targetCompatibility 1.8
           }
           ${additionalAndroidOptions.joinToString(separator = "\n")}
         }
@@ -180,16 +182,27 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         }
     }
 
+    private fun writeLocalProperties() {
+        localPropertiesFile?.delete()
+        localPropertiesFile = tempFolder.newFile("local.properties").apply {
+            writeText(
+                """
+        sdk.dir=/Users/shenliming/Library/Android
+        """.trimIndent()
+            )
+        }
+    }
+
     private fun writeAndroidManifest() {
         manifestFile?.delete()
         manifestFile = tempFolder.newFile("/src/main/AndroidManifest.xml").apply {
             writeText(
                 """
         <?xml version="1.0" encoding="utf-8"?>
-        <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="minimal">
+        <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="growingio">
             <application
                 android:name="${appClassName ?: "android.app.Application"}"
-                android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+                >
                 ${activities.joinToString(separator = "\n")}
             </application>
         </manifest>
@@ -221,8 +234,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
 
         // Finds a transformed file. The srcFilePath is relative to the app's package.
         fun getTransformedFile(srcFilePath: String): File {
-            val parentDir =
-                File(projectRoot, "build/intermediates/asm_instrumented_project_classes/debug")
+            val parentDir = File(projectRoot, "build/intermediates/asm_instrumented_project_classes/debug")
             return File(parentDir, srcFilePath).also {
                 if (!it.exists()) {
                     error("Unable to find transformed class ${it.path}")

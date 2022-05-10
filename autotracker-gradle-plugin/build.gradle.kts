@@ -43,7 +43,6 @@ ext {
 dependencies {
     implementation(gradleApi())
 
-
     implementation("org.ow2.asm:asm:9.2")
     implementation("org.ow2.asm:asm-util:9.2")
     implementation("org.ow2.asm:asm-commons:9.2")
@@ -52,16 +51,22 @@ dependencies {
     compileOnly("com.android.tools.build:gradle-api:7.2.0-beta04")
     compileOnly("com.android.tools.build:gradle:4.2.2")
 
-
     testImplementation(gradleTestKit())
     testImplementation("junit:junit:4.13.2")
     testImplementation("com.google.truth:truth:1.1.3")
+    testImplementation("com.android.tools.build:gradle:4.2.2")
 
     testPluginImplementation("com.android.tools.build:gradle:4.2.2")
+    testPluginImplementation("com.google.guava:guava:30.1.1-jre")
 }
 
 tasks.withType(PluginUnderTestMetadata::class.java).named("pluginUnderTestMetadata").configure {
     pluginClasspath.from(testPluginImplementation)
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 // 调试 plugin
 // 1. 配置 gradle.properties ,设置host端口
