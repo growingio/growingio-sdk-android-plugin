@@ -19,7 +19,6 @@ package com.growingio.android.plugin.visitor
 import com.growingio.android.plugin.hook.HookClassesConfig
 import com.growingio.android.plugin.hook.TargetMethod
 import com.growingio.android.plugin.utils.info
-import com.growingio.android.plugin.utils.normalize
 import com.growingio.android.plugin.utils.unNormalize
 import org.objectweb.asm.*
 import org.objectweb.asm.commons.AdviceAdapter
@@ -58,6 +57,7 @@ internal class DesugarClassVisitor(
         exceptions: Array<out String>?
     ): MethodVisitor {
         val mv = super.visitMethod(access, name, descriptor, signature, exceptions)
+        //return JSRInlinerAdapter(mv, access, name, descriptor,signature,exceptions)
         return DesugarMethodVisitor(api, mv, access, name, descriptor)
     }
 

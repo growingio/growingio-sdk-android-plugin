@@ -33,6 +33,10 @@ class InjectorProcessor(
     private val aroundHookClassArgs = arrayListOf<InjectorHookData>()
     private val superHookClassArgs = arrayListOf<InjectorHookData>()
 
+    fun KSPLogger.log(message:String){
+        info(message)
+    }
+
     override fun process(resolver: Resolver): List<KSAnnotated> {
 
         val symbols =
@@ -44,7 +48,7 @@ class InjectorProcessor(
         logger.info("start injector processor!")
 
         symbols.forEach {
-            logger.info("analyze class $it")
+            logger.log("analyze class $it")
             it.accept(Visitor(resolver), Unit)
         }
 
@@ -155,7 +159,7 @@ class InjectorProcessor(
         }
 
         codeGenerator.generatedFile.forEach {
-            logger.warn(it.path)
+            logger.log(it.path)
         }
     }
 
@@ -185,21 +189,21 @@ class InjectorProcessor(
 
             // of course, className is the first arg
             val injectClass = classAnnotation.arguments.first().value.toString().unNormalize()
-            logger.warn("injectClass:$injectClass")
+            logger.log("injectClass:$injectClass")
 
             classDeclaration.getDeclaredFunctions().iterator().forEach { function ->
                 val injectMethod = function.toString()
-                logger.warn("injectMethod:$injectMethod")
+                logger.log("injectMethod:$injectMethod")
 
                 val injectReturnDesc = function.returnType.typeName(resolver)
-                logger.warn("returnType:${function.returnType.typeName(resolver)}")
+                logger.log("returnType:${function.returnType.typeName(resolver)}")
 
                 val injectMethodDescBuilder = StringBuilder("(")
                 function.parameters.forEach {
                     injectMethodDescBuilder.append(it.type.typeName(resolver) ?: "")
                 }
                 injectMethodDescBuilder.append(")").append(injectReturnDesc)
-                logger.warn("injectMethodDesc:$injectMethodDescBuilder")
+                logger.log("injectMethodDesc:$injectMethodDescBuilder")
 
                 function.annotations.filter {
                     it.shortName.asString() == After::class.simpleName
@@ -214,12 +218,12 @@ class InjectorProcessor(
                             "clazz" -> {
                                 val clazz = it.value as KSType
                                 injectData.targetClassName = clazz.declaration.getClassName()
-                                logger.warn("targetClassName:${injectData.targetClassName}")
+                                logger.log("targetClassName:${injectData.targetClassName}")
                             }
                             "method" -> {
                                 val method = it.value as String
                                 injectData.targetMethodName = method
-                                logger.warn("targetMethodName:${method}")
+                                logger.log("targetMethodName:${method}")
                             }
                             "parameterTypes" -> {
                                 val types = it.value as ArrayList<KSType>
@@ -229,12 +233,12 @@ class InjectorProcessor(
                                 }
                                 targetMethodDescBuilder.append(")")
                                 injectData.targetMethodDesc = targetMethodDescBuilder.toString()
-                                logger.warn("parameterTypes:${targetMethodDescBuilder}")
+                                logger.log("parameterTypes:${targetMethodDescBuilder}")
                             }
                             "returnType" -> {
                                 val returnType = it.value as KSType
                                 injectData.targetMethodReturnDesc = returnType.typeName(resolver) ?: ""
-                                logger.warn("targetMethodReturnDesc:${injectData.targetMethodReturnDesc}")
+                                logger.log("targetMethodReturnDesc:${injectData.targetMethodReturnDesc}")
                             }
                         }
                     }
@@ -262,36 +266,36 @@ class InjectorProcessor(
                         when (it.name?.asString()) {
                             "targetClazz" -> {
                                 injectData.targetClassName = it.value as String
-                                logger.warn("targetClassName:${injectData.targetClassName}")
+                                logger.log("targetClassName:${injectData.targetClassName}")
                             }
                             "targetMethod" -> {
                                 val method = it.value as String
                                 injectData.targetMethodName = method
-                                logger.warn("targetMethodName:${method}")
+                                logger.log("targetMethodName:${method}")
                             }
                             "targetMethodDesc" -> {
                                 val typeDesc = it.value as String
                                 injectData.targetMethodDesc = typeDesc
-                                logger.warn("parameterTypes:${typeDesc}")
+                                logger.log("parameterTypes:${typeDesc}")
                             }
                             "injectMethod" -> {
                                 val method = it.value as String
                                 injectData.injectMethodName = method
-                                logger.warn("targetMethodName:${method}")
+                                logger.log("targetMethodName:${method}")
                             }
                             "injectMethodDesc" -> {
                                 val typeDesc = it.value as String
                                 injectData.injectMethodDesc = typeDesc
-                                logger.warn("parameterTypes:${typeDesc}")
+                                logger.log("parameterTypes:${typeDesc}")
                             }
                             "isSuper" -> {
                                 isSuper = it.value as Boolean
-                                logger.warn("isSuper:${isSuper}")
+                                logger.log("isSuper:${isSuper}")
                             }
                             "isAfter" -> {
                                 val isAfter = it.value as Boolean
                                 injectData.isAfter = isAfter
-                                logger.warn("isAfter:${isAfter}")
+                                logger.log("isAfter:${isAfter}")
                             }
                         }
                     }

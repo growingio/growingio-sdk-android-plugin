@@ -41,7 +41,7 @@ internal abstract class AutoTrackerFactory :
 
             override fun isAssignable(subClazz: String, superClazz: String): Boolean {
                 return classContext.loadClassData(normalize(subClazz))?.let {
-                    it.superClasses.indexOf(normalize(superClazz)) >= 0 || it.interfaces.indexOf(normalize(superClazz)) >= 0
+                    it.className == normalize(superClazz) || it.superClasses.indexOf(normalize(superClazz)) >= 0 || it.interfaces.indexOf(normalize(superClazz)) >= 0
                 } ?: false
             }
         }

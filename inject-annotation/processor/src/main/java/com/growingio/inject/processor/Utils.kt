@@ -41,6 +41,14 @@ fun String.unNormalize(): String {
     }
 }
 
+fun String.innerClass(): String {
+    return if (this.contains('.')) {
+        this.replace('.', '$')
+    } else {
+        this
+    }
+}
+
 /**
  * Turns a KSTypeReference into a TypeName in java's type system.
  */
@@ -67,18 +75,20 @@ internal fun KSTypeArgument.typeName(
 internal fun KSType.typeName(resolver: Resolver): String? {
     if (this.arguments.isNotEmpty() && this.arguments.size == 1) { //for array
         val ksTypeArg = this.arguments.single()
-        return "[" + when (ksTypeArg.variance) {
-            // 泛型暂时统一使用 Object 代替
-            Variance.CONTRAVARIANT -> "java/lang/Object"
-            Variance.COVARIANT -> "java/lang/Object"
+        return when (ksTypeArg.variance) {
+            // 泛型统一使用自身类型 包括 out,in,* 三种
+            Variance.CONTRAVARIANT -> this.declaration.typeName(resolver)
+            Variance.COVARIANT -> this.declaration.typeName(resolver)
             Variance.STAR -> {
                 // for star projected types, JavaPoet uses the name from the declaration if
                 // * is not given explicitly
-                "java/lang/Object"
+                this.declaration.typeName(resolver)
             }
-            else -> ksTypeArg.typeName(resolver)
+            //数组
+            else -> "[" + ksTypeArg.typeName(resolver)
         }
     } else {
+        //map
         return this.declaration.typeName(resolver)
     }
 }
@@ -112,7 +122,7 @@ internal fun KSDeclaration.getClassName(): String {
     val shortNames = if (pkg == "") {
         qualified
     } else {
-        qualified.substring(pkg.length + 1)
+        qualified.substring(pkg.length + 1).innerClass()
     }
     return "$pkg/$shortNames"
 }

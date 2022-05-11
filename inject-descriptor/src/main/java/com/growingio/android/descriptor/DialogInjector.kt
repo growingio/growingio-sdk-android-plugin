@@ -39,4 +39,5 @@ interface DialogInjector {
         parameterTypes = [DialogInterface::class, Int::class]
     )
     fun dialogOnClick(listener: DialogInterface.OnClickListener, dialogInterface: DialogInterface, which: Int)
+
 }
