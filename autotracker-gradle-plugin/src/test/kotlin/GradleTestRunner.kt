@@ -127,6 +127,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
           repositories {
             google()
             mavenLocal()
+            maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
             mavenCentral()
           }
           dependencies {
@@ -159,6 +160,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         allprojects {
           repositories {
             mavenLocal()
+            maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
             google()
             mavenCentral()
           }
