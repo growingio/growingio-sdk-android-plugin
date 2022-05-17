@@ -13,9 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
-/gradle/wrapper/
-/gradlew.bat
-/gradlew
 /buildSrc/build/pluginUnderTestMetadata/
 /buildSrc/build/
 /autotracker-gradle-plugin/build/
