@@ -53,7 +53,6 @@ class GioFragmentTransformTest {
         gradleRunner = GradleTestRunner(testProjectDir)
         gradleRunner.addDependencies(
             "implementation 'androidx.appcompat:appcompat:1.1.0'",
-            "implementation 'com.growingio.android:autotracker-cdp:3.3.6'",
         )
     }
 
@@ -91,6 +90,7 @@ class GioFragmentTransformTest {
             val classNode = ClassNode()
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onDestroyView" && it.desc == "()V" }.let {
+                assertThat(it).isNotNull()
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.last { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -103,6 +103,7 @@ class GioFragmentTransformTest {
 
             classNode.methods.find { it.name == "onResume" && it.desc == "()V" }
                 .let {
+                    assertThat(it).isNotNull()
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.last { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -115,6 +116,7 @@ class GioFragmentTransformTest {
 
             classNode.methods.find { it.name == "onHiddenChanged" && it.desc == "(Z)V" }
                 .let {
+                    assertThat(it).isNotNull()
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.last { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -127,6 +129,7 @@ class GioFragmentTransformTest {
 
             classNode.methods.find { it.name == "setUserVisibleHint" && it.desc == "(Z)V" }
                 .let {
+                    assertThat(it).isNotNull()
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.last { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)

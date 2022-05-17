@@ -84,7 +84,7 @@ val EXCLUDED_PACKAGES = arrayListOf(
     //"android.support",
     //"org.jetbrains.kotlin",
     "android.arch",
-    "com.google.android",
+    //"com.google.android",
 
     //THIRD
     "com.bumptech.glide",
@@ -105,6 +105,7 @@ val EXCLUDED_PACKAGES = arrayListOf(
     "com.heytap.msp.push",
     "com.tencent.tinker",
     "com.amap.api",
+    "com.google.iot"
 )
 
 fun isAndroidGenerated(className: String): Boolean {

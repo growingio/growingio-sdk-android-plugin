@@ -41,11 +41,16 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         tempFolder.newFolder("src", "main", "java", "growingio")
         tempFolder.newFolder("src", "test", "java", "growingio")
         tempFolder.newFolder("src", "main", "res")
+        addDependencies("implementation 'com.growingio.android:autotracker-cdp:3.4.0'")
     }
 
     // Adds project dependencies, e.g. "implementation <group>:<id>:<version>"
     fun addDependencies(vararg deps: String) {
         dependencies.addAll(deps)
+    }
+
+    fun clearDependencies() {
+        dependencies.clear()
     }
 
     // Adds an <activity> tag in the project's Android Manifest, e.g. "<activity name=".Foo"/>

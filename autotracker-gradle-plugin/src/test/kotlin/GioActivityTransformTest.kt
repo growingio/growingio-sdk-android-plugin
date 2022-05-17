@@ -58,7 +58,6 @@ class GioActivityTransformTest {
         gradleRunner = GradleTestRunner(testProjectDir)
         gradleRunner.addDependencies(
             "implementation 'androidx.appcompat:appcompat:1.1.0'",
-            "implementation 'com.growingio.android:autotracker-cdp:3.3.6'",
         )
     }
 
@@ -99,6 +98,7 @@ class GioActivityTransformTest {
             val classNode = ClassNode()
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onNewIntent" && it.desc == "(Landroid/content/Intent;)V" }.let {
+                assertThat(it).isNotNull()
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -111,6 +111,7 @@ class GioActivityTransformTest {
 
             classNode.methods.find { it.name == "onOptionsItemSelected" && it.desc == "(Landroid/view/MenuItem;)Z" }
                 .let {
+                    assertThat(it).isNotNull()
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.first { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -123,6 +124,7 @@ class GioActivityTransformTest {
 
             classNode.methods.find { it.name == "onChildClick" && it.desc == "(Landroid/widget/ExpandableListView;Landroid/view/View;IIJ)Z" }
                 .let {
+                    assertThat(it).isNotNull()
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.first { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -135,6 +137,7 @@ class GioActivityTransformTest {
 
             classNode.methods.find { it.name == "onListItemClick" && it.desc == "(Landroid/widget/ListView;Landroid/view/View;IJ)V" }
                 .let {
+                    assertThat(it).isNotNull()
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.first { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
