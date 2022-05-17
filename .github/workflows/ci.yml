@@ -31,12 +31,12 @@ jobs:
       - name: Before script
         run: |
           chmod +x gradlew
-          chmod +x gradle/publishAllToMavenLocal.sh
+          chmod +x gradle/publishPluginToMavenLocal.sh
 
       - name: Run Gradle command
         run: |
           ./gradlew clean
           ./gradlew build
           ./gradlew lint
-          bash ./gradle/publishAllToMavenLocal.sh
+          bash ./gradle/publishPluginToMavenLocal.sh
           ./gradlew :autotracker-gradle-plugin:test
