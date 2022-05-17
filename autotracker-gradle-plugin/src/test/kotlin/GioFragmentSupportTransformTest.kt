@@ -49,7 +49,6 @@ class GioFragmentSupportTransformTest {
         gradleRunner = GradleTestRunner(testProjectDir)
         gradleRunner.addDependencies(
             "implementation 'com.android.support:support-fragment:28.0.0'",
-            "implementation 'com.growingio.android:autotracker-cdp:3.3.6'",
         )
     }
 
@@ -87,6 +86,7 @@ class GioFragmentSupportTransformTest {
             val classNode = ClassNode()
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onDestroyView" && it.desc == "()V" }.let {
+                assertThat(it).isNotNull()
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.last { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -99,6 +99,7 @@ class GioFragmentSupportTransformTest {
 
             classNode.methods.find { it.name == "onResume" && it.desc == "()V" }
                 .let {
+                    assertThat(it).isNotNull()
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.last { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -111,6 +112,7 @@ class GioFragmentSupportTransformTest {
 
             classNode.methods.find { it.name == "onHiddenChanged" && it.desc == "(Z)V" }
                 .let {
+                    assertThat(it).isNotNull()
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.last { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -123,6 +125,7 @@ class GioFragmentSupportTransformTest {
 
             classNode.methods.find { it.name == "setUserVisibleHint" && it.desc == "(Z)V" }
                 .let {
+                    assertThat(it).isNotNull()
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.last { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)

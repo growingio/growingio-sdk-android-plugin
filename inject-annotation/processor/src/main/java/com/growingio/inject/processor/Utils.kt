@@ -79,11 +79,7 @@ internal fun KSType.typeName(resolver: Resolver): String? {
             // 泛型统一使用自身类型 包括 out,in,* 三种
             Variance.CONTRAVARIANT -> this.declaration.typeName(resolver)
             Variance.COVARIANT -> this.declaration.typeName(resolver)
-            Variance.STAR -> {
-                // for star projected types, JavaPoet uses the name from the declaration if
-                // * is not given explicitly
-                this.declaration.typeName(resolver)
-            }
+            Variance.STAR -> this.declaration.typeName(resolver)
             //数组
             else -> "[" + ksTypeArg.typeName(resolver)
         }

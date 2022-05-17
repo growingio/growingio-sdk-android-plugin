@@ -16,7 +16,6 @@
 
 package com.growingio.android.descriptor
 
-import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
@@ -37,6 +36,32 @@ interface ViewClickInjector {
 
     @BeforeSuper(clazz = View.OnClickListener::class, method = "onClick", parameterTypes = [View::class])
     fun viewOnClick(listener: View.OnClickListener, view: View)
+
+    @BeforeSuper(
+        clazz = OnSeekBarChangeListener::class,
+        method = "onStopTrackingTouch",
+        parameterTypes = [SeekBar::class]
+    )
+    fun seekBarOnSeekBarChange(listener: OnSeekBarChangeListener, seekBar: SeekBar)
+
+    @BeforeSuper(
+        clazz = RadioGroup.OnCheckedChangeListener::class,
+        method = "onCheckedChanged",
+        parameterTypes = [RadioGroup::class, Int::class]
+    )
+    fun radioGroupOnChecked(listener: RadioGroup.OnCheckedChangeListener, radioGroup: RadioGroup, i: Int)
+
+    @BeforeSuper(
+        clazz = OnRatingBarChangeListener::class,
+        method = "onRatingChanged",
+        parameterTypes = [RatingBar::class, Float::class, Boolean::class]
+    )
+    fun ratingBarOnRatingBarChange(
+        listener: OnRatingBarChangeListener,
+        ratingBar: RatingBar,
+        rating: Float,
+        fromUser: Boolean
+    )
 
     @BeforeSuper(
         clazz = OnItemClickListener::class,
@@ -102,67 +127,5 @@ interface ViewClickInjector {
         listener: CompoundButton.OnCheckedChangeListener,
         button: CompoundButton,
         checked: Boolean
-    )
-
-    @BeforeSuper(
-        clazz = RadioGroup.OnCheckedChangeListener::class,
-        method = "onCheckedChanged",
-        parameterTypes = [RadioGroup::class, Int::class]
-    )
-    fun radioGroupOnChecked(listener: RadioGroup.OnCheckedChangeListener, radioGroup: RadioGroup, i: Int)
-
-    @BeforeSuper(
-        clazz = OnRatingBarChangeListener::class,
-        method = "onRatingChanged",
-        parameterTypes = [RatingBar::class, Float::class, Boolean::class]
-    )
-    fun ratingBarOnRatingBarChange(
-        listener: OnRatingBarChangeListener,
-        ratingBar: RatingBar,
-        rating: Float,
-        fromUser: Boolean
-    )
-
-    @BeforeSuper(
-        clazz = OnSeekBarChangeListener::class,
-        method = "onStopTrackingTouch",
-        parameterTypes = [SeekBar::class]
-    )
-    fun seekBarOnSeekBarChange(listener: OnSeekBarChangeListener, seekBar: SeekBar)
-
-    @BeforeSuper(
-        clazz = Toolbar.OnMenuItemClickListener::class,
-        method = "onMenuItemClick",
-        parameterTypes = [MenuItem::class],
-        returnType = Boolean::class
-    )
-    fun toolbarOnMenuItemClick(listener: Toolbar.OnMenuItemClickListener, item: MenuItem)
-
-    @BeforeSuper(
-        clazz = ActionMenuView.OnMenuItemClickListener::class,
-        method = "onMenuItemClick",
-        parameterTypes = [MenuItem::class],
-        returnType = Boolean::class
-    )
-    fun actionMenuViewOnMenuItemClick(listener: ActionMenuView.OnMenuItemClickListener, item: MenuItem)
-
-    @BeforeSuper(
-        clazz = PopupMenu.OnMenuItemClickListener::class,
-        method = "onMenuItemClick",
-        parameterTypes = [MenuItem::class],
-        returnType = Boolean::class
-    )
-    fun popupMenuOnMenuItemClick(listener: PopupMenu.OnMenuItemClickListener, item: MenuItem)
-
-
-    @BeforeSuper(
-        clazz = androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener::class,
-        method = "onMenuItemClick",
-        parameterTypes = [MenuItem::class],
-        returnType = Boolean::class
-    )
-    fun popupMenuOnMenuItemClick(
-        listener: androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener,
-        item: MenuItem?
     )
 }

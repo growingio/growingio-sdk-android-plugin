@@ -41,6 +41,7 @@ class GioGradlePluginTest {
     // Verify plugin configuration fails when runtime dependency is missing but plugin is applied.
     @Test
     fun test_missingLibraryDep() {
+        gradleRunner.clearDependencies()
         gradleRunner.addDependencies(
             "implementation 'androidx.appcompat:appcompat:1.1.0'"
         )
@@ -55,7 +56,6 @@ class GioGradlePluginTest {
     fun testAssemble() {
         gradleRunner.addDependencies(
             "implementation 'androidx.appcompat:appcompat:1.1.0'",
-            "implementation 'com.growingio.android:autotracker-cdp:3.3.6'",
         )
         gradleRunner.addAndroidOption(
             "buildFeatures.buildConfig = false"

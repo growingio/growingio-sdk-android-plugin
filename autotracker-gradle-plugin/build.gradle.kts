@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.6.10"
     `java-gradle-plugin`
+    id("io.codearte.nexus-staging") version("0.30.0")
 }
 
 repositories {
@@ -36,7 +37,7 @@ val testPluginImplementation: Configuration by configurations.creating {
 }
 
 ext {
-    set("releaseVersion", "3.4.0")
+    set("releaseVersion", "3.4.0-SNAPSHOT")
     set("releaseVersionCode", 30400)
 }
 
@@ -48,7 +49,7 @@ dependencies {
     implementation("org.ow2.asm:asm-commons:9.2")
 
     compileOnly(kotlin("stdlib"))
-    compileOnly("com.android.tools.build:gradle-api:7.2.0-beta04")
+    compileOnly("com.android.tools.build:gradle-api:7.2.0-rc02")
     compileOnly("com.android.tools.build:gradle:4.2.2")
 
     testImplementation(gradleTestKit())
@@ -75,3 +76,4 @@ java {
 // 4. 运行构建，开始调试 ./gradlew assembleDebug
 
 apply("publishMaven.gradle")
+apply("stagingMaven.gradle")

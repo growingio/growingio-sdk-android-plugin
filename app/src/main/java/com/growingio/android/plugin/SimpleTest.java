@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 
@@ -17,6 +18,9 @@ import androidx.annotation.NonNull;
 class SimpleTest extends Dialog implements DialogInterface, View.OnClickListener {
     public SimpleTest(@NonNull Context context) {
         super(context);
+
+        WebView wb = new WebView(context);
+        wb.loadUrl("https://www.baidu.com");
     }
 
     @Override
