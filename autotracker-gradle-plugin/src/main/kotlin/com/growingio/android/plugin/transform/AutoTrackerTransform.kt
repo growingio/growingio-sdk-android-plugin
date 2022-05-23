@@ -56,6 +56,15 @@ internal class AutoTrackerTransform(
             override fun isAssignable(subClazz: String, superClazz: String): Boolean {
                 return context.klassPool.get(superClazz).isAssignableFrom(subClazz)
             }
+
+            override fun loadClass(clazz: String): Boolean {
+                try {
+                    context.klassPool.classLoader.loadClass(clazz)
+                    return true
+                } catch (e: ClassNotFoundException) {
+                    return false
+                }
+            }
         }
 
         try {

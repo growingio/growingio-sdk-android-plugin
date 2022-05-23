@@ -41,8 +41,14 @@ internal abstract class AutoTrackerFactory :
 
             override fun isAssignable(subClazz: String, superClazz: String): Boolean {
                 return classContext.loadClassData(normalize(subClazz))?.let {
-                    it.className == normalize(superClazz) || it.superClasses.indexOf(normalize(superClazz)) >= 0 || it.interfaces.indexOf(normalize(superClazz)) >= 0
+                    it.className == normalize(superClazz) || it.superClasses.indexOf(normalize(superClazz)) >= 0 || it.interfaces.indexOf(
+                        normalize(superClazz)
+                    ) >= 0
                 } ?: false
+            }
+
+            override fun loadClass(clazz: String): Boolean {
+                return if (classContext.loadClassData(normalize(clazz)) == null) false else true
             }
         }
         val apiVersion = instrumentationContext.apiVersion.get()
@@ -85,4 +91,6 @@ interface ClassContextCompat {
     val className: String
 
     fun isAssignable(subClazz: String, superClazz: String): Boolean
+
+    fun loadClass(clazz: String): Boolean
 }

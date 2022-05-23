@@ -95,17 +95,7 @@ internal class InjectSuperClassVisitor(
                     val injectMethods = targetMethod.injectMethods
                     val m = Method(targetMethod.name, targetMethod.desc)
                     val mg = GeneratorAdapter(Opcodes.ACC_PUBLIC, m, null, null, cv)
-                    for (injectMethod in injectMethods) {
-                        if (!injectMethod.isAfter) {
-                            mg.loadThis()
-                            mg.loadArgs()
-                            mg.invokeStatic(
-                                Type.getObjectType(injectMethod.className),
-                                Method(injectMethod.methodName, injectMethod.methodDesc)
-                            )
-                            info("[SuperBefore] " + className + "#" + targetMethod.name + targetMethod.desc + " ==> Method Add: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
-                        }
-                    }
+                    injectMethod(mg, injectMethods, false, targetMethod.name, targetMethod.desc)
                     if (!targetClass.isInterface) {
                         mg.loadThis()
                         mg.loadArgs()
@@ -114,23 +104,32 @@ internal class InjectSuperClassVisitor(
                             Method(targetMethod.name, targetMethod.desc)
                         )
                     }
-                    for (injectMethod in injectMethods) {
-                        if (injectMethod.isAfter) {
-                            mg.loadThis()
-                            mg.loadArgs()
-                            mg.invokeStatic(
-                                Type.getObjectType(injectMethod.className),
-                                Method(injectMethod.methodName, injectMethod.methodDesc)
-                            )
-                            info("[SuperAfter] " + className.simpleClass() + "#" + targetMethod.name + targetMethod.desc + " ==>Method Add: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
-                        }
-                    }
+                    injectMethod(mg, injectMethods, true, targetMethod.name, targetMethod.desc)
                     mg.returnValue()
                     mg.endMethod()
                 }
             }
         }
         super.visitEnd()
+    }
+
+    private fun injectMethod(
+        mg: GeneratorAdapter,
+        injectMethods: Set<InjectMethod>,
+        isAfter: Boolean,
+        targetName: String, targetDesc: String,
+    ) {
+        for (injectMethod in injectMethods) {
+            if (injectMethod.isAfter == isAfter && loadClass(injectMethod.className)) {
+                mg.loadThis()
+                mg.loadArgs()
+                mg.invokeStatic(
+                    Type.getObjectType(injectMethod.className),
+                    Method(injectMethod.methodName, injectMethod.methodDesc)
+                )
+                info((if (isAfter) "[SuperAfter] " else "[SuperBefore] ") + className.simpleClass() + "#" + targetName + targetDesc + " ==>Method Add: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
+            }
+        }
     }
 
     inner class InjectSuperMethodVisitor(
@@ -144,31 +143,11 @@ internal class InjectSuperClassVisitor(
 
         override fun onMethodEnter() {
             super.onMethodEnter()
-            for (injectMethod in injectMethods) {
-                if (!injectMethod.isAfter) {
-                    loadThis()
-                    loadArgs()
-                    invokeStatic(
-                        Type.getObjectType(injectMethod.className),
-                        Method(injectMethod.methodName, injectMethod.methodDesc)
-                    )
-                    info("[SuperBefore] " + className + "#" + name.toString() + methodDesc + " ==> Method Insert: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
-                }
-            }
+            injectMethod(this, injectMethods, false, name.toString(), methodDesc)
         }
 
         override fun onMethodExit(opcode: Int) {
-            for (injectMethod in injectMethods) {
-                if (injectMethod.isAfter) {
-                    loadThis()
-                    loadArgs()
-                    invokeStatic(
-                        Type.getObjectType(injectMethod.className),
-                        Method(injectMethod.methodName, injectMethod.methodDesc)
-                    )
-                    info("[SuperAfter] " + className + "#" + name.toString() + methodDesc + " ==> Insert Method: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
-                }
-            }
+            injectMethod(this, injectMethods, true, name.toString(), methodDesc)
             super.onMethodExit(opcode)
         }
     }
