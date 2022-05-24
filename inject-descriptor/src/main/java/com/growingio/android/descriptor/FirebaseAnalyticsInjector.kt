@@ -34,7 +34,7 @@ interface FirebaseAnalyticsInjector {
         injectMethod = "logEvent",
         injectMethodDesc = "(Ljava/lang/String;Landroid/os/Bundle;)V",
         isAfter = true,
-        isSuper = true
+        type = 0
     )
     fun logEvent()
 
@@ -45,7 +45,7 @@ interface FirebaseAnalyticsInjector {
         injectMethod = "setDefaultEventParameters",
         injectMethodDesc = "(Landroid/os/Bundle;)V",
         isAfter = true,
-        isSuper = true
+        type = 0
     )
     fun setDefaultEventParameters()
 
@@ -56,7 +56,7 @@ interface FirebaseAnalyticsInjector {
         injectMethod = "setUserId",
         injectMethodDesc = "(Ljava/lang/String;)V",
         isAfter = true,
-        isSuper = true
+        type = 0
     )
     fun setUserId()
 
@@ -67,7 +67,7 @@ interface FirebaseAnalyticsInjector {
         injectMethod = "setUserProperty",
         injectMethodDesc = "(Ljava/lang/String;Ljava/lang/String;)V",
         isAfter = true,
-        isSuper = true
+        type = 0
     )
     fun setUserProperty();
 }

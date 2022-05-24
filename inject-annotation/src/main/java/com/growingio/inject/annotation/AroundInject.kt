@@ -20,17 +20,16 @@ import kotlin.reflect.KClass
 
 /**
  * <p>
- *     查询其super方法并将其插入，对应 putSuperHookMethod isAfter=false
+ *     插入方法的最前，对应 putAroundHookMethod
  * @author cpacm 2022/5/6
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 @Repeatable
-annotation class BeforeSuper(
+annotation class AroundInject(
     val clazz: KClass<*>,
     val method: String,
     val parameterTypes: Array<KClass<*>> = [],
     val returnType: KClass<*> = Unit::class,
-//    val aliasMethodName: String = "", //默认为其方法名
-//    val aliasMethodDesc: String = "" //默认为其方法描述
+    val isAfter: Boolean = false
 )

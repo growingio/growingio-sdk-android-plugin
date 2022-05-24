@@ -10,6 +10,8 @@ public object HookInjectorClass {
 
   private val SUPER_HOOK_CLASSES: MutableList<HookData> = mutableListOf()
 
+  private val TARGET_HOOK_CLASSES: MutableList<HookData> = mutableListOf()
+
   public fun initAroundClass(): MutableList<HookData> {
     AROUND_HOOK_CLASSES.clear()
     AROUND_HOOK_CLASSES.add(HookData("android/app/AlertDialog","show","()V","com/growingio/android/sdk/autotrack/inject/DialogInjector","alertDialogShow","(Landroid/app/AlertDialog;)V",true))
@@ -56,10 +58,6 @@ public object HookInjectorClass {
     SUPER_HOOK_CLASSES.add(HookData("android/app/ExpandableListActivity","onChildClick","(Landroid/widget/ExpandableListView;Landroid/view/View;IIJ)Z","com/growingio/android/sdk/autotrack/inject/ActivityInjector","expandableListActivityOnChildClick","(Landroid/app/ExpandableListActivity;Landroid/widget/ExpandableListView;Landroid/view/View;IIJ)V",false))
     SUPER_HOOK_CLASSES.add(HookData("android/app/ListActivity","onListItemClick","(Landroid/widget/ListView;Landroid/view/View;IJ)V","com/growingio/android/sdk/autotrack/inject/ActivityInjector","listActivityOnListItemClick","(Landroid/app/ListActivity;Landroid/widget/ListView;Landroid/view/View;IJ)V",false))
     SUPER_HOOK_CLASSES.add(HookData("android/content/DialogInterface${'$'}OnClickListener","onClick","(Landroid/content/DialogInterface;I)V","com/growingio/android/sdk/autotrack/inject/DialogInjector","dialogOnClick","(Landroid/content/DialogInterface${'$'}OnClickListener;Landroid/content/DialogInterface;I)V",false))
-    SUPER_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","logEvent","(Ljava/lang/String;Landroid/os/Bundle;)V","com/growingio/android/analytics/FirebaseAnalyticsInjector","logEvent","(Ljava/lang/String;Landroid/os/Bundle;)V",true))
-    SUPER_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","setDefaultEventParameters","(Landroid/os/Bundle;)V","com/growingio/android/analytics/FirebaseAnalyticsInjector","setDefaultEventParameters","(Landroid/os/Bundle;)V",true))
-    SUPER_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","setUserId","(Ljava/lang/String;)V","com/growingio/android/analytics/FirebaseAnalyticsInjector","setUserId","(Ljava/lang/String;)V",true))
-    SUPER_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","setUserProperty","(Ljava/lang/String;Ljava/lang/String;)V","com/growingio/android/analytics/FirebaseAnalyticsInjector","setUserProperty","(Ljava/lang/String;Ljava/lang/String;)V",true))
     SUPER_HOOK_CLASSES.add(HookData("android/app/Fragment","onResume","()V","com/growingio/android/sdk/autotrack/inject/FragmentInjector","systemFragmentOnResume","(Landroid/app/Fragment;)V",true))
     SUPER_HOOK_CLASSES.add(HookData("android/app/DialogFragment","onResume","()V","com/growingio/android/sdk/autotrack/inject/FragmentInjector","systemFragmentOnResume","(Landroid/app/Fragment;)V",true))
     SUPER_HOOK_CLASSES.add(HookData("android/app/ListFragment","onResume","()V","com/growingio/android/sdk/autotrack/inject/FragmentInjector","systemFragmentOnResume","(Landroid/app/Fragment;)V",true))
@@ -101,6 +99,15 @@ public object HookInjectorClass {
     SUPER_HOOK_CLASSES.add(HookData("android/widget/ExpandableListView${'$'}OnChildClickListener","onChildClick","(Landroid/widget/ExpandableListView;Landroid/view/View;IIJ)Z","com/growingio/android/sdk/autotrack/inject/ViewClickInjector","expandableListViewOnChildClick","(Landroid/widget/ExpandableListView${'$'}OnChildClickListener;Landroid/widget/ExpandableListView;Landroid/view/View;IIJ)V",false))
     SUPER_HOOK_CLASSES.add(HookData("android/widget/CompoundButton${'$'}OnCheckedChangeListener","onCheckedChanged","(Landroid/widget/CompoundButton;Z)V","com/growingio/android/sdk/autotrack/inject/ViewClickInjector","compoundButtonOnChecked","(Landroid/widget/CompoundButton${'$'}OnCheckedChangeListener;Landroid/widget/CompoundButton;Z)V",false))
     return SUPER_HOOK_CLASSES
+  }
+
+  public fun initTargetClass(): MutableList<HookData> {
+    TARGET_HOOK_CLASSES.clear()
+    TARGET_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","logEvent","(Ljava/lang/String;Landroid/os/Bundle;)V","com/growingio/android/analytics/FirebaseAnalyticsInjector","logEvent","(Ljava/lang/String;Landroid/os/Bundle;)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","setDefaultEventParameters","(Landroid/os/Bundle;)V","com/growingio/android/analytics/FirebaseAnalyticsInjector","setDefaultEventParameters","(Landroid/os/Bundle;)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","setUserId","(Ljava/lang/String;)V","com/growingio/android/analytics/FirebaseAnalyticsInjector","setUserId","(Ljava/lang/String;)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","setUserProperty","(Ljava/lang/String;Ljava/lang/String;)V","com/growingio/android/analytics/FirebaseAnalyticsInjector","setUserProperty","(Ljava/lang/String;Ljava/lang/String;)V",true))
+    return TARGET_HOOK_CLASSES
   }
 
   public data class HookData(

@@ -16,7 +16,7 @@
 
 package com.growingio.android.descriptor
 
-import com.growingio.inject.annotation.Before
+import com.growingio.inject.annotation.AroundInject
 import com.growingio.inject.annotation.Belong
 import com.tencent.smtt.sdk.WebView
 
@@ -27,16 +27,16 @@ import com.tencent.smtt.sdk.WebView
  */
 @Belong(className = "com.growingio.android.sdk.autotrack.inject.X5WebViewInjector")
 interface X5WebViewInjector {
-    @Before(clazz = WebView::class, method = "loadUrl", parameterTypes = [String::class])
+    @AroundInject(clazz = WebView::class, method = "loadUrl", parameterTypes = [String::class])
     fun x5WebViewLoadUrl(webView: WebView, url: String?)
 
-    @Before(clazz = WebView::class, method = "loadUrl", parameterTypes = [String::class, MutableMap::class])
+    @AroundInject(clazz = WebView::class, method = "loadUrl", parameterTypes = [String::class, MutableMap::class])
     fun x5WebViewLoadUrl(webView: WebView, url: String?, additionalHttpHeaders: Map<String?, String?>?)
 
-    @Before(clazz = WebView::class, method = "loadData", parameterTypes = [String::class, String::class, String::class])
+    @AroundInject(clazz = WebView::class, method = "loadData", parameterTypes = [String::class, String::class, String::class])
     fun x5WebViewLoadData(webView: WebView, data: String?, mimeType: String?, encoding: String?)
 
-    @Before(
+    @AroundInject(
         clazz = WebView::class,
         method = "loadDataWithBaseURL",
         parameterTypes = [String::class, String::class, String::class, String::class, String::class]
@@ -50,6 +50,6 @@ interface X5WebViewInjector {
         historyUrl: String?
     )
 
-    @Before(clazz = WebView::class, method = "postUrl", parameterTypes = [String::class, ByteArray::class])
+    @AroundInject(clazz = WebView::class, method = "postUrl", parameterTypes = [String::class, ByteArray::class])
     fun x5WebViewPostUrl(webView: WebView, url: String?, postData: ByteArray?)
 }

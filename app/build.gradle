@@ -36,7 +36,11 @@ growingAutotracker {
     logEnabled true
     includePackages "com.growingio.android.plugin"
     excludePackages "com.cpacm"
+    analyticsAdapter {
+        firebaseAnalytics = true
+    }
 }
+
 
 dependencies {
 

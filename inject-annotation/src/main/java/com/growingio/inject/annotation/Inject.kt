@@ -32,5 +32,5 @@ annotation class Inject(
     val injectMethod: String,
     val injectMethodDesc: String,
     val isAfter: Boolean,
-    val isSuper: Boolean
+    val type: Int = 0,//注入类型，0为TargetInject,1为SuperInject,2为AroundInject
 )

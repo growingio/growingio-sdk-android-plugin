@@ -17,7 +17,7 @@
 package com.growingio.android.descriptor
 
 import android.webkit.WebView
-import com.growingio.inject.annotation.Before
+import com.growingio.inject.annotation.AroundInject
 import com.growingio.inject.annotation.Belong
 
 /**
@@ -28,16 +28,16 @@ import com.growingio.inject.annotation.Belong
 @Belong(className = "com.growingio.android.sdk.autotrack.inject.WebViewInjector")
 interface WebViewInjector {
 
-    @Before(clazz = WebView::class, method = "loadUrl", parameterTypes = [String::class])
+    @AroundInject(clazz = WebView::class, method = "loadUrl", parameterTypes = [String::class])
     fun webkitWebViewLoadUrl(webView: WebView, url: String?)
 
-    @Before(clazz = WebView::class, method = "loadUrl", parameterTypes = [String::class, MutableMap::class])
+    @AroundInject(clazz = WebView::class, method = "loadUrl", parameterTypes = [String::class, MutableMap::class])
     fun webkitWebViewLoadUrl(webView: WebView, url: String?, additionalHttpHeaders: Map<String?, String?>?)
 
-    @Before(clazz = WebView::class, method = "loadData", parameterTypes = [String::class, String::class, String::class])
+    @AroundInject(clazz = WebView::class, method = "loadData", parameterTypes = [String::class, String::class, String::class])
     fun webkitWebViewLoadData(webView: WebView, data: String?, mimeType: String?, encoding: String?)
 
-    @Before(
+    @AroundInject(
         clazz = WebView::class,
         method = "loadDataWithBaseURL",
         parameterTypes = [String::class, String::class, String::class, String::class, String::class]
@@ -51,7 +51,7 @@ interface WebViewInjector {
         historyUrl: String?
     )
 
-    @Before(clazz = WebView::class, method = "postUrl", parameterTypes = [String::class, ByteArray::class])
+    @AroundInject(clazz = WebView::class, method = "postUrl", parameterTypes = [String::class, ByteArray::class])
     fun webkitWebViewPostUrl(webView: WebView, url: String?, postData: ByteArray?)
 
 }

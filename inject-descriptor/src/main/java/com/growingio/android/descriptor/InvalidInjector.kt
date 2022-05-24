@@ -19,18 +19,17 @@ package com.growingio.android.descriptor
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.widget.*
-import androidx.core.widget.CompoundButtonCompat
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.slider.Slider
 import com.google.android.material.tabs.TabLayout
-import com.growingio.inject.annotation.BeforeSuper
+import com.growingio.inject.annotation.SuperInject
 
 /**
  * 暂未参与埋点的可交互控件
  */
 interface InvalidInjector {
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = TimePicker.OnTimeChangedListener::class,
         method = "onTimeChanged",
         parameterTypes = [TimePicker::class, Int::class, Int::class],
@@ -41,7 +40,7 @@ interface InvalidInjector {
         hourOfDay: Int, minute: Int
     )
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = DatePicker.OnDateChangedListener::class,
         method = "onDateChanged",
         parameterTypes = [DatePicker::class, Int::class, Int::class, Int::class],
@@ -52,7 +51,7 @@ interface InvalidInjector {
         year: Int, monthOfYear: Int, dayOfMonth: Int
     )
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = TextView.OnEditorActionListener::class,
         method = "onEditorAction",
         parameterTypes = [TextView::class, Int::class, KeyEvent::class],
@@ -61,14 +60,14 @@ interface InvalidInjector {
     fun textViewEditorAction(listener: TextView.OnEditorActionListener, actionId: Int, event: KeyEvent)
 
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = Slider.OnSliderTouchListener::class,
         method = "onStopTrackingTouch",
         parameterTypes = [Slider::class],
     )
     fun sliderTouch(slider: Slider)
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = SearchView.OnQueryTextListener::class,
         method = "onQueryTextSubmit",
         parameterTypes = [SearchView::class, String::class],
@@ -76,7 +75,7 @@ interface InvalidInjector {
     )
     fun searchViewTextSubmit(listener: SearchView.OnQueryTextListener, query: String)
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = NavigationBarView.OnItemSelectedListener::class,
         method = "onNavigationItemSelected",
         parameterTypes = [MenuItem::class],
@@ -87,7 +86,7 @@ interface InvalidInjector {
         item: MenuItem
     )
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = TabLayout.OnTabSelectedListener::class,
         method = "onTabSelected",
         parameterTypes = [TabLayout.Tab::class],

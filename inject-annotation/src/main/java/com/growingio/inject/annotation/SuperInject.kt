@@ -20,15 +20,18 @@ import kotlin.reflect.KClass
 
 /**
  * <p>
- *     查询其super方法并将其插入，对应 putSuperHookMethod isAfter=true
+ *     查询其super方法并将其插入，对应 putSuperHookMethod
  * @author cpacm 2022/5/6
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 @Repeatable
-annotation class AfterSuper(
+annotation class SuperInject(
     val clazz: KClass<*>,
     val method: String,
     val parameterTypes: Array<KClass<*>> = [],
     val returnType: KClass<*> = Unit::class,
+    val isAfter :Boolean = false
+//    val aliasMethodName: String = "", //默认为其方法名
+//    val aliasMethodDesc: String = "" //默认为其方法描述
 )

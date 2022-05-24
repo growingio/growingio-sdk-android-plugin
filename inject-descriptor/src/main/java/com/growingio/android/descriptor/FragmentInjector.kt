@@ -23,7 +23,7 @@ import android.app.Fragment
 import android.app.ListFragment
 import android.preference.PreferenceFragment
 import android.webkit.WebViewFragment
-import com.growingio.inject.annotation.AfterSuper
+import com.growingio.inject.annotation.SuperInject
 import com.growingio.inject.annotation.Belong
 
 /**
@@ -34,52 +34,99 @@ import com.growingio.inject.annotation.Belong
 @Belong(className = "com.growingio.android.sdk.autotrack.inject.FragmentInjector")
 interface FragmentInjector {
 
-    @AfterSuper(clazz = Fragment::class, method = "onResume")
-    @AfterSuper(clazz = DialogFragment::class, method = "onResume")
-    @AfterSuper(clazz = ListFragment::class, method = "onResume")
-    @AfterSuper(clazz = PreferenceFragment::class, method = "onResume")
-    @AfterSuper(clazz = WebViewFragment::class, method = "onResume")
+    @SuperInject(clazz = Fragment::class, method = "onResume", isAfter = true)
+    @SuperInject(clazz = DialogFragment::class, method = "onResume", isAfter = true)
+    @SuperInject(clazz = ListFragment::class, method = "onResume", isAfter = true)
+    @SuperInject(clazz = PreferenceFragment::class, method = "onResume", isAfter = true)
+    @SuperInject(clazz = WebViewFragment::class, method = "onResume", isAfter = true)
     fun systemFragmentOnResume(fragment: Fragment)
 
-    @AfterSuper(clazz = Fragment::class, method = "setUserVisibleHint", parameterTypes = [Boolean::class])
-    @AfterSuper(clazz = DialogFragment::class, method = "setUserVisibleHint", parameterTypes = [Boolean::class])
-    @AfterSuper(clazz = ListFragment::class, method = "setUserVisibleHint", parameterTypes = [Boolean::class])
-    @AfterSuper(clazz = PreferenceFragment::class, method = "setUserVisibleHint", parameterTypes = [Boolean::class])
-    @AfterSuper(clazz = WebViewFragment::class, method = "setUserVisibleHint", parameterTypes = [Boolean::class])
+    @SuperInject(
+        clazz = Fragment::class,
+        method = "setUserVisibleHint",
+        parameterTypes = [Boolean::class],
+        isAfter = true
+    )
+    @SuperInject(
+        clazz = DialogFragment::class,
+        method = "setUserVisibleHint",
+        parameterTypes = [Boolean::class],
+        isAfter = true
+    )
+    @SuperInject(
+        clazz = ListFragment::class,
+        method = "setUserVisibleHint",
+        parameterTypes = [Boolean::class],
+        isAfter = true
+    )
+    @SuperInject(
+        clazz = PreferenceFragment::class,
+        method = "setUserVisibleHint",
+        parameterTypes = [Boolean::class],
+        isAfter = true
+    )
+    @SuperInject(
+        clazz = WebViewFragment::class,
+        method = "setUserVisibleHint",
+        parameterTypes = [Boolean::class],
+        isAfter = true
+    )
     fun systemFragmentSetUserVisibleHint(fragment: Fragment, isVisibleToUser: Boolean)
 
-    @AfterSuper(clazz = Fragment::class, method = "onHiddenChanged", parameterTypes = [Boolean::class])
-    @AfterSuper(clazz = DialogFragment::class, method = "onHiddenChanged", parameterTypes = [Boolean::class])
-    @AfterSuper(clazz = ListFragment::class, method = "onHiddenChanged", parameterTypes = [Boolean::class])
-    @AfterSuper(clazz = PreferenceFragment::class, method = "onHiddenChanged", parameterTypes = [Boolean::class])
-    @AfterSuper(clazz = WebViewFragment::class, method = "onHiddenChanged", parameterTypes = [Boolean::class])
+    @SuperInject(clazz = Fragment::class, method = "onHiddenChanged", parameterTypes = [Boolean::class], isAfter = true)
+    @SuperInject(
+        clazz = DialogFragment::class,
+        method = "onHiddenChanged",
+        parameterTypes = [Boolean::class],
+        isAfter = true
+    )
+    @SuperInject(
+        clazz = ListFragment::class,
+        method = "onHiddenChanged",
+        parameterTypes = [Boolean::class],
+        isAfter = true
+    )
+    @SuperInject(
+        clazz = PreferenceFragment::class,
+        method = "onHiddenChanged",
+        parameterTypes = [Boolean::class],
+        isAfter = true
+    )
+    @SuperInject(
+        clazz = WebViewFragment::class,
+        method = "onHiddenChanged",
+        parameterTypes = [Boolean::class],
+        isAfter = true
+    )
     fun systemFragmentOnHiddenChanged(fragment: Fragment, hidden: Boolean)
 
-    @AfterSuper(clazz = Fragment::class, method = "onDestroyView")
-    @AfterSuper(clazz = DialogFragment::class, method = "onDestroyView")
-    @AfterSuper(clazz = ListFragment::class, method = "onDestroyView")
-    @AfterSuper(clazz = PreferenceFragment::class, method = "onDestroyView")
-    @AfterSuper(clazz = WebViewFragment::class, method = "onDestroyView")
+    @SuperInject(clazz = Fragment::class, method = "onDestroyView", isAfter = true)
+    @SuperInject(clazz = DialogFragment::class, method = "onDestroyView", isAfter = true)
+    @SuperInject(clazz = ListFragment::class, method = "onDestroyView", isAfter = true)
+    @SuperInject(clazz = PreferenceFragment::class, method = "onDestroyView", isAfter = true)
+    @SuperInject(clazz = WebViewFragment::class, method = "onDestroyView", isAfter = true)
     fun systemFragmentOnDestroyView(fragment: Fragment)
 
-    @AfterSuper(clazz = androidx.fragment.app.Fragment::class, method = "onResume")
+    @SuperInject(clazz = androidx.fragment.app.Fragment::class, method = "onResume", isAfter = true)
     fun androidxFragmentOnResume(fragment: androidx.fragment.app.Fragment?)
 
     @Deprecated("新版本的AndroidX Fragment setUserVisibleHint 将通过 FragmentTransaction setMaxLifecycle 来控制生命周期实现")
-    @AfterSuper(
+    @SuperInject(
         clazz = androidx.fragment.app.Fragment::class,
         method = "setUserVisibleHint",
-        parameterTypes = [Boolean::class]
+        parameterTypes = [Boolean::class],
+        isAfter = true
     )
     fun androidxFragmentSetUserVisibleHint(fragment: androidx.fragment.app.Fragment, isVisibleToUser: Boolean)
 
-    @AfterSuper(
+    @SuperInject(
         clazz = androidx.fragment.app.Fragment::class,
         method = "onHiddenChanged",
-        parameterTypes = [Boolean::class]
+        parameterTypes = [Boolean::class],
+        isAfter = true
     )
     fun androidxFragmentOnHiddenChanged(fragment: androidx.fragment.app.Fragment, hidden: Boolean)
 
-    @AfterSuper(clazz = androidx.fragment.app.Fragment::class, method = "onDestroyView")
+    @SuperInject(clazz = androidx.fragment.app.Fragment::class, method = "onDestroyView", isAfter = true)
     fun androidxFragmentOnDestroyView(fragment: androidx.fragment.app.Fragment)
 }

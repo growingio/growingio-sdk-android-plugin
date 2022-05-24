@@ -18,8 +18,8 @@ package com.growingio.android.descriptor
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import com.growingio.inject.annotation.After
-import com.growingio.inject.annotation.BeforeSuper
+import com.growingio.inject.annotation.AroundInject
+import com.growingio.inject.annotation.SuperInject
 import com.growingio.inject.annotation.Belong
 
 /**
@@ -30,10 +30,10 @@ import com.growingio.inject.annotation.Belong
 @Belong(className = "com.growingio.android.sdk.autotrack.inject.DialogInjector")
 interface DialogInjector {
 
-    @After(clazz = AlertDialog::class, method = "show")
+    @AroundInject(clazz = AlertDialog::class, method = "show", isAfter = true)
     fun alertDialogShow(alertDialog: AlertDialog)
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = DialogInterface.OnClickListener::class,
         method = "onClick",
         parameterTypes = [DialogInterface::class, Int::class]
