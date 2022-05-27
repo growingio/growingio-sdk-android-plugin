@@ -69,5 +69,16 @@ interface FirebaseAnalyticsInjector {
         isAfter = true,
         type = 0
     )
-    fun setUserProperty();
+    fun setUserProperty()
+
+    @Inject(
+        targetClazz = "com/google/firebase/analytics/FirebaseAnalytics",
+        targetMethod = "setAnalyticsCollectionEnabled",
+        targetMethodDesc = "(Z)V",
+        injectMethod = "setAnalyticsCollectionEnabled",
+        injectMethodDesc = "(Z)V",
+        isAfter = true,
+        type = 0
+    )
+    fun setAnalyticsCollectionEnabled()
 }
