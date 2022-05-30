@@ -118,22 +118,6 @@ publishing {
                 configurePom(owner)
             }
         }
-        // https://docs.gradle.org/current/userguide/plugins.html#sec:plugin_markers
-        pluginMarker(MavenPublication) {
-            groupId = GROUP
-            artifactId = POM_ARTIFACT_ID
-            version = version
-            pom {
-                configurePom(owner)
-                withXml {
-                    def dependencyNode =
-                            asNode().appendNode("dependencies").appendNode("dependency")
-                    dependencyNode.appendNode("groupId", GROUP)
-                    dependencyNode.appendNode("artifactId", POM_ARTIFACT_ID)
-                    dependencyNode.appendNode("version", version)
-                }
-            }
-        }
     }
     // Publish to build output repository.
     repositories {
