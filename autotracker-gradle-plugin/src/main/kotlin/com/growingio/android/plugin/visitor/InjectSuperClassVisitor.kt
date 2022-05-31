@@ -137,18 +137,45 @@ internal class InjectSuperClassVisitor(
         nmv: MethodVisitor,
         access: Int,
         name: String?,
-        descriptor: String?,
+        private val descriptor: String?,
         private val injectMethods: Set<InjectMethod>
     ) : AdviceAdapter(api, nmv, access, name, descriptor) {
 
+        lateinit var localVariables: IntArray
+
         override fun onMethodEnter() {
+            val targetArgs: Array<Type> = Type.getArgumentTypes(descriptor)
+            localVariables = IntArray(targetArgs.size)
+            for (i in targetArgs.indices) {
+                loadArg(i)
+                localVariables[i] = newLocal(targetArgs[i])
+                storeLocal(localVariables[i])
+            }
+
             super.onMethodEnter()
             injectMethod(this, injectMethods, false, name.toString(), methodDesc)
         }
 
         override fun onMethodExit(opcode: Int) {
-            injectMethod(this, injectMethods, true, name.toString(), methodDesc)
+            injectMethodExit(injectMethods)
             super.onMethodExit(opcode)
+        }
+
+        private fun injectMethodExit(injectMethods: Set<InjectMethod>) {
+            for (injectMethod in injectMethods) {
+                if (classIncluded(injectMethod.className)) {
+                    loadThis()
+                    val args: Array<Type> = Type.getArgumentTypes(descriptor)
+                    for (index in args.indices) {
+                        loadLocal(localVariables[index])
+                    }
+                    invokeStatic(
+                        Type.getObjectType(injectMethod.className),
+                        Method(injectMethod.methodName, injectMethod.methodDesc)
+                    )
+                    info("[SuperAfter] " + className.simpleClass() + "#" + name.toString() + methodDesc + " ==>Method Add: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
+                }
+            }
         }
     }
 }

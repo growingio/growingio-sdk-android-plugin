@@ -38,6 +38,7 @@ growingAutotracker {
     excludePackages "com.cpacm"
     analyticsAdapter {
         firebaseAnalytics = false
+        googleAnalytics = true
     }
 }
 
