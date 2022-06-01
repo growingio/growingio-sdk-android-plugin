@@ -116,7 +116,6 @@ internal class InjectTargetClassVisitor(
                     w("can't find class:" + injectMethod.className)
                     continue
                 }
-                w(injectMethod.methodDesc)
                 if (injectMethod.isAfter == isAfter) {
                     when(visitCode(isAfter, injectMethod.methodDesc, opcode)) {
                         1 -> loadThis()

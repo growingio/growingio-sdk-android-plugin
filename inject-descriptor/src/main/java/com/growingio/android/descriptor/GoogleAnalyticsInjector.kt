@@ -3,7 +3,7 @@ package com.growingio.android.descriptor
 import com.growingio.inject.annotation.Belong
 import com.growingio.inject.annotation.Inject
 
-@Belong(className = "com.growingio.android.analytics3.GoogleAnalyticsInjector")
+@Belong(className = "com.growingio.android.google.analytics3.GoogleAnalyticsInjector")
 interface GoogleAnalyticsInjector {
 
     @Inject(
