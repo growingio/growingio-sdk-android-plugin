@@ -18,13 +18,12 @@ package com.growingio.android.plugin.transform
 
 import com.android.build.gradle.BaseExtension
 import com.growingio.android.plugin.AutoTrackerExtension
-import com.growingio.android.plugin.utils.e
-import com.growingio.android.plugin.utils.info
+import com.growingio.android.plugin.utils.*
 import com.growingio.android.plugin.utils.shouldClassModified
-import com.growingio.android.plugin.visitor.ClassContextCompat
+import com.growingio.android.plugin.visitor.*
 import com.growingio.android.plugin.visitor.DesugarClassVisitor
-import com.growingio.android.plugin.visitor.InjectAroundClassVisitor
 import com.growingio.android.plugin.visitor.InjectSuperClassVisitor
+import com.growingio.android.plugin.visitor.InjectTargetClassVisitor
 import org.gradle.api.Project
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassWriter
@@ -56,6 +55,10 @@ internal class AutoTrackerTransform(
             override fun isAssignable(subClazz: String, superClazz: String): Boolean {
                 return context.klassPool.get(superClazz).isAssignableFrom(subClazz)
             }
+
+            override fun classIncluded(clazz: String): Boolean {
+                return DEFAULT_INJECT_CLASS.contains(normalize(clazz))
+            }
         }
 
         try {
@@ -67,10 +70,13 @@ internal class AutoTrackerTransform(
             }
             val apiVersion = autoTrackerWriter.getApi()
             val visitor = DesugarClassVisitor(
-                apiVersion, InjectAroundClassVisitor(
-                    apiVersion,
-                    InjectSuperClassVisitor(apiVersion, autoTrackerWriter, classContextCompat),
-                    classContextCompat
+                apiVersion,
+                InjectTargetClassVisitor(
+                    apiVersion, InjectAroundClassVisitor(
+                        apiVersion,
+                        InjectSuperClassVisitor(apiVersion, autoTrackerWriter, classContextCompat),
+                        classContextCompat
+                    ), classContextCompat
                 ), classContextCompat
             )
             classReader.accept(visitor, ClassReader.EXPAND_FRAMES)

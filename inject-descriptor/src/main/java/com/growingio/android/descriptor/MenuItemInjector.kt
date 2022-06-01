@@ -18,15 +18,12 @@ package com.growingio.android.descriptor
 
 import android.view.MenuItem
 import android.widget.*
-import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.tabs.TabLayout
-import com.growingio.inject.annotation.BeforeSuper
+import com.growingio.inject.annotation.SuperInject
 import com.growingio.inject.annotation.Belong
-import com.growingio.inject.annotation.Inject
 
 @Belong(className = "com.growingio.android.sdk.autotrack.inject.MenuItemInjector")
 interface MenuItemInjector {
-    @BeforeSuper(
+    @SuperInject(
         clazz = Toolbar.OnMenuItemClickListener::class,
         method = "onMenuItemClick",
         parameterTypes = [MenuItem::class],
@@ -59,7 +56,7 @@ interface MenuItemInjector {
      * 只处理android.jar上的ActionMenuView.OnMenuItemClickListener，不会造成多次调用 Toolbar.OnMenuItemClickListener.
      * 不处理appcompat和support包上的ActionMenuView.OnMenuItemClickListener，避免重复调用 Toolbar.OnMenuItemClickListener.
      */
-    @BeforeSuper(
+    @SuperInject(
         clazz = ActionMenuView.OnMenuItemClickListener::class,
         method = "onMenuItemClick",
         parameterTypes = [MenuItem::class],
@@ -68,7 +65,7 @@ interface MenuItemInjector {
     fun actionMenuViewOnMenuItemClick(listener: ActionMenuView.OnMenuItemClickListener, item: MenuItem)
 
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = PopupMenu.OnMenuItemClickListener::class,
         method = "onMenuItemClick",
         parameterTypes = [MenuItem::class],

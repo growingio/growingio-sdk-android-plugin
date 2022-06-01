@@ -20,15 +20,16 @@ import kotlin.reflect.KClass
 
 /**
  * <p>
- *     插入方法的最后，对应 putAroundHookMethod isAfter=true
+ *     插入指定类的指定方法，对应 putTargetHookMethod
  * @author cpacm 2022/5/6
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 @Repeatable
-annotation class After(
+annotation class TargetInject(
     val clazz: KClass<*>,
     val method: String,
     val parameterTypes: Array<KClass<*>> = [],
     val returnType: KClass<*> = Unit::class,
+    val isAfter: Boolean = false
 )

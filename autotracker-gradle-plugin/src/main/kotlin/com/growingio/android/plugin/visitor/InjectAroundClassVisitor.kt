@@ -76,7 +76,7 @@ internal class InjectAroundClassVisitor(
                 storeLocal(callObject)
             }
             for (injectMethod in targetMethod.injectMethods) {
-                if (!injectMethod.isAfter) {
+                if (!injectMethod.isAfter && classIncluded(injectMethod.className)) {
                     if (callObject >= 0) {
                         loadLocal(callObject)
                     }
@@ -101,7 +101,7 @@ internal class InjectAroundClassVisitor(
             super.visitMethodInsn(opcode, owner, name, descriptor, isInterface)
 
             for (injectMethod in targetMethod.injectMethods) {
-                if (injectMethod.isAfter) {
+                if (injectMethod.isAfter && classIncluded(injectMethod.className)) {
                     if (callObject >= 0) {
                         loadLocal(callObject)
                     }

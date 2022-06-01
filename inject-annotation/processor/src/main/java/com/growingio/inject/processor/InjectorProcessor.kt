@@ -32,8 +32,9 @@ class InjectorProcessor(
 
     private val aroundHookClassArgs = arrayListOf<InjectorHookData>()
     private val superHookClassArgs = arrayListOf<InjectorHookData>()
+    private val targetHookClassArgs = arrayListOf<InjectorHookData>()
 
-    fun KSPLogger.log(message:String){
+    fun KSPLogger.log(message: String) {
         info(message)
     }
 
@@ -67,6 +68,10 @@ class InjectorProcessor(
             .build()
 
         val paramSpec2 = PropertySpec.builder(SUPER_PARAM_NAME, mapType, KModifier.PRIVATE)
+            .initializer("mutableListOf()")
+            .build()
+
+        val paramSpec3 = PropertySpec.builder(TARGET_PARAM_NAME, mapType, KModifier.PRIVATE)
             .initializer("mutableListOf()")
             .build()
 
@@ -134,13 +139,32 @@ class InjectorProcessor(
             .addStatement("return $SUPER_PARAM_NAME")
             .build()
 
+        val targetFuncBuilder = FunSpec.builder(TARGET_METHOD_NAME).addStatement("$TARGET_PARAM_NAME.clear()")
+        for (t in targetHookClassArgs) {
+            targetFuncBuilder.addStatement(
+                "$TARGET_PARAM_NAME.add(${DATA_CLASS_NAME}(%S,%S,%S,%S,%S,%S,${t.isAfter}))",
+                t.targetClassName,
+                t.targetMethodName,
+                t.targetMethodDesc + t.targetMethodReturnDesc,
+                t.injectClassName,
+                t.injectMethodName,
+                t.injectMethodDesc,
+            )
+        }
+        val targetFunc = targetFuncBuilder
+            .returns(mapType)
+            .addStatement("return $TARGET_PARAM_NAME")
+            .build()
+
 
         val typeSpec = TypeSpec.objectBuilder(CLASS_NAME)
             .addProperty(paramSpec1)
             .addProperty(paramSpec2)
+            .addProperty(paramSpec3)
             .addType(dataTypeSpec)
             .addFunction(aroundFunc)
             .addFunction(superFunc)
+            .addFunction(targetFunc)
             .build()
 
         val fileSpec = FileSpec.builder(packageName = PACKAGE_NAME, CLASS_NAME)
@@ -174,6 +198,9 @@ class InjectorProcessor(
 
         const val SUPER_PARAM_NAME = "SUPER_HOOK_CLASSES"
         const val SUPER_METHOD_NAME = "initSuperClass"
+
+        const val TARGET_PARAM_NAME = "TARGET_HOOK_CLASSES"
+        const val TARGET_METHOD_NAME = "initTargetClass"
     }
 
     inner class Visitor(private val resolver: Resolver) : KSVisitorVoid() {
@@ -206,10 +233,9 @@ class InjectorProcessor(
                 logger.log("injectMethodDesc:$injectMethodDescBuilder")
 
                 function.annotations.filter {
-                    it.shortName.asString() == After::class.simpleName
-                            || it.shortName.asString() == AfterSuper::class.simpleName
-                            || it.shortName.asString() == Before::class.simpleName
-                            || it.shortName.asString() == BeforeSuper::class.simpleName
+                    it.shortName.asString() == AroundInject::class.simpleName
+                            || it.shortName.asString() == SuperInject::class.simpleName
+                            || it.shortName.asString() == TargetInject::class.simpleName
                 }.iterator().forEach { annotation ->
                     val injectData = InjectorHookData(injectClass, injectMethod, injectMethodDescBuilder.toString())
 
@@ -240,20 +266,19 @@ class InjectorProcessor(
                                 injectData.targetMethodReturnDesc = returnType.typeName(resolver) ?: ""
                                 logger.log("targetMethodReturnDesc:${injectData.targetMethodReturnDesc}")
                             }
+                            "isAfter" -> {
+                                val isAfter = it.value as Boolean
+                                injectData.isAfter = isAfter
+                                logger.log("isAfter:${isAfter}")
+                            }
                         }
                     }
-                    if (annotation.shortName.asString() == After::class.simpleName) {
-                        injectData.isAfter = true
+                    if (annotation.shortName.asString() == AroundInject::class.simpleName) {
                         aroundHookClassArgs.add(injectData)
-                    } else if (annotation.shortName.asString() == Before::class.simpleName) {
-                        injectData.isAfter = false
-                        aroundHookClassArgs.add(injectData)
-                    } else if (annotation.shortName.asString() == AfterSuper::class.simpleName) {
-                        injectData.isAfter = true
+                    } else if (annotation.shortName.asString() == SuperInject::class.simpleName) {
                         superHookClassArgs.add(injectData)
-                    } else if (annotation.shortName.asString() == BeforeSuper::class.simpleName) {
-                        injectData.isAfter = false
-                        superHookClassArgs.add(injectData)
+                    } else if (annotation.shortName.asString() == TargetInject::class.simpleName) {
+                        targetHookClassArgs.add(injectData)
                     }
                 }
 
@@ -261,7 +286,7 @@ class InjectorProcessor(
                     it.shortName.asString() == Inject::class.simpleName
                 }.iterator().forEach { annotation ->
                     val injectData = InjectorHookData(injectClass)
-                    var isSuper = false
+                    var type = 0
                     annotation.arguments.forEach {
                         when (it.name?.asString()) {
                             "targetClazz" -> {
@@ -288,9 +313,9 @@ class InjectorProcessor(
                                 injectData.injectMethodDesc = typeDesc
                                 logger.log("parameterTypes:${typeDesc}")
                             }
-                            "isSuper" -> {
-                                isSuper = it.value as Boolean
-                                logger.log("isSuper:${isSuper}")
+                            "type" -> {
+                                type = it.value as Int
+                                logger.log("type:${type}")
                             }
                             "isAfter" -> {
                                 val isAfter = it.value as Boolean
@@ -299,12 +324,11 @@ class InjectorProcessor(
                             }
                         }
                     }
-                    if (!isSuper) {
-                        aroundHookClassArgs.add(injectData)
-                    } else {
-                        superHookClassArgs.add(injectData)
+                    when (type) {
+                        0 -> targetHookClassArgs.add(injectData)
+                        1 -> superHookClassArgs.add(injectData)
+                        else -> aroundHookClassArgs.add(injectData)
                     }
-
                 }
             }
             super.visitClassDeclaration(classDeclaration, data)

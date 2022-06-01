@@ -43,7 +43,6 @@ abstract class AutoTrackerPlugin : Plugin<Project> {
         var inAndroidProject = false
 
         val autoTrackerExtension = project.extensions.create("growingAutotracker", AutoTrackerExtension::class.java)
-        LOG_ENABLE = autoTrackerExtension.logEnabled
         project.plugins.withType(AndroidBasePlugin::class.java) {
             inAndroidProject = true
 
@@ -61,8 +60,9 @@ abstract class AutoTrackerPlugin : Plugin<Project> {
             check(inAndroidProject) {
                 "The GrowingIO AutoTracker Gradle plugin can only be applied to an Android project"
             }
-
-            checkAutoTrackerDependency(it,autoTrackerExtension.skipDependencyCheck)
+            LOG_ENABLE = autoTrackerExtension.logEnabled
+            initInjectClass(autoTrackerExtension.injectClasses, autoTrackerExtension.analyticsAdapter)
+            checkAutoTrackerDependency(it, autoTrackerExtension.skipDependencyCheck)
         }
 
     }

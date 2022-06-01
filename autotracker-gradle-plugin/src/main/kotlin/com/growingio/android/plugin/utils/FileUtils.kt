@@ -15,6 +15,9 @@
  */
 
 package com.growingio.android.plugin.utils
+
+import com.growingio.android.plugin.AnalyticsAdapter
+
 /**
  * <p>
  *
@@ -28,7 +31,7 @@ fun normalize(type: String) = if (type.contains('/')) {
     type
 }
 
-fun String.unNormalize():String{
+fun String.unNormalize(): String {
     return if (this.contains('.')) {
         this.replace('.', '/')
     } else {
@@ -37,7 +40,7 @@ fun String.unNormalize():String{
 }
 
 
-fun String.simpleClass():String{
+fun String.simpleClass(): String {
     return this.split("/").last()
 }
 
@@ -107,6 +110,33 @@ val EXCLUDED_PACKAGES = arrayListOf(
     "com.amap.api",
     "com.google.iot"
 )
+
+val DEFAULT_INJECT_CLASS = arrayListOf(
+    "com.growingio.android.sdk.autotrack.inject.ActivityInjector",
+    "com.growingio.android.sdk.autotrack.inject.DialogInjector",
+    "com.growingio.android.sdk.autotrack.inject.FragmentInjector",
+    "com.growingio.android.sdk.autotrack.inject.FragmentV4Injector",
+    "com.growingio.android.sdk.autotrack.inject.MenuItemInjector",
+    "com.growingio.android.sdk.autotrack.inject.UcWebViewInjector",
+    "com.growingio.android.sdk.autotrack.inject.WebViewInjector",
+    "com.growingio.android.sdk.autotrack.inject.X5WebViewInjector",
+    "com.growingio.android.sdk.autotrack.inject.ViewClickInjector",
+)
+
+fun initInjectClass(injectClasses: Array<String>?, adapter: AnalyticsAdapter?) {
+    injectClasses?.let {
+        DEFAULT_INJECT_CLASS.addAll(it)
+    }
+    adapter?.apply {
+        if (firebaseAnalytics) {
+            DEFAULT_INJECT_CLASS.add("com.growingio.android.analytics.firebase.FirebaseAnalyticsInjector")
+        }
+        if (googleAnalytics) {
+            DEFAULT_INJECT_CLASS.add("com.growingio.android.analytics.google.GoogleAnalyticsInjector")
+        }
+    }
+
+}
 
 fun isAndroidGenerated(className: String): Boolean {
     return className.contains("R$") ||

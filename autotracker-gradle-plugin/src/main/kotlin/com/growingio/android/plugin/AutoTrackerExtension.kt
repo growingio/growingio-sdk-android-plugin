@@ -16,7 +16,7 @@
 
 package com.growingio.android.plugin
 
-import java.io.Serializable
+import org.gradle.api.Action
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import java.io.Serializable
  * @author cpacm 2022/3/30
  */
 
-internal open class AutoTrackerExtension {
+open class AutoTrackerExtension {
     var logEnabled = false
 
     var skipDependencyCheck = false
@@ -32,4 +32,20 @@ internal open class AutoTrackerExtension {
     var excludePackages: Array<String>? = null
 
     var includePackages: Array<String>? = null
+
+    var injectClasses: Array<String>? = null
+
+    var analyticsAdapter: AnalyticsAdapter? = null
+
+    open fun analyticsAdapter(configuration: Action<in AnalyticsAdapter>) {
+        analyticsAdapter = AnalyticsAdapter().apply { configuration.execute(this) }
+    }
 }
+
+//用于配置是否可以对第三方分析服务进行适配
+open class AnalyticsAdapter (
+    // 针对 FirebaseAnalytics
+    var firebaseAnalytics: Boolean = false,
+    // 针对 GoogleAnalytics
+    var googleAnalytics: Boolean = false,
+)

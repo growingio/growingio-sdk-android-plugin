@@ -23,7 +23,7 @@ import android.widget.ExpandableListView.OnChildClickListener
 import android.widget.ExpandableListView.OnGroupClickListener
 import android.widget.RatingBar.OnRatingBarChangeListener
 import android.widget.SeekBar.OnSeekBarChangeListener
-import com.growingio.inject.annotation.BeforeSuper
+import com.growingio.inject.annotation.SuperInject
 import com.growingio.inject.annotation.Belong
 
 /**
@@ -34,24 +34,24 @@ import com.growingio.inject.annotation.Belong
 @Belong(className = "com.growingio.android.sdk.autotrack.inject.ViewClickInjector")
 interface ViewClickInjector {
 
-    @BeforeSuper(clazz = View.OnClickListener::class, method = "onClick", parameterTypes = [View::class])
+    @SuperInject(clazz = View.OnClickListener::class, method = "onClick", parameterTypes = [View::class])
     fun viewOnClick(listener: View.OnClickListener, view: View)
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = OnSeekBarChangeListener::class,
         method = "onStopTrackingTouch",
         parameterTypes = [SeekBar::class]
     )
     fun seekBarOnSeekBarChange(listener: OnSeekBarChangeListener, seekBar: SeekBar)
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = RadioGroup.OnCheckedChangeListener::class,
         method = "onCheckedChanged",
         parameterTypes = [RadioGroup::class, Int::class]
     )
     fun radioGroupOnChecked(listener: RadioGroup.OnCheckedChangeListener, radioGroup: RadioGroup, i: Int)
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = OnRatingBarChangeListener::class,
         method = "onRatingChanged",
         parameterTypes = [RatingBar::class, Float::class, Boolean::class]
@@ -63,7 +63,7 @@ interface ViewClickInjector {
         fromUser: Boolean
     )
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = OnItemClickListener::class,
         method = "onItemClick",
         parameterTypes = [AdapterView::class, View::class, Int::class, Long::class]
@@ -76,7 +76,7 @@ interface ViewClickInjector {
         id: Long
     )
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = AdapterView.OnItemSelectedListener::class,
         method = "onItemSelected",
         parameterTypes = [AdapterView::class, View::class, Int::class, Long::class]
@@ -89,7 +89,7 @@ interface ViewClickInjector {
         id: Long
     )
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = OnGroupClickListener::class,
         method = "onGroupClick",
         parameterTypes = [ExpandableListView::class, View::class, Int::class, Long::class],
@@ -103,7 +103,7 @@ interface ViewClickInjector {
         id: Long
     )
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = OnChildClickListener::class,
         method = "onChildClick",
         parameterTypes = [ExpandableListView::class, View::class, Int::class, Int::class, Long::class],
@@ -118,7 +118,7 @@ interface ViewClickInjector {
         id: Long
     )
 
-    @BeforeSuper(
+    @SuperInject(
         clazz = CompoundButton.OnCheckedChangeListener::class,
         method = "onCheckedChanged",
         parameterTypes = [CompoundButton::class, Boolean::class]

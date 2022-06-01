@@ -25,7 +25,9 @@ package com.growingio.android.plugin.utils
 var LOG_ENABLE = false
 
 fun info(message: String) {
-    if (LOG_ENABLE) println("[GIO.Plugin] $message")
+    if (LOG_ENABLE) {
+        println("[GIO.Info] $message")
+    }
 }
 
 fun w(message: String, cause: Throwable? = null) {

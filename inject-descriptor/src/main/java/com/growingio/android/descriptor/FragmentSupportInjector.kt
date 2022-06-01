@@ -36,7 +36,7 @@ interface FragmentSupportInjector {
         injectMethod = "v4FragmentOnResume",
         injectMethodDesc = "(Landroid/support/v4/app/Fragment;)V",
         isAfter = true,
-        isSuper = true
+        type = 1
     )
     fun v4FragmentOnResume()
 
@@ -47,7 +47,7 @@ interface FragmentSupportInjector {
         injectMethod = "v4FragmentSetUserVisibleHint",
         injectMethodDesc = "(Landroid/support/v4/app/Fragment;Z)V",
         isAfter = true,
-        isSuper = true
+        type = 1
     )
     fun v4FragmentSetUserVisibleHint()
 
@@ -58,7 +58,7 @@ interface FragmentSupportInjector {
         injectMethod = "v4FragmentOnHiddenChanged",
         injectMethodDesc = "(Landroid/support/v4/app/Fragment;Z)V",
         isAfter = true,
-        isSuper = true
+        type = 1
     )
     fun v4FragmentOnHiddenChanged()
 
@@ -69,7 +69,7 @@ interface FragmentSupportInjector {
         injectMethod = "v4FragmentOnDestroyView",
         injectMethodDesc = "(Landroid/support/v4/app/Fragment;)V",
         isAfter = true,
-        isSuper = true
+        type = 1
     )
     fun v4FragmentOnDestroyView()
 }

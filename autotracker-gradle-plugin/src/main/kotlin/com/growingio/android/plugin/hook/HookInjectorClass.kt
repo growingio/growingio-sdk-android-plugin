@@ -10,6 +10,8 @@ public object HookInjectorClass {
 
   private val SUPER_HOOK_CLASSES: MutableList<HookData> = mutableListOf()
 
+  private val TARGET_HOOK_CLASSES: MutableList<HookData> = mutableListOf()
+
   public fun initAroundClass(): MutableList<HookData> {
     AROUND_HOOK_CLASSES.clear()
     AROUND_HOOK_CLASSES.add(HookData("android/app/AlertDialog","show","()V","com/growingio/android/sdk/autotrack/inject/DialogInjector","alertDialogShow","(Landroid/app/AlertDialog;)V",true))
@@ -97,6 +99,21 @@ public object HookInjectorClass {
     SUPER_HOOK_CLASSES.add(HookData("android/widget/ExpandableListView${'$'}OnChildClickListener","onChildClick","(Landroid/widget/ExpandableListView;Landroid/view/View;IIJ)Z","com/growingio/android/sdk/autotrack/inject/ViewClickInjector","expandableListViewOnChildClick","(Landroid/widget/ExpandableListView${'$'}OnChildClickListener;Landroid/widget/ExpandableListView;Landroid/view/View;IIJ)V",false))
     SUPER_HOOK_CLASSES.add(HookData("android/widget/CompoundButton${'$'}OnCheckedChangeListener","onCheckedChanged","(Landroid/widget/CompoundButton;Z)V","com/growingio/android/sdk/autotrack/inject/ViewClickInjector","compoundButtonOnChecked","(Landroid/widget/CompoundButton${'$'}OnCheckedChangeListener;Landroid/widget/CompoundButton;Z)V",false))
     return SUPER_HOOK_CLASSES
+  }
+
+  public fun initTargetClass(): MutableList<HookData> {
+    TARGET_HOOK_CLASSES.clear()
+    TARGET_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","logEvent","(Ljava/lang/String;Landroid/os/Bundle;)V","com/growingio/android/analytics/firebase/FirebaseAnalyticsInjector","logEvent","(Ljava/lang/String;Landroid/os/Bundle;)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","setDefaultEventParameters","(Landroid/os/Bundle;)V","com/growingio/android/analytics/firebase/FirebaseAnalyticsInjector","setDefaultEventParameters","(Landroid/os/Bundle;)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","setUserId","(Ljava/lang/String;)V","com/growingio/android/analytics/firebase/FirebaseAnalyticsInjector","setUserId","(Ljava/lang/String;)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","setUserProperty","(Ljava/lang/String;Ljava/lang/String;)V","com/growingio/android/analytics/firebase/FirebaseAnalyticsInjector","setUserProperty","(Ljava/lang/String;Ljava/lang/String;)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/google/firebase/analytics/FirebaseAnalytics","setAnalyticsCollectionEnabled","(Z)V","com/growingio/android/analytics/firebase/FirebaseAnalyticsInjector","setAnalyticsCollectionEnabled","(Z)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/google/android/gms/analytics/GoogleAnalytics","newTracker","(I)Lcom/google/android/gms/analytics/Tracker;","com/growingio/android/analytics/google/GoogleAnalyticsInjector","newTracker","(Lcom/google/android/gms/analytics/Tracker;Lcom/google/android/gms/analytics/GoogleAnalytics;I)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/google/android/gms/analytics/GoogleAnalytics","newTracker","(Ljava/lang/String;)Lcom/google/android/gms/analytics/Tracker;","com/growingio/android/analytics/google/GoogleAnalyticsInjector","newTracker","(Lcom/google/android/gms/analytics/Tracker;Lcom/google/android/gms/analytics/GoogleAnalytics;Ljava/lang/String;)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/google/android/gms/analytics/Tracker","set","(Ljava/lang/String;Ljava/lang/String;)V","com/growingio/android/analytics/google/GoogleAnalyticsInjector","set","(Lcom/google/android/gms/analytics/Tracker;Ljava/lang/String;Ljava/lang/String;)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/google/android/gms/analytics/Tracker","send","(Ljava/util/Map;)V","com/growingio/android/analytics/google/GoogleAnalyticsInjector","send","(Lcom/google/android/gms/analytics/Tracker;Ljava/util/Map;)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/google/android/gms/analytics/Tracker","setClientId","(Ljava/lang/String;)V","com/growingio/android/analytics/google/GoogleAnalyticsInjector","setClientId","(Lcom/google/android/gms/analytics/Tracker;Ljava/lang/String;)V",true))
+    return TARGET_HOOK_CLASSES
   }
 
   public data class HookData(

@@ -19,9 +19,9 @@ package com.growingio.android.plugin.visitor
 import com.growingio.android.plugin.hook.HookClassesConfig
 import com.growingio.android.plugin.hook.InjectMethod
 import com.growingio.android.plugin.hook.TargetClass
-import com.growingio.android.plugin.hook.TargetMethod
 import com.growingio.android.plugin.utils.info
 import com.growingio.android.plugin.utils.simpleClass
+import com.growingio.android.plugin.utils.w
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
@@ -33,14 +33,13 @@ import org.objectweb.asm.commons.Method
 /**
  * <p>
  *
- * @author cpacm 2022/4/7
+ * @author cpacm 2022/5/21
  */
-internal class InjectSuperClassVisitor(
+internal class InjectTargetClassVisitor(
     api: Int, ncv: ClassVisitor, classContext: ClassContextCompat
 ) : ClassVisitor(api, ncv), ClassContextCompat by classContext {
 
     private val mTargetClasses = arrayListOf<TargetClass>()
-    private val mOverrideMethods = hashSetOf<TargetMethod>()
 
     override fun visit(
         version: Int,
@@ -51,17 +50,9 @@ internal class InjectSuperClassVisitor(
         interfaces: Array<out String>?
     ) {
         super.visit(version, access, name, signature, superName, interfaces)
-        // 使用 superName 来查找类，避免多重继承下的重复注入
-        val targetClass = HookClassesConfig.superHookClasses[superName]
+        val targetClass = HookClassesConfig.targetHookClasses[name]
         if (targetClass != null) {
             mTargetClasses.add(targetClass)
-        }
-        for (i in interfaces!!) {
-            val targetInterface = HookClassesConfig.superHookClasses[i]
-            if (targetInterface != null) {
-                targetInterface.setInterface(true)
-                mTargetClasses.add(targetInterface)
-            }
         }
     }
 
@@ -76,7 +67,6 @@ internal class InjectSuperClassVisitor(
         for (targetClass in mTargetClasses) {
             val targetMethod = targetClass.getTargetMethod(name, descriptor)
             if (targetMethod != null) {
-                mOverrideMethods.add(targetMethod)
                 return InjectSuperMethodVisitor(
                     api, mv, access, name, descriptor,
                     targetMethod.injectMethods
@@ -85,51 +75,6 @@ internal class InjectSuperClassVisitor(
         }
 
         return mv
-    }
-
-    override fun visitEnd() {
-        // 生成未实现的 override 方法
-        for (targetClass in mTargetClasses) {
-            for (targetMethod in targetClass.targetMethods) {
-                if (!mOverrideMethods.contains(targetMethod)) {
-                    val injectMethods = targetMethod.injectMethods
-                    val m = Method(targetMethod.name, targetMethod.desc)
-                    val mg = GeneratorAdapter(Opcodes.ACC_PUBLIC, m, null, null, cv)
-                    injectMethod(mg, injectMethods, false, targetMethod.name, targetMethod.desc)
-                    if (!targetClass.isInterface) {
-                        mg.loadThis()
-                        mg.loadArgs()
-                        mg.invokeConstructor(
-                            Type.getObjectType(targetClass.name),
-                            Method(targetMethod.name, targetMethod.desc)
-                        )
-                    }
-                    injectMethod(mg, injectMethods, true, targetMethod.name, targetMethod.desc)
-                    mg.returnValue()
-                    mg.endMethod()
-                }
-            }
-        }
-        super.visitEnd()
-    }
-
-    private fun injectMethod(
-        mg: GeneratorAdapter,
-        injectMethods: Set<InjectMethod>,
-        isAfter: Boolean,
-        targetName: String, targetDesc: String,
-    ) {
-        for (injectMethod in injectMethods) {
-            if (injectMethod.isAfter == isAfter && classIncluded(injectMethod.className)) {
-                mg.loadThis()
-                mg.loadArgs()
-                mg.invokeStatic(
-                    Type.getObjectType(injectMethod.className),
-                    Method(injectMethod.methodName, injectMethod.methodDesc)
-                )
-                info((if (isAfter) "[SuperAfter] " else "[SuperBefore] ") + className.simpleClass() + "#" + targetName + targetDesc + " ==>Method Add: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
-            }
-        }
     }
 
     inner class InjectSuperMethodVisitor(
@@ -141,7 +86,7 @@ internal class InjectSuperClassVisitor(
         private val injectMethods: Set<InjectMethod>
     ) : AdviceAdapter(api, nmv, access, name, descriptor) {
 
-        lateinit var localVariables: IntArray
+        lateinit var localVariables: IntArray;
 
         override fun onMethodEnter() {
             val targetArgs: Array<Type> = Type.getArgumentTypes(descriptor)
@@ -153,18 +98,34 @@ internal class InjectSuperClassVisitor(
             }
 
             super.onMethodEnter()
-            injectMethod(this, injectMethods, false, name.toString(), methodDesc)
+            injectMethod(injectMethods, false, Opcodes.RETURN)
         }
 
         override fun onMethodExit(opcode: Int) {
-            injectMethodExit(injectMethods)
+            injectMethod(injectMethods, true, opcode)
             super.onMethodExit(opcode)
         }
 
-        private fun injectMethodExit(injectMethods: Set<InjectMethod>) {
+        private fun injectMethod(
+            injectMethods: Set<InjectMethod>,
+            isAfter: Boolean,
+            opcode: Int,
+        ) {
             for (injectMethod in injectMethods) {
-                if (classIncluded(injectMethod.className)) {
-                    loadThis()
+                if (!classIncluded(injectMethod.className)) {
+                    w("can't find class:" + injectMethod.className)
+                    continue
+                }
+                if (injectMethod.isAfter == isAfter) {
+                    when(visitCode(isAfter, injectMethod.methodDesc, opcode)) {
+                        1 -> loadThis()
+                        2 -> visitInsn(Opcodes.DUP)
+                        3 -> {
+                            visitInsn(Opcodes.DUP)
+                            loadThis()
+                        }
+                        -1 -> return
+                    }
                     val args: Array<Type> = Type.getArgumentTypes(descriptor)
                     for (index in args.indices) {
                         loadLocal(localVariables[index])
@@ -173,9 +134,55 @@ internal class InjectSuperClassVisitor(
                         Type.getObjectType(injectMethod.className),
                         Method(injectMethod.methodName, injectMethod.methodDesc)
                     )
-                    info("[SuperAfter] " + className.simpleClass() + "#" + name.toString() + methodDesc + " ==>Method Add: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
+                    info((if (isAfter) "[TargetAfter] " else "[TargetBefore] ") + className.simpleClass() + "#" + name.toString() + methodDesc + " ==>Method Add: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
                 }
             }
+        }
+
+        /**
+         * 可对返回类型与this类型校验
+         *
+         * inject 参数 - target 参数：
+         * 0 不加载返回值和this对象
+         * 1 非静态函数        加载this对象
+         *   静态函数且有返回值  加载返回值
+         * 2 非静态函数且有返回值 加载返回值和this对象
+         *
+         * 返回值：
+         * 0 -> NOP
+         * 1 -> loadThis()
+         * 2 -> visitInsn(Opcodes.DUP)
+         * 3 -> visitInsn(Opcodes.DUP); loadThis()
+         * -1 -> 异常指令
+         */
+        private fun visitCode(isAfter: Boolean, injectDescriptor: String, opcode: Int) : Int {
+            val isStatic = (methodAccess and Opcodes.ACC_STATIC) != 0
+            val hasReturnOpcode = opcode >= Opcodes.IRETURN && opcode <= Opcodes.ARETURN
+
+            if (!isAfter) {
+                return if (isStatic) 0 else 1
+            }
+
+            val targetArgs = Type.getArgumentTypes(methodDesc)
+            val injectArgs = Type.getArgumentTypes(injectDescriptor)
+            when(injectArgs.size - targetArgs.size) {
+                0 -> return 0
+                1 -> {
+                    if (!isStatic) {
+                        return 1
+                    }
+                    if (isStatic && hasReturnOpcode) {
+                        return 2
+                    }
+                }
+                2 -> {
+                    if (!isStatic && hasReturnOpcode) {
+                        return 3
+                    }
+                }
+            }
+
+            return -1
         }
     }
 }

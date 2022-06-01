@@ -26,39 +26,7 @@ import java.util.*
 object HookClassesConfig {
     private val AROUND_HOOK_CLASSES: MutableMap<String, TargetClass> = mutableMapOf()
     private val SUPER_HOOK_CLASSES: MutableMap<String, TargetClass> = mutableMapOf()
-    private fun putAroundHookMethod(
-        targetClassName: String, targetMethodName: String,
-        targetMethodDesc: String, injectClassName: String, injectMethodName: String,
-        injectMethodDesc: String, isAfter: Boolean
-    ) {
-        putHookMethod(
-            AROUND_HOOK_CLASSES,
-            targetClassName,
-            targetMethodName,
-            targetMethodDesc,
-            injectClassName,
-            injectMethodName,
-            injectMethodDesc,
-            isAfter
-        )
-    }
-
-    private fun putSuperHookMethod(
-        targetClassName: String, targetMethodName: String,
-        targetMethodDesc: String, injectClassName: String, injectMethodName: String,
-        injectMethodDesc: String, isAfter: Boolean
-    ) {
-        putHookMethod(
-            SUPER_HOOK_CLASSES,
-            targetClassName,
-            targetMethodName,
-            targetMethodDesc,
-            injectClassName,
-            injectMethodName,
-            injectMethodDesc,
-            isAfter
-        )
-    }
+    private val TARGET_HOOK_CLASSES: MutableMap<String, TargetClass> = mutableMapOf()
 
     private fun putHookMethod(
         classMap: MutableMap<String, TargetClass>, targetClassName: String,
@@ -81,7 +49,8 @@ object HookClassesConfig {
     init {
         val aroundList = HookInjectorClass.initAroundClass()
         for (around in aroundList) {
-            putAroundHookMethod(
+            putHookMethod(
+                AROUND_HOOK_CLASSES,
                 around.targetClassName,
                 around.targetMethodName,
                 around.targetMethodDesc,
@@ -94,7 +63,8 @@ object HookClassesConfig {
 
         val superList = HookInjectorClass.initSuperClass()
         for (s in superList) {
-            putSuperHookMethod(
+            putHookMethod(
+                SUPER_HOOK_CLASSES,
                 s.targetClassName,
                 s.targetMethodName,
                 s.targetMethodDesc,
@@ -104,8 +74,23 @@ object HookClassesConfig {
                 s.isAfter
             )
         }
+
+        val targetList = HookInjectorClass.initTargetClass()
+        for (t in targetList) {
+            putHookMethod(
+                TARGET_HOOK_CLASSES,
+                t.targetClassName,
+                t.targetMethodName,
+                t.targetMethodDesc,
+                t.injectClassName,
+                t.injectMethodName,
+                t.injectMethodDesc,
+                t.isAfter
+            )
+        }
     }
 
     val aroundHookClasses: Map<String, TargetClass> get() = Collections.unmodifiableMap(AROUND_HOOK_CLASSES)
     val superHookClasses: Map<String, TargetClass> get() = Collections.unmodifiableMap(SUPER_HOOK_CLASSES)
+    val targetHookClasses: Map<String, TargetClass> get() = Collections.unmodifiableMap(TARGET_HOOK_CLASSES)
 }
