@@ -129,7 +129,10 @@ fun initInjectClass(injectClasses: Array<String>?, adapter: AnalyticsAdapter?) {
     }
     adapter?.apply {
         if (firebaseAnalytics) {
-            DEFAULT_INJECT_CLASS.add("com.growingio.android.analytics.FirebaseAnalyticsInjector")
+            DEFAULT_INJECT_CLASS.add("com.growingio.android.analytics.firebase.FirebaseAnalyticsInjector")
+        }
+        if (googleAnalytics) {
+            DEFAULT_INJECT_CLASS.add("com.growingio.android.analytics.google.GoogleAnalyticsInjector")
         }
     }
 

@@ -24,6 +24,7 @@ import com.growingio.android.plugin.utils.simpleClass
 import com.growingio.android.plugin.utils.w
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 import org.objectweb.asm.commons.AdviceAdapter
 import org.objectweb.asm.commons.GeneratorAdapter
@@ -76,46 +77,112 @@ internal class InjectTargetClassVisitor(
         return mv
     }
 
-    private fun injectMethod(
-        mg: GeneratorAdapter,
-        injectMethods: Set<InjectMethod>,
-        isAfter: Boolean,
-        targetName: String, targetDesc: String,
-    ) {
-        for (injectMethod in injectMethods) {
-            if (!classIncluded(injectMethod.className)) {
-                w("can't find class:" + injectMethod.className)
-                continue
-            }
-            if (injectMethod.isAfter == isAfter) {
-                mg.loadThis()
-                mg.loadArgs()
-                mg.invokeStatic(
-                    Type.getObjectType(injectMethod.className),
-                    Method(injectMethod.methodName, injectMethod.methodDesc)
-                )
-                info((if (isAfter) "[TargetAfter] " else "[TargetBefore] ") + className.simpleClass() + "#" + targetName + targetDesc + " ==>Method Add: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
-            }
-        }
-    }
-
     inner class InjectSuperMethodVisitor(
         api: Int,
         nmv: MethodVisitor,
         access: Int,
         name: String?,
-        descriptor: String?,
+        private val descriptor: String?,
         private val injectMethods: Set<InjectMethod>
     ) : AdviceAdapter(api, nmv, access, name, descriptor) {
 
+        lateinit var localVariables: IntArray;
+
         override fun onMethodEnter() {
+            val targetArgs: Array<Type> = Type.getArgumentTypes(descriptor)
+            localVariables = IntArray(targetArgs.size)
+            for (i in targetArgs.indices) {
+                loadArg(i)
+                localVariables[i] = newLocal(targetArgs[i])
+                storeLocal(localVariables[i])
+            }
+
             super.onMethodEnter()
-            injectMethod(this, injectMethods, false, name.toString(), methodDesc)
+            injectMethod(injectMethods, false, Opcodes.RETURN)
         }
 
         override fun onMethodExit(opcode: Int) {
-            injectMethod(this, injectMethods, true, name.toString(), methodDesc)
+            injectMethod(injectMethods, true, opcode)
             super.onMethodExit(opcode)
+        }
+
+        private fun injectMethod(
+            injectMethods: Set<InjectMethod>,
+            isAfter: Boolean,
+            opcode: Int,
+        ) {
+            for (injectMethod in injectMethods) {
+                if (!classIncluded(injectMethod.className)) {
+                    w("can't find class:" + injectMethod.className)
+                    continue
+                }
+                if (injectMethod.isAfter == isAfter) {
+                    when(visitCode(isAfter, injectMethod.methodDesc, opcode)) {
+                        1 -> loadThis()
+                        2 -> visitInsn(Opcodes.DUP)
+                        3 -> {
+                            visitInsn(Opcodes.DUP)
+                            loadThis()
+                        }
+                        -1 -> return
+                    }
+                    val args: Array<Type> = Type.getArgumentTypes(descriptor)
+                    for (index in args.indices) {
+                        loadLocal(localVariables[index])
+                    }
+                    invokeStatic(
+                        Type.getObjectType(injectMethod.className),
+                        Method(injectMethod.methodName, injectMethod.methodDesc)
+                    )
+                    info((if (isAfter) "[TargetAfter] " else "[TargetBefore] ") + className.simpleClass() + "#" + name.toString() + methodDesc + " ==>Method Add: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
+                }
+            }
+        }
+
+        /**
+         * 可对返回类型与this类型校验
+         *
+         * inject 参数 - target 参数：
+         * 0 不加载返回值和this对象
+         * 1 非静态函数        加载this对象
+         *   静态函数且有返回值  加载返回值
+         * 2 非静态函数且有返回值 加载返回值和this对象
+         *
+         * 返回值：
+         * 0 -> NOP
+         * 1 -> loadThis()
+         * 2 -> visitInsn(Opcodes.DUP)
+         * 3 -> visitInsn(Opcodes.DUP); loadThis()
+         * -1 -> 异常指令
+         */
+        private fun visitCode(isAfter: Boolean, injectDescriptor: String, opcode: Int) : Int {
+            val isStatic = (methodAccess and Opcodes.ACC_STATIC) != 0
+            val hasReturnOpcode = opcode >= Opcodes.IRETURN && opcode <= Opcodes.ARETURN
+
+            if (!isAfter) {
+                return if (isStatic) 0 else 1
+            }
+
+            val targetArgs = Type.getArgumentTypes(methodDesc)
+            val injectArgs = Type.getArgumentTypes(injectDescriptor)
+            when(injectArgs.size - targetArgs.size) {
+                0 -> return 0
+                1 -> {
+                    if (!isStatic) {
+                        return 1
+                    }
+                    if (isStatic && hasReturnOpcode) {
+                        return 2
+                    }
+                }
+                2 -> {
+                    if (!isStatic && hasReturnOpcode) {
+                        return 3
+                    }
+                }
+            }
+
+            return -1
         }
     }
 }

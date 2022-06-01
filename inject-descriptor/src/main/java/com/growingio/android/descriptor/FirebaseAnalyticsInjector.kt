@@ -24,7 +24,7 @@ import com.growingio.inject.annotation.Inject
  *
  * @author cpacm 2022/5/10
  */
-@Belong(className = "com.growingio.android.analytics.FirebaseAnalyticsInjector")
+@Belong(className = "com.growingio.android.analytics.firebase.FirebaseAnalyticsInjector")
 interface FirebaseAnalyticsInjector {
 
     @Inject(
