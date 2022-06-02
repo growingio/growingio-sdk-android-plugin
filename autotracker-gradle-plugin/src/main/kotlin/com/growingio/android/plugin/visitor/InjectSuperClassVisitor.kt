@@ -163,7 +163,7 @@ internal class InjectSuperClassVisitor(
 
         private fun injectMethodExit(injectMethods: Set<InjectMethod>) {
             for (injectMethod in injectMethods) {
-                if (classIncluded(injectMethod.className)) {
+                if (injectMethod.isAfter && classIncluded(injectMethod.className)) {
                     loadThis()
                     val args: Array<Type> = Type.getArgumentTypes(descriptor)
                     for (index in args.indices) {
