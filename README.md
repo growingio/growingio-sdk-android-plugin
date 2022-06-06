@@ -83,7 +83,8 @@ plugins {
 | `includePackages`            | `Array<String>` | 否      | `null`   | 需要额外包含编译的包名          |  |
 | `excludePackages`            | `Array<String>` | 否      | `null`   | 需要跳过编译的包名             |  |
 | `analyticsAdapter`           | `Extension`     | 否      | -        | 用于配置是否适配第三方分析数据   |  |
-|     ↳ `firebaseAnalytics`    | `Boolean`       | 否      | `false`  | 用于配置是否适配Firebase分析SDK |  |
+|     - `firebaseAnalytics`    | `Boolean`       | 否      | `false`  | 用于配置是否适配Firebase分析SDK |  |
+|     - `googleAnalytics`      | `Boolean`       | 否      | `false`  | 用于配置是否适配GoogleAnalyticsSDK |  |
 
 
 配置代码示例
@@ -100,6 +101,7 @@ growingAutotracker {
     excludePackages "com.cpacm.xxx1"
     analyticsAdapter {
         firebaseAnalytics = false
+        googleAnalytics = false
     }
 }
 

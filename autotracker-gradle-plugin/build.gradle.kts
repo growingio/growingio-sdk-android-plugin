@@ -37,7 +37,7 @@ val testPluginImplementation: Configuration by configurations.creating {
 }
 
 ext {
-    set("releaseVersion", "3.4.0-SNAPSHOT")
+    set("releaseVersion", "3.4.0")
     set("releaseVersionCode", 30400)
 }
 
