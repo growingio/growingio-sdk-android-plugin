@@ -82,7 +82,7 @@ internal class DesugarClassVisitor(
 
         // 插入hook before
         for (injectMethod in methodBlock.targetMethod.injectMethods) {
-            if (!injectMethod.isAfter) {
+            if (!injectMethod.isAfter && classIncluded(injectMethod.className)) {
                 adapter.visitInsn(Opcodes.ACONST_NULL)
                 if (isStaticOrigin) {
                     adapter.loadArgs()
@@ -110,7 +110,7 @@ internal class DesugarClassVisitor(
 
         // 插入hook after
         for (injectMethod in methodBlock.targetMethod.injectMethods) {
-            if (injectMethod.isAfter) {
+            if (injectMethod.isAfter && classIncluded(injectMethod.className)) {
                 adapter.visitInsn(Opcodes.ACONST_NULL)
                 if (isStaticOrigin) {
                     adapter.loadArgs()
@@ -125,8 +125,8 @@ internal class DesugarClassVisitor(
             }
         }
 
-        // 插个log,防止编译优化导致的无法正常编译
-        adapter.visitLdcInsn("[GenerateMethod]")
+        // 插个log
+        adapter.visitLdcInsn("[GenerateDynamicMethod]")
         adapter.visitLdcInsn(methodBlock.methodName)
         adapter.visitInsn(Opcodes.ICONST_0)
         adapter.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object");
@@ -136,7 +136,7 @@ internal class DesugarClassVisitor(
             "d",
             "(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V",
             false
-        );
+        )
 
         adapter.returnValue()
         adapter.visitMaxs(arguments.size, arguments.size)
@@ -252,7 +252,7 @@ internal class DesugarClassVisitor(
         override fun onMethodEnter() {
             val targetMethod = findTargetMethod(name, methodDesc) ?: return
             for (injectMethod in targetMethod.injectMethods) {
-                if (!injectMethod.isAfter) {
+                if (!injectMethod.isAfter && classIncluded(injectMethod.className)) {
                     visitInsn(ACONST_NULL)
                     val injectArgsLen = Type.getArgumentTypes(injectMethod.methodDesc).size - 1
                     val originArgsLen = Type.getArgumentTypes(methodDesc).size
@@ -270,7 +270,7 @@ internal class DesugarClassVisitor(
         override fun onMethodExit(opcode: Int) {
             val targetMethod = findTargetMethod(name, methodDesc) ?: return
             for (injectMethod in targetMethod.injectMethods) {
-                if (injectMethod.isAfter) {
+                if (injectMethod.isAfter && classIncluded(injectMethod.className)) {
                     visitInsn(ACONST_NULL)
                     val injectArgsLen = Type.getArgumentTypes(injectMethod.methodDesc).size - 1
                     val originArgsLen = Type.getArgumentTypes(methodDesc).size

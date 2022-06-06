@@ -123,6 +123,7 @@ class GioListTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onItemClick" && it.desc == "(Landroid/widget/AdapterView;Landroid/view/View;IJ)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(24)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -141,6 +142,7 @@ class GioListTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onItemSelected" && it.desc == "(Landroid/widget/AdapterView;Landroid/view/View;IJ)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(24)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -159,6 +161,7 @@ class GioListTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onGroupClick" && it.desc == "(Landroid/widget/ExpandableListView;Landroid/view/View;IJ)Z" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(25)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -177,6 +180,7 @@ class GioListTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onChildClick" && it.desc == "(Landroid/widget/ExpandableListView;Landroid/view/View;IIJ)Z" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(28)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)

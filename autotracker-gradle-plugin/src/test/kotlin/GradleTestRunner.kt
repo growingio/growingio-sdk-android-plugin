@@ -114,7 +114,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
     private fun setupFiles() {
         writeBuildFile()
         writeGradleProperties()
-        //writeLocalProperties()
+        writeLocalProperties()
         writeAndroidManifest()
     }
 
