@@ -99,6 +99,7 @@ class GioActivityTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onNewIntent" && it.desc == "(Landroid/content/Intent;)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(7)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -112,6 +113,7 @@ class GioActivityTransformTest {
             classNode.methods.find { it.name == "onOptionsItemSelected" && it.desc == "(Landroid/view/MenuItem;)Z" }
                 .let {
                     assertThat(it).isNotNull()
+                    assertThat(it?.instructions?.size()).isEqualTo(7)
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.first { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)

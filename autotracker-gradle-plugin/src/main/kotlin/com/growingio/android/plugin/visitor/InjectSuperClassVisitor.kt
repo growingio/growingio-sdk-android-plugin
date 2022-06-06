@@ -90,20 +90,20 @@ internal class InjectSuperClassVisitor(
     override fun visitEnd() {
         // 生成未实现的 override 方法
         for (targetClass in mTargetClasses) {
+            // 若是该方法是需要接口实现的，则不做方法生成
+            if (targetClass.isInterface) return
             for (targetMethod in targetClass.targetMethods) {
                 if (!mOverrideMethods.contains(targetMethod)) {
                     val injectMethods = targetMethod.injectMethods
                     val m = Method(targetMethod.name, targetMethod.desc)
                     val mg = GeneratorAdapter(Opcodes.ACC_PUBLIC, m, null, null, cv)
                     injectMethod(mg, injectMethods, false, targetMethod.name, targetMethod.desc)
-                    if (!targetClass.isInterface) {
-                        mg.loadThis()
-                        mg.loadArgs()
-                        mg.invokeConstructor(
-                            Type.getObjectType(targetClass.name),
-                            Method(targetMethod.name, targetMethod.desc)
-                        )
-                    }
+                    mg.loadThis()
+                    mg.loadArgs()
+                    mg.invokeConstructor(
+                        Type.getObjectType(targetClass.name),
+                        Method(targetMethod.name, targetMethod.desc)
+                    )
                     injectMethod(mg, injectMethods, true, targetMethod.name, targetMethod.desc)
                     mg.returnValue()
                     mg.endMethod()
@@ -163,7 +163,7 @@ internal class InjectSuperClassVisitor(
 
         private fun injectMethodExit(injectMethods: Set<InjectMethod>) {
             for (injectMethod in injectMethods) {
-                if (classIncluded(injectMethod.className)) {
+                if (injectMethod.isAfter && classIncluded(injectMethod.className)) {
                     loadThis()
                     val args: Array<Type> = Type.getArgumentTypes(descriptor)
                     for (index in args.indices) {

@@ -93,6 +93,7 @@ class GioDialogTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onClick" && it.desc == "(Landroid/content/DialogInterface;I)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(18)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -111,6 +112,7 @@ class GioDialogTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "createAppDialog" && it.desc == "(Landroid/content/Context;)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(34)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.last { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -173,6 +175,7 @@ class GioDialogTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onClick" && it.desc == "(Landroid/content/DialogInterface;I)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(18)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -191,6 +194,7 @@ class GioDialogTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onClick" && it.desc == "(Landroid/content/DialogInterface;I)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(18)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -254,6 +258,7 @@ class GioDialogTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onClick" && it.desc == "(Landroid/content/DialogInterface;I)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(18)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -272,6 +277,7 @@ class GioDialogTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onClick" && it.desc == "(Landroid/content/DialogInterface;I)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(18)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)

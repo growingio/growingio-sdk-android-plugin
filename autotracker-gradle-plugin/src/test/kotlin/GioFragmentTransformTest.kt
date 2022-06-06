@@ -91,6 +91,7 @@ class GioFragmentTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onDestroyView" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(5)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.last { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -104,6 +105,7 @@ class GioFragmentTransformTest {
             classNode.methods.find { it.name == "onResume" && it.desc == "()V" }
                 .let {
                     assertThat(it).isNotNull()
+                    assertThat(it?.instructions?.size()).isEqualTo(5)
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.last { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -117,6 +119,7 @@ class GioFragmentTransformTest {
             classNode.methods.find { it.name == "onHiddenChanged" && it.desc == "(Z)V" }
                 .let {
                     assertThat(it).isNotNull()
+                    assertThat(it?.instructions?.size()).isEqualTo(7)
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.last { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -130,6 +133,7 @@ class GioFragmentTransformTest {
             classNode.methods.find { it.name == "setUserVisibleHint" && it.desc == "(Z)V" }
                 .let {
                     assertThat(it).isNotNull()
+                    assertThat(it?.instructions?.size()).isEqualTo(7)
                     it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                         ?.last { method ->
                             assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)

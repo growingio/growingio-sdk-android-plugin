@@ -95,6 +95,7 @@ class GioWebViewTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "loadUrl1" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(16)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -107,6 +108,7 @@ class GioWebViewTransformTest {
 
             classNode.methods.find { it.name == "loadUrl2" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(33)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.filter { methodInsnNode -> methodInsnNode.opcode == Opcodes.INVOKESTATIC }
                     ?.first { method ->
@@ -120,6 +122,7 @@ class GioWebViewTransformTest {
 
             classNode.methods.find { it.name == "loadUrl3" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(24)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -132,6 +135,7 @@ class GioWebViewTransformTest {
 
             classNode.methods.find { it.name == "loadUrl4" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(32)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -226,6 +230,7 @@ class GioWebViewTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "loadUrl1" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(16)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -238,6 +243,7 @@ class GioWebViewTransformTest {
 
             classNode.methods.find { it.name == "loadUrl2" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(33)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.filter { methodInsnNode -> methodInsnNode.opcode == Opcodes.INVOKESTATIC }
                     ?.first { method ->
@@ -251,6 +257,7 @@ class GioWebViewTransformTest {
 
             classNode.methods.find { it.name == "loadUrl3" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(24)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -263,6 +270,7 @@ class GioWebViewTransformTest {
 
             classNode.methods.find { it.name == "loadUrl4" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(32)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -326,6 +334,7 @@ class GioWebViewTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "loadUrl1" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(16)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -338,6 +347,7 @@ class GioWebViewTransformTest {
 
             classNode.methods.find { it.name == "loadUrl2" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(33)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.filter { methodInsnNode -> methodInsnNode.opcode == Opcodes.INVOKESTATIC }
                     ?.first { method ->
@@ -351,6 +361,7 @@ class GioWebViewTransformTest {
 
             classNode.methods.find { it.name == "loadUrl3" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(24)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -363,6 +374,7 @@ class GioWebViewTransformTest {
 
             classNode.methods.find { it.name == "loadUrl4" && it.desc == "()V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(32)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)

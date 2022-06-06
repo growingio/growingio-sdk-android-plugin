@@ -137,6 +137,7 @@ class GioViewClickTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onClick" && it.desc == "(Landroid/view/View;)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(15)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -155,6 +156,7 @@ class GioViewClickTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onStopTrackingTouch" && it.desc == "(Landroid/widget/SeekBar;)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(15)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -173,6 +175,7 @@ class GioViewClickTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onCheckedChanged" && it.desc == "(Landroid/widget/RadioGroup;I)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(18)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -191,6 +194,7 @@ class GioViewClickTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onRatingChanged" && it.desc == "(Landroid/widget/RatingBar;FZ)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(21)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -209,6 +213,7 @@ class GioViewClickTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onCheckedChanged" && it.desc == "(Landroid/widget/CompoundButton;Z)V" }.let {
                 assertThat(it).isNotNull()
+                assertThat(it?.instructions?.size()).isEqualTo(18)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
