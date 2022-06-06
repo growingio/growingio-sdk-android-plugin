@@ -22,7 +22,7 @@ dependencies{
     implementation(kotlin("stdlib"))
     implementation(project(":inject-annotation"))
 
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.6.10-1.0.4")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.6.21-1.0.5")
     // https://square.github.io/kotlinpoet/
     implementation("com.squareup:kotlinpoet:1.11.0")
 }

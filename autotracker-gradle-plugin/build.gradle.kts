@@ -49,7 +49,7 @@ dependencies {
     implementation("org.ow2.asm:asm-commons:9.2")
 
     compileOnly(kotlin("stdlib"))
-    compileOnly("com.android.tools.build:gradle-api:7.2.0-rc02")
+    compileOnly("com.android.tools.build:gradle-api:7.2.0")
     compileOnly("com.android.tools.build:gradle:4.2.2")
 
     testImplementation(gradleTestKit())
