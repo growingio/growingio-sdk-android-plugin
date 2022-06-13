@@ -30,6 +30,7 @@ ext {
 dependencies {
 
     implementation(project(":growingio-plugin-library"))
+    compileOnly(project(":agp-wrapper-impl"))
 
     implementation(gradleApi())
 

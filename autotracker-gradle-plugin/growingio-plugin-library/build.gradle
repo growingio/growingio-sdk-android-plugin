@@ -12,18 +12,19 @@ java {
 configurations {
     // Config for dependencies that will be shadowed / jarjared
     shadowed
+    compileOnly.extendsFrom(shadowed)
     // Make all shadowed dependencies be compileOnly dependencies to not affect
     // main compilation / configuration
-//    implementation.extendsFrom(shadowed)
+//    api.extendsFrom(shadowed)
 //
-//    shadowed{
-//        canBeConsumed = false
-//        canBeResolved = true
-//    }
+    shadowed{
+        canBeConsumed = false
+        canBeResolved = true
+    }
 }
 
 dependencies {
-    api project(':agp-wrapper-impl')
+    //api project(':agp-wrapper-impl')
     shadowed(project(":agp-wrapper-impl"))
 
     compileOnly gradleApi()
