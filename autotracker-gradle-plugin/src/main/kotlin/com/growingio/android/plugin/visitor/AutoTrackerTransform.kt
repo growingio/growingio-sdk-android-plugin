@@ -14,16 +14,15 @@
  *   limitations under the License.
  */
 
-package com.growingio.android.plugin.transform
+package com.growingio.android.plugin.visitor
 
 import com.android.build.gradle.BaseExtension
 import com.growingio.android.plugin.AutoTrackerExtension
+import com.growingio.android.plugin.transform.AutoTrackerContext
+import com.growingio.android.plugin.transform.ClassContextCompat
+import com.growingio.android.plugin.transform.GrowingBaseTransform
 import com.growingio.android.plugin.utils.*
 import com.growingio.android.plugin.utils.shouldClassModified
-import com.growingio.android.plugin.visitor.*
-import com.growingio.android.plugin.visitor.DesugarClassVisitor
-import com.growingio.android.plugin.visitor.InjectSuperClassVisitor
-import com.growingio.android.plugin.visitor.InjectTargetClassVisitor
 import org.gradle.api.Project
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassWriter
@@ -36,7 +35,7 @@ import org.objectweb.asm.ClassWriter
 internal class AutoTrackerTransform(
     project: Project, android: BaseExtension,
     private val gioExtension: AutoTrackerExtension
-) : AutoTrackerBaseTransform(project, android) {
+) : GrowingBaseTransform(project, android) {
 
     override fun getName() = "AutoTrackerTransform"
 

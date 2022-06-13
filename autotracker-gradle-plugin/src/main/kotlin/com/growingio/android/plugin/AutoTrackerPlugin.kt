@@ -21,10 +21,11 @@ import com.android.build.api.instrumentation.FramesComputationMode
 import com.android.build.api.instrumentation.InstrumentationScope
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.AndroidBasePlugin
-import com.growingio.android.plugin.transform.AutoTrackerTransform
+import com.growingio.android.plugin.visitor.AutoTrackerTransform
+import com.growingio.android.plugin.util.ComponentCompat
+import com.growingio.android.plugin.util.SimpleAGPVersion
+import com.growingio.android.plugin.util.getAndroidComponentsExtension
 import com.growingio.android.plugin.utils.*
-import com.growingio.android.plugin.utils.AndroidComponentsExtensionCompat.Companion.getAndroidComponentsExtension
-import com.growingio.android.plugin.utils.SimpleAGPVersion
 import com.growingio.android.plugin.visitor.AutoTrackerFactory
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
@@ -43,6 +44,7 @@ abstract class AutoTrackerPlugin : Plugin<Project> {
         var inAndroidProject = false
 
         val autoTrackerExtension = project.extensions.create("growingAutotracker", AutoTrackerExtension::class.java)
+
         project.plugins.withType(AndroidBasePlugin::class.java) {
             inAndroidProject = true
 
@@ -95,7 +97,7 @@ abstract class AutoTrackerPlugin : Plugin<Project> {
 
     private fun checkJavaVersion() {
         if (JavaVersion.current() < JavaVersion.VERSION_1_8) {
-            error("The GrowingIO AutoTracker Gradle Plugin request at least Java 8")
+            error("GrowingIO AutoTracker Gradle Plugin request at least Java 8")
         }
     }
 
@@ -121,22 +123,6 @@ abstract class AutoTrackerPlugin : Plugin<Project> {
         }
 
     }
-
-//    open fun getPluginVersion(): String? {
-//        try {
-//            val jarPath = URLDecoder.decode(
-//                File(
-//                    ClassRewriter::class.java.getProtectionDomain().getCodeSource().getLocation().getPath()
-//                ).getCanonicalPath()
-//            )
-//            JarInputStream(FileInputStream(jarPath)).use { inputStream ->
-//                return inputStream.manifest.mainAttributes.getValue("Gradle-Plugin-Version")
-//                    ?: throw AutotrackBuildException("Cannot find GrowingIO autotrack gradle plugin version")
-//            }
-//        } catch (e: IOException) {
-//            throw AutotrackBuildException("Cannot find GrowingIO autotrack gradle plugin version")
-//        }
-//    }
 
     companion object {
         const val LIBRARY_GROUP = "com.growingio.android"

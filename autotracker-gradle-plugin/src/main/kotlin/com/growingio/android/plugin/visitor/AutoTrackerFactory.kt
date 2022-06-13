@@ -20,6 +20,7 @@ import com.android.build.api.instrumentation.AsmClassVisitorFactory
 import com.android.build.api.instrumentation.ClassContext
 import com.android.build.api.instrumentation.ClassData
 import com.android.build.api.instrumentation.InstrumentationParameters
+import com.growingio.android.plugin.transform.ClassContextCompat
 import com.growingio.android.plugin.utils.DEFAULT_INJECT_CLASS
 import com.growingio.android.plugin.utils.normalize
 import com.growingio.android.plugin.utils.shouldClassModified
@@ -88,13 +89,4 @@ internal interface AutoTrackerParams : InstrumentationParameters {
     @get:Internal
     val includePackages: Property<Array<String>>
 
-}
-
-
-interface ClassContextCompat {
-    val className: String
-
-    fun isAssignable(subClazz: String, superClazz: String): Boolean
-
-    fun classIncluded(clazz: String): Boolean
 }

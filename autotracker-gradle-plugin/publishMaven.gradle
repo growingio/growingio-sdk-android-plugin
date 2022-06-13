@@ -83,7 +83,6 @@ def configurePom(pom) {
     }
 }
 
-
 // Create sources Jar from main kotlin sources
 tasks.register("sourcesJar", Jar).configure {
     group = JavaBasePlugin.DOCUMENTATION_GROUP

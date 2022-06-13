@@ -112,3 +112,33 @@ fun ByteArray.redirect(file: File): Long = this.inputStream().use { it.redirect(
  * @author johnsonlee
  */
 fun ByteArray.redirect(output: OutputStream): Long = this.inputStream().copyTo(output)
+
+
+val NCPU = Runtime.getRuntime().availableProcessors()
+
+fun normalize(type: String) = if (type.contains('/')) {
+    type.replace('/', '.')
+} else {
+    type
+}
+
+fun String.unNormalize(): String {
+    return if (this.contains('.')) {
+        this.replace('.', '/')
+    } else {
+        this
+    }
+}
+
+
+fun String.simpleClass(): String {
+    return this.split("/").last()
+}
+
+fun isAndroidGenerated(className: String): Boolean {
+    return className.contains("R$") ||
+            className.contains("R2$") ||
+            className.contains("R.class") ||
+            className.contains("R2.class") ||
+            className.contains("BuildConfig.class")
+}

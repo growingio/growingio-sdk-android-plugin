@@ -14,14 +14,13 @@
  *   limitations under the License.
  */
 
-package com.growingio.android.plugin.utils
-
+package com.growingio.android.plugin.util
 /**
  * <p>
  *
  * @author cpacm 2022/3/30
  */
-internal data class SimpleAGPVersion(
+data class SimpleAGPVersion(
     val major: Int,
     val minor: Int,
 ) : Comparable<SimpleAGPVersion> {
@@ -55,5 +54,12 @@ internal data class SimpleAGPVersion(
 
             return SimpleAGPVersion(parts[0].toInt(), parts[1].toInt())
         }
+
+        private fun findClass(fqName: String) =
+            try {
+                Class.forName(fqName)
+            } catch (ex: ClassNotFoundException) {
+                null
+            }
     }
 }

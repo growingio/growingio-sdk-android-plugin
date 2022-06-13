@@ -33,7 +33,7 @@ import java.lang.management.ThreadMXBean
  *
  * @author cpacm 2022/3/31
  */
-internal abstract class AutoTrackerBaseTransform(
+abstract class GrowingBaseTransform(
     val project: Project,
     val android: BaseExtension,
 ) : Transform(), AutoTrackerTransformListener {
@@ -50,7 +50,7 @@ internal abstract class AutoTrackerBaseTransform(
         }
     }
 
-    override fun getName() = "baseAutotracker"
+    override fun getName() = "GioAutotracker"
 
     override fun getInputTypes() = TransformManager.CONTENT_CLASS
 
@@ -59,7 +59,7 @@ internal abstract class AutoTrackerBaseTransform(
     override fun isIncremental() = true
 
     override fun transform(transformInvocation: TransformInvocation) {
-        AutoTrackerClassRewriter(transformInvocation, this).apply {
+        GrowingClassRewriter(transformInvocation, this).apply {
             threadMxBean.sumCpuTime {
                 if (isIncremental) {
                     doIncrementalTransform()
@@ -76,7 +76,7 @@ internal abstract class AutoTrackerBaseTransform(
         val ct0 = this.currentThreadCpuTime
         val result = action()
         val ct1 = this.currentThreadCpuTime
-        info("[Growingio Transform]: ${(ct1 - ct0) / 1000000} ms")
+        info("[GrowingIO Transform]: ${(ct1 - ct0) / 1000000} ms")
         return result
     }
 }
