@@ -17,6 +17,7 @@
 package com.growingio.android.plugin
 
 import org.gradle.api.Action
+import org.gradle.internal.reflect.Instantiator
 
 /**
  * <p>
@@ -24,7 +25,8 @@ import org.gradle.api.Action
  * @author cpacm 2022/3/30
  */
 
-open class AutoTrackerExtension {
+open class AutoTrackerExtension (var instantiator: Instantiator) {
+
     var logEnabled = false
 
     var skipDependencyCheck = false
@@ -38,7 +40,7 @@ open class AutoTrackerExtension {
     var analyticsAdapter: AnalyticsAdapter? = null
 
     open fun analyticsAdapter(configuration: Action<in AnalyticsAdapter>) {
-        analyticsAdapter = AnalyticsAdapter().apply { configuration.execute(this) }
+        analyticsAdapter = (instantiator.newInstance(AnalyticsAdapter::class.java)).apply { configuration.execute(this) }
     }
 }
 
