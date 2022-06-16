@@ -37,8 +37,8 @@ growingAutotracker {
     includePackages "com.growingio.android.plugin"
     excludePackages "com.cpacm"
     analyticsAdapter {
-        firebaseAnalytics = false
-        googleAnalytics = false
+        firebaseAnalytics false
+        googleAnalytics false
     }
 }
 
