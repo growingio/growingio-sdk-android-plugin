@@ -46,20 +46,36 @@ fun <T> Project.getProperty(name: String, defaultValue: T): T {
  * Returns the corresponding variant of this transform invocation
  *
  */
-fun TransformInvocation.getVariant(project: Project): BaseVariant {
-    return project.getAndroid<BaseExtension>().let { android ->
-        this.context.variantName.let { variant ->
-            when (android) {
-                is AppExtension -> when {
-                    variant.endsWith("AndroidTest") -> android.testVariants.single { it.name == variant }
-                    variant.endsWith("UnitTest") -> android.unitTestVariants.single { it.name == variant }
-                    else -> android.applicationVariants.single { it.name == variant }
-                }
-                is LibraryExtension -> android.libraryVariants.single { it.name == variant }
-                else -> error("variant not found")
+fun TransformInvocation.getVariant(project: Project): BaseVariant? {
+    val androidExtension = project.extensions.findByType(BaseExtension::class.java)
+        ?: error("Android BaseExtension not found.")
+    var variant: BaseVariant? = null
+    when (androidExtension) {
+        is AppExtension -> {
+            androidExtension.applicationVariants.all {
+                variant = it
             }
         }
+        is LibraryExtension -> {
+            androidExtension.libraryVariants.all { variant = it }
+        }
     }
+    return variant
+
+//    return project.getAndroid<BaseExtension>().let { android ->
+//        this.context.variantName.let { variant ->
+//            when (android) {
+//                is AppExtension -> when {
+//                    variant.endsWith("AndroidTest") -> android.testVariants.single { it.name == variant }
+//                    variant.endsWith("UnitTest") -> android.unitTestVariants.single { it.name == variant }
+//                    else -> android.applicationVariants.single { it.name == variant }
+//                }
+//                is LibraryExtension -> android.libraryVariants.single { it.name == variant }
+//                else -> error("variant not found")
+//            }
+//
+//        }
+//    }
 }
 
 fun TransformInvocation.getBootClasspath(project: Project): Collection<File> {

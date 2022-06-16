@@ -64,7 +64,6 @@ abstract class GrowingBaseTransform(
                 if (isIncremental) {
                     doIncrementalTransform()
                 } else {
-                    outputProvider?.deleteAll()
                     doFullTransform()
                 }
             }

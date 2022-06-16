@@ -54,9 +54,9 @@ internal class GrowingClassRewriter(
     override val klassPool: AbstractKlassPool =
         object : AbstractKlassPool(compileClasspath, transform.bootKlassPool) {}
 
-    override val applicationId = getVariant(project).applicationId
+    override val applicationId = getVariant(project)?.applicationId ?: "unknown"
 
-    override val isDebuggable = getVariant(project).buildType.isDebuggable
+    override val isDebuggable = getVariant(project)?.buildType?.isDebuggable ?: false
 
     override fun hasProperty(name: String) = project.hasProperty(name)
 

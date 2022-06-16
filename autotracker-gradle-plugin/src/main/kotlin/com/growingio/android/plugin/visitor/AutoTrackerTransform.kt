@@ -40,34 +40,35 @@ internal class AutoTrackerTransform(
     override fun getName() = "AutoTrackerTransform"
 
     override fun transform(context: AutoTrackerContext, bytecode: ByteArray): ByteArray {
-        if (!shouldClassModified(
-                gioExtension.excludePackages ?: arrayOf(),
-                gioExtension.includePackages ?: arrayOf(),
-                context.name
-            )
-        ) {
-            return bytecode
-        }
-
-        val classContextCompat = object : ClassContextCompat {
-            override val className = context.name
-            override fun isAssignable(subClazz: String, superClazz: String): Boolean {
-                return context.klassPool.get(superClazz).isAssignableFrom(subClazz)
-            }
-
-            override fun classIncluded(clazz: String): Boolean {
-                return DEFAULT_INJECT_CLASS.contains(normalize(clazz))
-            }
-        }
-
         try {
             val classReader = ClassReader(bytecode)
+            if (!shouldClassModified(
+                    gioExtension.excludePackages ?: arrayOf(),
+                    gioExtension.includePackages ?: arrayOf(),
+                    normalize(classReader.className)
+                )
+            ) { return bytecode }
+
+
             val autoTrackerWriter = object : ClassWriter(classReader, COMPUTE_MAXS) {
                 fun getApi(): Int {
                     return api
                 }
             }
             val apiVersion = autoTrackerWriter.getApi()
+
+            val classContextCompat = object : ClassContextCompat {
+                override val className = classReader.className
+                override fun isAssignable(subClazz: String, superClazz: String): Boolean {
+                    return context.klassPool.get(superClazz).isAssignableFrom(subClazz)
+                }
+
+                override fun classIncluded(clazz: String): Boolean {
+                    return DEFAULT_INJECT_CLASS.contains(normalize(clazz))
+                }
+            }
+
+
             val visitor = DesugarClassVisitor(
                 apiVersion,
                 InjectTargetClassVisitor(
