@@ -30,7 +30,9 @@ import com.growingio.android.plugin.visitor.AutoTrackerFactory
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.internal.reflect.Instantiator
 import java.io.File
+import javax.inject.Inject
 
 /**
  * <p>
@@ -39,11 +41,18 @@ import java.io.File
  */
 abstract class AutoTrackerPlugin : Plugin<Project> {
 
+    private var instantiator: Instantiator
+
+    @Inject
+    constructor(instantiator: Instantiator) {
+        this.instantiator = instantiator
+    }
+
     override fun apply(project: Project) {
 
         var inAndroidProject = false
 
-        val autoTrackerExtension = project.extensions.create("growingAutotracker", AutoTrackerExtension::class.java)
+        val autoTrackerExtension = project.extensions.create("growingAutotracker", AutoTrackerExtension::class.java, instantiator)
 
         project.plugins.withType(AndroidBasePlugin::class.java) {
             inAndroidProject = true
