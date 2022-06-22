@@ -32,9 +32,9 @@ import java.util.concurrent.TimeUnit
 * @author cpacm 2022.4.1
 */
 @Suppress("DEPRECATION")
-internal class AutoTrackerClassRewriter(
+internal class GrowingClassRewriter(
     private val delegate: TransformInvocation,
-    internal val transform: AutoTrackerBaseTransform,
+    internal val transform: GrowingBaseTransform,
 ) : TransformInvocation by delegate, AutoTrackerContext {
 
     private val project = transform.project
@@ -54,9 +54,9 @@ internal class AutoTrackerClassRewriter(
     override val klassPool: AbstractKlassPool =
         object : AbstractKlassPool(compileClasspath, transform.bootKlassPool) {}
 
-    override val applicationId = getVariant(project).applicationId
+    override val applicationId = getVariant(project)?.applicationId ?: "unknown"
 
-    override val isDebuggable = getVariant(project).buildType.isDebuggable
+    override val isDebuggable = getVariant(project)?.buildType?.isDebuggable ?: false
 
     override fun hasProperty(name: String) = project.hasProperty(name)
 
@@ -185,6 +185,6 @@ internal class AutoTrackerClassRewriter(
     }
 
     private fun ByteArray.transform(): ByteArray {
-        return transform.transform(this@AutoTrackerClassRewriter, this)
+        return transform.transform(this@GrowingClassRewriter, this)
     }
 }

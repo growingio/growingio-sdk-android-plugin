@@ -67,4 +67,11 @@ interface AutoTrackerTransformListener {
     fun transform(context: AutoTrackerContext, bytecode: ByteArray): ByteArray
 }
 
+interface ClassContextCompat {
+    val className: String
+
+    fun isAssignable(subClazz: String, superClazz: String): Boolean
+
+    fun classIncluded(clazz: String): Boolean
+}
 

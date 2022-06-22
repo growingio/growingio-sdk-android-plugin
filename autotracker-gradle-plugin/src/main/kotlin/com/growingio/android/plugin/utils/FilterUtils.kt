@@ -23,28 +23,6 @@ import com.growingio.android.plugin.AnalyticsAdapter
  *
  * @author cpacm 2022/3/30
  */
-val NCPU = Runtime.getRuntime().availableProcessors()
-
-fun normalize(type: String) = if (type.contains('/')) {
-    type.replace('/', '.')
-} else {
-    type
-}
-
-fun String.unNormalize(): String {
-    return if (this.contains('.')) {
-        this.replace('.', '/')
-    } else {
-        this
-    }
-}
-
-
-fun String.simpleClass(): String {
-    return this.split("/").last()
-}
-
-
 internal fun shouldClassModified(
     excludePackages: Array<String>, includePackages: Array<String>,
     className: String
@@ -136,12 +114,4 @@ fun initInjectClass(injectClasses: Array<String>?, adapter: AnalyticsAdapter?) {
         }
     }
 
-}
-
-fun isAndroidGenerated(className: String): Boolean {
-    return className.contains("R$") ||
-            className.contains("R2$") ||
-            className.contains("R.class") ||
-            className.contains("R2.class") ||
-            className.contains("BuildConfig.class")
 }

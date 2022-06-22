@@ -8,7 +8,7 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    //repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         mavenLocal()
         maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
@@ -18,6 +18,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "growingio-sdk-plugin"
 includeBuild("autotracker-gradle-plugin")
+
 include ':app'
 include ':inject-annotation'
 include ':inject-annotation:processor'

@@ -13,5 +13,34 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+
+pluginManagement {
+    repositories {
+        mavenLocal()
+        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    //repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenLocal()
+        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+        google()
+        mavenCentral()
+    }
+}
+
 // just for plugin test unit
 rootProject.name = "autotracker-gradle-plugin"
+
+
+include ':agp-wrapper'
+include ':agp-wrapper-42'
+include ':agp-wrapper-70'
+include ':agp-wrapper-71'
+include ':agp-wrapper-72'
+include ':agp-wrapper-impl'
+include ':growingio-plugin-library'

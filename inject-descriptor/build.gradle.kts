@@ -34,7 +34,7 @@ dependencies {
 
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("com.google.android.material:material:1.6.0")
+    implementation("com.google.android.material:material:1.6.1")
 
     compileOnly(files("libs/uc_webview_sdk-2.14.0.31.jar"))
     compileOnly(files("libs/tbs_sdk_44051.jar"))

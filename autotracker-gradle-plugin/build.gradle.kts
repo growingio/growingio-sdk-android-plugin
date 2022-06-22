@@ -1,13 +1,8 @@
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.6.21"
     `java-gradle-plugin`
-    id("io.codearte.nexus-staging") version("0.30.0")
-}
 
-repositories {
-    google()
-    mavenLocal()
-    mavenCentral()
+    id("io.codearte.nexus-staging") version ("0.30.0")
 }
 
 gradlePlugin {
@@ -19,45 +14,41 @@ gradlePlugin {
     }
 }
 
-// 将插件的版本放入 jar 包中
-//tasks.jar {
-//    manifest {
-//        attributes(
-//            mapOf(
-//                "Manifest-Version" to "1.0",
-//                "Gradle-Plugin-Version" to "4.0.0"
-//            )
-//        )
-//    }
-//}
 val testPluginImplementation: Configuration by configurations.creating {
     isCanBeResolved = true
     isCanBeConsumed = false
-    extendsFrom(configurations["testImplementation"])
+    extendsFrom(configurations.testImplementation.get())
 }
 
 ext {
     set("releaseVersion", "3.4.0")
     set("releaseVersionCode", 30400)
+    set("agp_version", "7.2.1")
+    set("low_agp_version", "4.2.2")
+    set("kotlin_version", "1.6.21")
 }
 
 dependencies {
+
+    implementation(project(":growingio-plugin-library"))
+    compileOnly(project(":agp-wrapper-impl"))
+
     implementation(gradleApi())
 
     implementation("org.ow2.asm:asm:9.2")
-    implementation("org.ow2.asm:asm-util:9.2")
-    implementation("org.ow2.asm:asm-commons:9.2")
+//    implementation("org.ow2.asm:asm-util:9.2")
+//    implementation("org.ow2.asm:asm-commons:9.2")
 
-    compileOnly(kotlin("stdlib"))
-    compileOnly("com.android.tools.build:gradle-api:7.2.0")
-    compileOnly("com.android.tools.build:gradle:4.2.2")
+//    compileOnly(kotlin("stdlib"))
+    compileOnly("com.android.tools.build:gradle-api:${rootProject.ext.get("agp_version")}")
+    compileOnly("com.android.tools.build:gradle:${rootProject.ext.get("low_agp_version")}")
 
     testImplementation(gradleTestKit())
     testImplementation("junit:junit:4.13.2")
     testImplementation("com.google.truth:truth:1.1.3")
-    testImplementation("com.android.tools.build:gradle:4.2.2")
+    testImplementation("com.android.tools.build:gradle:${rootProject.ext.get("low_agp_version")}")
 
-    testPluginImplementation("com.android.tools.build:gradle:4.2.2")
+    testPluginImplementation("com.android.tools.build:gradle:${rootProject.ext.get("low_agp_version")}")
     testPluginImplementation("com.google.guava:guava:30.1.1-jre")
 }
 

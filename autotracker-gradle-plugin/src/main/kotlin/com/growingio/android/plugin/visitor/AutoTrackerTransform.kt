@@ -14,16 +14,15 @@
  *   limitations under the License.
  */
 
-package com.growingio.android.plugin.transform
+package com.growingio.android.plugin.visitor
 
 import com.android.build.gradle.BaseExtension
 import com.growingio.android.plugin.AutoTrackerExtension
+import com.growingio.android.plugin.transform.AutoTrackerContext
+import com.growingio.android.plugin.transform.ClassContextCompat
+import com.growingio.android.plugin.transform.GrowingBaseTransform
 import com.growingio.android.plugin.utils.*
 import com.growingio.android.plugin.utils.shouldClassModified
-import com.growingio.android.plugin.visitor.*
-import com.growingio.android.plugin.visitor.DesugarClassVisitor
-import com.growingio.android.plugin.visitor.InjectSuperClassVisitor
-import com.growingio.android.plugin.visitor.InjectTargetClassVisitor
 import org.gradle.api.Project
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassWriter
@@ -36,39 +35,40 @@ import org.objectweb.asm.ClassWriter
 internal class AutoTrackerTransform(
     project: Project, android: BaseExtension,
     private val gioExtension: AutoTrackerExtension
-) : AutoTrackerBaseTransform(project, android) {
+) : GrowingBaseTransform(project, android) {
 
     override fun getName() = "AutoTrackerTransform"
 
     override fun transform(context: AutoTrackerContext, bytecode: ByteArray): ByteArray {
-        if (!shouldClassModified(
-                gioExtension.excludePackages ?: arrayOf(),
-                gioExtension.includePackages ?: arrayOf(),
-                context.name
-            )
-        ) {
-            return bytecode
-        }
-
-        val classContextCompat = object : ClassContextCompat {
-            override val className = context.name
-            override fun isAssignable(subClazz: String, superClazz: String): Boolean {
-                return context.klassPool.get(superClazz).isAssignableFrom(subClazz)
-            }
-
-            override fun classIncluded(clazz: String): Boolean {
-                return DEFAULT_INJECT_CLASS.contains(normalize(clazz))
-            }
-        }
-
         try {
             val classReader = ClassReader(bytecode)
+            if (!shouldClassModified(
+                    gioExtension.excludePackages ?: arrayOf(),
+                    gioExtension.includePackages ?: arrayOf(),
+                    normalize(classReader.className)
+                )
+            ) { return bytecode }
+
+
             val autoTrackerWriter = object : ClassWriter(classReader, COMPUTE_MAXS) {
                 fun getApi(): Int {
                     return api
                 }
             }
             val apiVersion = autoTrackerWriter.getApi()
+
+            val classContextCompat = object : ClassContextCompat {
+                override val className = classReader.className
+                override fun isAssignable(subClazz: String, superClazz: String): Boolean {
+                    return context.klassPool.get(superClazz).isAssignableFrom(subClazz)
+                }
+
+                override fun classIncluded(clazz: String): Boolean {
+                    return DEFAULT_INJECT_CLASS.contains(normalize(clazz))
+                }
+            }
+
+
             val visitor = DesugarClassVisitor(
                 apiVersion,
                 InjectTargetClassVisitor(
