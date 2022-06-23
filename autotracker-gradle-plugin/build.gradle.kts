@@ -66,5 +66,5 @@ java {
 // 3. 新建 remote JVM debug ,运行 debug
 // 4. 运行构建，开始调试 ./gradlew assembleDebug
 
-apply("publishMaven.gradle")
+apply("publishMavenWithPluginMarker.gradle")
 apply("stagingMaven.gradle")
