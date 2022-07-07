@@ -29,6 +29,17 @@ interface GoogleAnalyticsInjector {
     fun newTracker(measurementId: String)
 
     @Inject(
+        targetClazz = "com/google/android/gms/analytics/GoogleAnalytics",
+        targetMethod = "setAppOptOut",
+        targetMethodDesc = "(Z)V",
+        injectMethod = "setAppOptOut",
+        injectMethodDesc = "(Lcom/google/android/gms/analytics/GoogleAnalytics;Z)V",
+        isAfter = true,
+        type = 0
+    )
+    fun setAppOptOut(optOut: Boolean)
+
+    @Inject(
         targetClazz = "com/google/android/gms/analytics/Tracker",
         targetMethod = "set",
         targetMethodDesc = "(Ljava/lang/String;Ljava/lang/String;)V",
