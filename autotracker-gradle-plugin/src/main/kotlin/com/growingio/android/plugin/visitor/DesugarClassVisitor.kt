@@ -96,7 +96,6 @@ internal class DesugarClassVisitor(
                     }
                     info("[GenerateMethod]${injectMethod.methodDesc}#loadArg(null)")
                     adapter.visitInsn(Opcodes.ACONST_NULL)
-                    adapter.loadArgs(adapter.argumentTypes.size - 1, 1)
                 }
                 adapter.invokeStatic(
                     Type.getObjectType(injectMethod.className),
@@ -130,7 +129,6 @@ internal class DesugarClassVisitor(
                     }
                     info("[GenerateMethod]${injectMethod.methodDesc}#loadArg(null)")
                     adapter.visitInsn(Opcodes.ACONST_NULL)
-                    adapter.loadArgs(adapter.argumentTypes.size - 1, 1)
                 }
                 adapter.invokeStatic(
                     Type.getObjectType(injectMethod.className), Method(injectMethod.methodName, injectMethod.methodDesc)
