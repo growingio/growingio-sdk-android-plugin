@@ -16,7 +16,7 @@
 
 package com.growingio.android.plugin.utils
 
-import com.growingio.android.plugin.AnalyticsAdapter
+import com.growingio.android.plugin.AutoTrackerExtension
 
 /**
  * <p>
@@ -30,16 +30,23 @@ internal fun shouldClassModified(
     if (isAndroidGenerated(className)) {
         return false
     }
-    excludePackages.forEach {
-        if (className.startsWith(it)) {
-            return false
-        }
-    }
+
     includePackages.forEach {
         if (className.startsWith(it)) {
             return true
         }
     }
+    excludePackages.forEach {
+        if (className.startsWith(it)) {
+            return false
+        }
+    }
+    INCLUDED_PACKAGES.forEach {
+        if (className.startsWith(it)) {
+            return true
+        }
+    }
+
     EXCLUDED_PACKAGES.forEach {
         if (className.startsWith(it)) {
             return false
@@ -47,6 +54,8 @@ internal fun shouldClassModified(
     }
     return true
 }
+
+val INCLUDED_PACKAGES = arrayListOf<String>()
 
 val EXCLUDED_PACKAGES = arrayListOf(
     "com.growingio.android",
@@ -65,6 +74,7 @@ val EXCLUDED_PACKAGES = arrayListOf(
     //"android.support",
     //"org.jetbrains.kotlin",
     "android.arch",
+    "androidx.lifecycle.ReportFragment",
     //"com.google.android",
 
     //THIRD
@@ -101,16 +111,21 @@ val DEFAULT_INJECT_CLASS = arrayListOf(
     "com.growingio.android.sdk.autotrack.inject.ViewClickInjector",
 )
 
-fun initInjectClass(injectClasses: Array<String>?, adapter: AnalyticsAdapter?) {
-    injectClasses?.let {
+fun initInjectClass(extension: AutoTrackerExtension) {
+    extension.injectClasses?.let {
         DEFAULT_INJECT_CLASS.addAll(it)
     }
-    adapter?.apply {
+
+    extension.analyticsAdapter?.apply {
         if (firebaseAnalytics) {
             DEFAULT_INJECT_CLASS.add("com.growingio.android.analytics.firebase.FirebaseAnalyticsInjector")
         }
         if (googleAnalytics) {
             DEFAULT_INJECT_CLASS.add("com.growingio.android.analytics.google.GoogleAnalyticsInjector")
+        }
+        if (sensorAnalytics) {
+            INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.SensorsDataAPI")
+            DEFAULT_INJECT_CLASS.add("com.growingio.android.analytics.sensor.SensorAnalyticsInjector")
         }
     }
 

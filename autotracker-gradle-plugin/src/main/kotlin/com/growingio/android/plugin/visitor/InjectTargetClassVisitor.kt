@@ -118,7 +118,7 @@ internal class InjectTargetClassVisitor(
                     continue
                 }
                 if (injectMethod.isAfter == isAfter) {
-                    when(visitCode(isAfter, injectMethod.methodDesc, opcode)) {
+                    when (visitCode(isAfter, injectMethod.methodDesc, opcode)) {
                         1 -> loadThis()
                         2 -> visitInsn(Opcodes.DUP)
                         3 -> {
@@ -156,17 +156,20 @@ internal class InjectTargetClassVisitor(
          * 3 -> visitInsn(Opcodes.DUP); loadThis()
          * -1 -> 异常指令
          */
-        private fun visitCode(isAfter: Boolean, injectDescriptor: String, opcode: Int) : Int {
+        private fun visitCode(isAfter: Boolean, injectDescriptor: String, opcode: Int): Int {
             val isStatic = (methodAccess and Opcodes.ACC_STATIC) != 0
             val hasReturnOpcode = opcode >= Opcodes.IRETURN && opcode <= Opcodes.ARETURN
 
+            val injectArgs = Type.getArgumentTypes(injectDescriptor)
+            if (injectArgs.isEmpty()) return 0
+            val targetArgs = Type.getArgumentTypes(methodDesc)
+
             if (!isAfter) {
-                return if (isStatic) 0 else 1
+                // 方法注入在前面时，只允许注入方法中比原方法（static除外）多一个
+                return if (isStatic || injectArgs.size == targetArgs.size) 0 else if (injectArgs.size - targetArgs.size == 1) 1 else -1
             }
 
-            val targetArgs = Type.getArgumentTypes(methodDesc)
-            val injectArgs = Type.getArgumentTypes(injectDescriptor)
-            when(injectArgs.size - targetArgs.size) {
+            when (injectArgs.size - targetArgs.size) {
                 0 -> return 0
                 1 -> {
                     if (!isStatic) {

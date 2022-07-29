@@ -114,6 +114,9 @@ public object HookInjectorClass {
     TARGET_HOOK_CLASSES.add(HookData("com/google/android/gms/analytics/Tracker","set","(Ljava/lang/String;Ljava/lang/String;)V","com/growingio/android/analytics/google/GoogleAnalyticsInjector","set","(Lcom/google/android/gms/analytics/Tracker;Ljava/lang/String;Ljava/lang/String;)V",true))
     TARGET_HOOK_CLASSES.add(HookData("com/google/android/gms/analytics/Tracker","send","(Ljava/util/Map;)V","com/growingio/android/analytics/google/GoogleAnalyticsInjector","send","(Lcom/google/android/gms/analytics/Tracker;Ljava/util/Map;)V",true))
     TARGET_HOOK_CLASSES.add(HookData("com/google/android/gms/analytics/Tracker","setClientId","(Ljava/lang/String;)V","com/growingio/android/analytics/google/GoogleAnalyticsInjector","setClientId","(Lcom/google/android/gms/analytics/Tracker;Ljava/lang/String;)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("com/sensorsdata/analytics/android/sdk/SensorsDataAPI","disableSDK","()V","com/growingio/android/analytics/sensor/SensorAnalyticsInjector","disableSDK","()V",false))
+    TARGET_HOOK_CLASSES.add(HookData("com/sensorsdata/analytics/android/sdk/SensorsDataAPI","enableSDK","()V","com/growingio/android/analytics/sensor/SensorAnalyticsInjector","enableSDK","()V",false))
+    TARGET_HOOK_CLASSES.add(HookData("com/sensorsdata/analytics/android/sdk/SensorsDataAPI","profileSet","(Lorg/json/JSONObject;)V","com/growingio/android/analytics/sensor/SensorAnalyticsInjector","profileSet","(Lorg/json/JSONObject;)V",false))
     return TARGET_HOOK_CLASSES
   }
 
