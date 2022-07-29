@@ -91,7 +91,7 @@ internal class DesugarClassVisitor(
                         if (originType.className == argType) {
                             adapter.loadArg(arguments.indexOf(originType))
                             info("[GenerateMethod]${injectMethod.methodDesc}#${argType}<==>${originType.className}")
-                            break;
+                            return@forEach
                         }
                     }
                     info("[GenerateMethod]${injectMethod.methodDesc}#loadArg(null)")
@@ -125,7 +125,7 @@ internal class DesugarClassVisitor(
                         if (originType.className == argType) {
                             adapter.loadArg(arguments.indexOf(originType))
                             info("[GenerateMethod]${injectMethod.methodDesc}#${argType}<==>${originType.className}")
-                            break;
+                            return@forEach
                         }
                     }
                     info("[GenerateMethod]${injectMethod.methodDesc}#loadArg(null)")
