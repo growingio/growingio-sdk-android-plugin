@@ -89,7 +89,7 @@ internal class DesugarClassVisitor(
                     val argType = it.className
                     for (originType in arguments.reversed()) {
                         if (originType.className == argType) {
-                            adapter.loadArg(arguments.indexOf(originType))
+                            adapter.loadArg(arguments.lastIndexOf(originType))
                             info("[GenerateMethod]${injectMethod.methodDesc}#${argType}<==>${originType.className}")
                             return@forEach
                         }
@@ -122,7 +122,7 @@ internal class DesugarClassVisitor(
                     val argType = it.className
                     for (originType in arguments.reversed()) {
                         if (originType.className == argType) {
-                            adapter.loadArg(arguments.indexOf(originType))
+                            adapter.loadArg(arguments.lastIndexOf(originType))
                             info("[GenerateMethod]${injectMethod.methodDesc}#${argType}<==>${originType.className}")
                             return@forEach
                         }
