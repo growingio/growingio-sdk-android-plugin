@@ -21,7 +21,7 @@ val testPluginImplementation: Configuration by configurations.creating {
 }
 
 ext {
-    set("releaseVersion", "3.4.1-SNAPSHOT")
+    set("releaseVersion", "3.4.1")
     set("releaseVersionCode", 30401)
     set("agp_version", "7.2.1")
     set("low_agp_version", "4.2.2")
