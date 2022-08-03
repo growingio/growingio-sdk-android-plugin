@@ -39,14 +39,7 @@ import javax.inject.Inject
  *
  * @author cpacm 2022/3/30
  */
-abstract class AutoTrackerPlugin : Plugin<Project> {
-
-    private var instantiator: Instantiator
-
-    @Inject
-    constructor(instantiator: Instantiator) {
-        this.instantiator = instantiator
-    }
+class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Plugin<Project> {
 
     override fun apply(project: Project) {
 
