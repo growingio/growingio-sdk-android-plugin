@@ -82,10 +82,10 @@ internal class InjectTargetClassVisitor(
         api: Int,
         nmv: MethodVisitor,
         access: Int,
-        name: String?,
+        private val methodName: String?,// ASM6.0 hasn't inline name field,so we just create it.
         private val descriptor: String?,
         private val injectMethods: Set<InjectMethod>
-    ) : AdviceAdapter(api, nmv, access, name, descriptor) {
+    ) : AdviceAdapter(api, nmv, access, methodName, descriptor) {
 
         lateinit var localVariables: IntArray;
 
@@ -135,7 +135,7 @@ internal class InjectTargetClassVisitor(
                         Type.getObjectType(injectMethod.className),
                         Method(injectMethod.methodName, injectMethod.methodDesc)
                     )
-                    info((if (isAfter) "[TargetAfter] " else "[TargetBefore] ") + className.simpleClass() + "#" + name.toString() + methodDesc + " ==>Method Add: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
+                    info((if (isAfter) "[TargetAfter] " else "[TargetBefore] ") + className.simpleClass() + "#" + methodName.toString() + methodDesc + " ==>Method Add: " + injectMethod.className.simpleClass() + "#" + injectMethod.methodName)
                 }
             }
         }
