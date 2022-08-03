@@ -84,13 +84,18 @@ internal class DesugarClassVisitor(
         // 插入hook before
         for (injectMethod in methodBlock.targetMethod.injectMethods) {
             if (!injectMethod.isAfter && classIncluded(injectMethod.className)) {
-                adapter.visitInsn(Opcodes.ACONST_NULL)
-                if (isStaticOrigin) {
-                    adapter.loadArgs()
-                } else {
-                    if (arguments.size > 1) {
-                        adapter.loadArgs(1, arguments.size - 1)
+                val injectArgs = Type.getArgumentTypes(injectMethod.methodDesc)
+                injectArgs.forEach {
+                    val argType = it.className
+                    for (originType in arguments.reversed()) {
+                        if (originType.className == argType) {
+                            adapter.loadArg(arguments.lastIndexOf(originType))
+                            info("[GenerateMethod]${injectMethod.methodDesc}#${argType}<==>${originType.className}")
+                            return@forEach
+                        }
                     }
+                    info("[GenerateMethod]${injectMethod.methodDesc}#loadArg(null)")
+                    adapter.visitInsn(Opcodes.ACONST_NULL)
                 }
                 adapter.invokeStatic(
                     Type.getObjectType(injectMethod.className),
@@ -112,13 +117,18 @@ internal class DesugarClassVisitor(
         // 插入hook after
         for (injectMethod in methodBlock.targetMethod.injectMethods) {
             if (injectMethod.isAfter && classIncluded(injectMethod.className)) {
-                adapter.visitInsn(Opcodes.ACONST_NULL)
-                if (isStaticOrigin) {
-                    adapter.loadArgs()
-                } else {
-                    if (arguments.size > 1) {
-                        adapter.loadArgs(1, arguments.size - 1)
+                val injectArgs = Type.getArgumentTypes(injectMethod.methodDesc)
+                injectArgs.forEach {
+                    val argType = it.className
+                    for (originType in arguments.reversed()) {
+                        if (originType.className == argType) {
+                            adapter.loadArg(arguments.lastIndexOf(originType))
+                            info("[GenerateMethod]${injectMethod.methodDesc}#${argType}<==>${originType.className}")
+                            return@forEach
+                        }
                     }
+                    info("[GenerateMethod]${injectMethod.methodDesc}#loadArg(null)")
+                    adapter.visitInsn(Opcodes.ACONST_NULL)
                 }
                 adapter.invokeStatic(
                     Type.getObjectType(injectMethod.className), Method(injectMethod.methodName, injectMethod.methodDesc)
@@ -180,6 +190,7 @@ internal class DesugarClassVisitor(
                 super.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, *bootstrapMethodArguments)
                 return
             }
+            if(bootstrapMethodArguments.isEmpty()) return
             //info("[visitInvokeDynamicInsn]${className}-${name}==>${(bootstrapMethodArguments[1] as Handle).name}")
             val handle = bootstrapMethodArguments[1] as Handle
             if (name == handle.name) {
@@ -222,7 +233,13 @@ internal class DesugarClassVisitor(
             }
             val access = Opcodes.ACC_PRIVATE + Opcodes.ACC_STATIC + Opcodes.ACC_SYNTHETIC
             val methodBlock =
-                GenerateMethodBlock("lambda\$GIO\$" + generateMethodIndex, methodDesc, targetMethod, handle, access)
+                GenerateMethodBlock(
+                    "${handle.name ?: "lambda"}\$GIO" + generateMethodIndex,
+                    methodDesc,
+                    targetMethod,
+                    handle,
+                    access
+                )
             generateMethodBlocks.put(key, methodBlock)
             generateMethodIndex++
 

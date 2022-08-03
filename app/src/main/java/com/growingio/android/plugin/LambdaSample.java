@@ -96,5 +96,23 @@ public class LambdaSample implements View.OnClickListener {
         }
     }
 
+    public void digitalClick(int i) {
+        Log.d("LambdaUtil", "digitalClick");
+    }
+
+    public void print7(MenuItem item, int position) {
+        float test2 = position * 1.0f;
+        item.getActionView().setOnClickListener(v -> {
+            digitalClick((int) test2);
+        });
+    }
+
+    public void print8(MenuItem item, int position) {
+        float test2 = position * 1.0f;
+        item.getActionView().setOnClickListener(v -> {
+            Log.d("LambdaUtil", test2+"cpacm");
+        });
+    }
+
 }
 

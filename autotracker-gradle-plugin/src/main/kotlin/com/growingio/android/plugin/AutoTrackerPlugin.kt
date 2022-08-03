@@ -45,11 +45,11 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
 
         var inAndroidProject = false
 
-        val autoTrackerExtension = project.extensions.create("growingAutotracker", AutoTrackerExtension::class.java, instantiator)
+        val autoTrackerExtension =
+            project.extensions.create("growingAutotracker", AutoTrackerExtension::class.java, instantiator)
 
         project.plugins.withType(AndroidBasePlugin::class.java) {
             inAndroidProject = true
-
             if (SimpleAGPVersion.ANDROID_GRADLE_PLUGIN_VERSION < SimpleAGPVersion(4, 2)) {
                 // Configures bytecode transform using older APIs pre AGP 4.2
                 configureBytecodeTransform(project, autoTrackerExtension)
@@ -65,7 +65,7 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
                 "The GrowingIO AutoTracker Gradle plugin can only be applied to an Android project"
             }
             LOG_ENABLE = autoTrackerExtension.logEnabled
-            initInjectClass(autoTrackerExtension.injectClasses, autoTrackerExtension.analyticsAdapter)
+            initInjectClass(autoTrackerExtension)
             checkAutoTrackerDependency(it, autoTrackerExtension.skipDependencyCheck)
         }
 

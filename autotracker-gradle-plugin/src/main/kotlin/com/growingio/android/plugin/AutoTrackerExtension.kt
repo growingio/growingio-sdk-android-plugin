@@ -46,8 +46,10 @@ open class AutoTrackerExtension (var instantiator: Instantiator) {
 
 //用于配置是否可以对第三方分析服务进行适配
 open class AnalyticsAdapter (
-    // 针对 FirebaseAnalytics
+    // 适配 FirebaseAnalytics
     var firebaseAnalytics: Boolean = false,
-    // 针对 GoogleAnalytics
+    // 适配 GoogleAnalytics
     var googleAnalytics: Boolean = false,
+    // 适配 sensorAnalytics
+    var sensorAnalytics: Boolean = false
 )
