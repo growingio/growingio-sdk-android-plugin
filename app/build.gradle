@@ -39,7 +39,6 @@ growingAutotracker {
     analyticsAdapter {
         firebaseAnalytics false
         googleAnalytics false
-        sensorAnalytics false
     }
 }
 
