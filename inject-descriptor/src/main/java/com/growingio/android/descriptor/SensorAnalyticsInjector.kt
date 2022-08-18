@@ -49,17 +49,14 @@ interface SensorAnalyticsInjector {
     )
     fun enableSDK()
 
-
     @Inject(
-        targetClazz = "com/sensorsdata/analytics/android/sdk/SensorsDataAPI",
-        targetMethod = "profileSet",
-        targetMethodDesc = "(Lorg/json/JSONObject;)V",
-        injectMethod = "profileSet",
-        injectMethodDesc = "(Lorg/json/JSONObject;)V",
+        targetClazz = "com/sensorsdata/analytics/android/sdk/AbstractSensorsDataAPI",
+        targetMethod = "trackEvent",
+        targetMethodDesc = "(Lcom/sensorsdata/analytics/android/sdk/internal/beans/EventType;Ljava/lang/String;Lorg/json/JSONObject;Ljava/lang/String;)V",
+        injectMethod = "trackEvent",
+        injectMethodDesc = "(Lcom/sensorsdata/analytics/android/sdk/internal/beans/EventType;Ljava/lang/String;Lorg/json/JSONObject;Ljava/lang/String;)V",
         isAfter = false,
         type = 0
     )
-    fun profileSet()
-
-
+    fun trackEvent()
 }

@@ -125,6 +125,7 @@ fun initInjectClass(extension: AutoTrackerExtension) {
         }
         if (sensorAnalytics) {
             INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.SensorsDataAPI")
+            INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.AbstractSensorsDataAPI")
             DEFAULT_INJECT_CLASS.add("com.growingio.android.analytics.sensor.SensorAnalyticsInjector")
         }
     }
