@@ -18,6 +18,7 @@ package com.growingio.android.plugin
 
 import org.gradle.api.Action
 import org.gradle.internal.reflect.Instantiator
+import java.io.Serializable
 
 /**
  * <p>
@@ -25,7 +26,7 @@ import org.gradle.internal.reflect.Instantiator
  * @author cpacm 2022/3/30
  */
 
-open class AutoTrackerExtension (var instantiator: Instantiator) {
+open class AutoTrackerExtension(var instantiator: Instantiator) {
 
     var logEnabled = false
 
@@ -40,16 +41,21 @@ open class AutoTrackerExtension (var instantiator: Instantiator) {
     var analyticsAdapter: AnalyticsAdapter? = null
 
     open fun analyticsAdapter(configuration: Action<in AnalyticsAdapter>) {
-        analyticsAdapter = (instantiator.newInstance(AnalyticsAdapter::class.java)).apply { configuration.execute(this) }
+        analyticsAdapter =
+            (instantiator.newInstance(AnalyticsAdapter::class.java)).apply { configuration.execute(this) }
     }
 }
 
 //用于配置是否可以对第三方分析服务进行适配
-open class AnalyticsAdapter (
+open class AnalyticsAdapter(
     // 适配 FirebaseAnalytics
     var firebaseAnalytics: Boolean = false,
     // 适配 GoogleAnalytics
     var googleAnalytics: Boolean = false,
     // 适配 sensorAnalytics
     var sensorAnalytics: Boolean = false
-)
+) : Serializable {
+    fun toArray(): Array<Boolean> {
+        return arrayOf(firebaseAnalytics, googleAnalytics, sensorAnalytics)
+    }
+}

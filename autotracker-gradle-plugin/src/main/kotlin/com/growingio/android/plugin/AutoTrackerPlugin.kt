@@ -31,7 +31,6 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.internal.reflect.Instantiator
-import java.io.File
 import javax.inject.Inject
 
 /**
@@ -77,10 +76,12 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
                 classVisitorFactoryImplClass = AutoTrackerFactory::class.java,
                 scope = InstrumentationScope.ALL
             ) { params ->
-                val classesDir = File(project.buildDir, "intermediates/javac/${androidComponent.name}/classes")
-                params.additionalClassesDir.set(classesDir)
+                //val classesDir = File(project.buildDir, "intermediates/javac/${androidComponent.name}/classes")
+                //params.additionalClassesDir.set(classesDir)
                 params.excludePackages.set(gioExtension.excludePackages ?: arrayOf())
                 params.includePackages.set(gioExtension.includePackages ?: arrayOf())
+                params.injectClasses.set(gioExtension.injectClasses ?: arrayOf())
+                params.analytics.set(gioExtension.analyticsAdapter?.toArray())
             }
             androidComponent.setAsmFramesComputationMode(FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS)
         }
