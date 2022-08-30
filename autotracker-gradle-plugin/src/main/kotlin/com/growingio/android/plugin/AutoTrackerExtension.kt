@@ -55,7 +55,8 @@ open class AnalyticsAdapter(
     // 适配 sensorAnalytics
     var sensorAnalytics: Boolean = false
 ) : Serializable {
-    fun toArray(): Array<Boolean> {
-        return arrayOf(firebaseAnalytics, googleAnalytics, sensorAnalytics)
+
+    override fun toString(): String {
+        return "$firebaseAnalytics+$googleAnalytics+$sensorAnalytics"
     }
 }

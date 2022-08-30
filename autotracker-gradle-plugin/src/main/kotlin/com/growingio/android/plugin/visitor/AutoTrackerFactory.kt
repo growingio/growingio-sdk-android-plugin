@@ -20,6 +20,7 @@ import com.android.build.api.instrumentation.AsmClassVisitorFactory
 import com.android.build.api.instrumentation.ClassContext
 import com.android.build.api.instrumentation.ClassData
 import com.android.build.api.instrumentation.InstrumentationParameters
+import com.growingio.android.plugin.AnalyticsAdapter
 import com.growingio.android.plugin.transform.ClassContextCompat
 import com.growingio.android.plugin.utils.DEFAULT_INJECT_CLASS
 import com.growingio.android.plugin.utils.normalize
@@ -86,7 +87,7 @@ internal interface AutoTrackerParams : InstrumentationParameters {
      * that is used solely for that purpose.
      */
     @get:Input
-    val analytics: Property<Array<Boolean>>
+    val analytics: Property<AnalyticsAdapter>
 
     @get:Input
     val injectClasses: Property<Array<String>>
