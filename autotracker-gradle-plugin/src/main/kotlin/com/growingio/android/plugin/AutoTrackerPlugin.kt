@@ -81,7 +81,7 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
                 params.excludePackages.set(gioExtension.excludePackages ?: arrayOf())
                 params.includePackages.set(gioExtension.includePackages ?: arrayOf())
                 params.injectClasses.set(gioExtension.injectClasses ?: arrayOf())
-                params.analytics.set(gioExtension.analyticsAdapter)
+                params.analytics.set(gioExtension.analyticsAdapter ?: AnalyticsAdapter())
             }
             androidComponent.setAsmFramesComputationMode(FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS)
         }
