@@ -117,15 +117,26 @@ fun initInjectClass(extension: AutoTrackerExtension) {
     }
 
     extension.analyticsAdapter?.apply {
-        if (firebaseAnalytics) {
-            DEFAULT_INJECT_CLASS.add("com.growingio.android.analytics.firebase.FirebaseAnalyticsInjector")
+        with("com.growingio.android.analytics.firebase.FirebaseAnalyticsInjector") {
+            if (firebaseAnalytics) DEFAULT_INJECT_CLASS.add(this)
+            else DEFAULT_INJECT_CLASS.remove(this)
         }
-        if (googleAnalytics) {
-            DEFAULT_INJECT_CLASS.add("com.growingio.android.analytics.google.GoogleAnalyticsInjector")
+
+        with("com.growingio.android.analytics.google.GoogleAnalyticsInjector") {
+            if (googleAnalytics) DEFAULT_INJECT_CLASS.add(this)
+            else DEFAULT_INJECT_CLASS.remove(this)
         }
-        if (sensorAnalytics) {
-            INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.SensorsDataAPI")
-            DEFAULT_INJECT_CLASS.add("com.growingio.android.analytics.sensor.SensorAnalyticsInjector")
+
+        with("com.growingio.android.analytics.sensor.SensorAnalyticsInjector") {
+            if (sensorAnalytics) {
+                DEFAULT_INJECT_CLASS.add(this)
+                INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.SensorsDataAPI")
+                INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.AbstractSensorsDataAPI")
+            } else {
+                DEFAULT_INJECT_CLASS.remove(this)
+                INCLUDED_PACKAGES.remove("com.sensorsdata.analytics.android.sdk.SensorsDataAPI")
+                INCLUDED_PACKAGES.remove("com.sensorsdata.analytics.android.sdk.AbstractSensorsDataAPI")
+            }
         }
     }
 

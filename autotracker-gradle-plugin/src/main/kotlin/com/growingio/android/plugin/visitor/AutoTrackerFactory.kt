@@ -20,14 +20,14 @@ import com.android.build.api.instrumentation.AsmClassVisitorFactory
 import com.android.build.api.instrumentation.ClassContext
 import com.android.build.api.instrumentation.ClassData
 import com.android.build.api.instrumentation.InstrumentationParameters
+import com.growingio.android.plugin.AnalyticsAdapter
 import com.growingio.android.plugin.transform.ClassContextCompat
 import com.growingio.android.plugin.utils.DEFAULT_INJECT_CLASS
 import com.growingio.android.plugin.utils.normalize
 import com.growingio.android.plugin.utils.shouldClassModified
-import org.gradle.api.tasks.Internal
 import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
 import org.objectweb.asm.ClassVisitor
-import java.io.File
 
 /**
  * <p>
@@ -80,13 +80,22 @@ internal abstract class AutoTrackerFactory :
 
 
 internal interface AutoTrackerParams : InstrumentationParameters {
-    @get:Internal
-    val additionalClassesDir: Property<File>
 
-    @get:Internal
+    /**
+     * AGP will re-instrument dependencies, when the [InstrumentationParameters] changed
+     * https://issuetracker.google.com/issues/190082518#comment4. This is just a dummy parameter
+     * that is used solely for that purpose.
+     */
+    @get:Input
+    val analytics: Property<AnalyticsAdapter>
+
+    @get:Input
+    val injectClasses: Property<Array<String>>
+
+    @get:Input
     val excludePackages: Property<Array<String>>
 
-    @get:Internal
+    @get:Input
     val includePackages: Property<Array<String>>
 
 }

@@ -159,9 +159,10 @@ internal class DesugarClassVisitor(
         api: Int,
         nmv: MethodVisitor,
         access: Int,
-        name: String?,
+        private val methodName: String?,//ASM6.0 hasn't inline name field,so we just create it.
         descriptor: String?,
-    ) : AdviceAdapter(api, nmv, access, name, descriptor) {
+    ) : AdviceAdapter(api, nmv, access, methodName, descriptor) {
+
 
         /**
          * 1. 生成的lambda方法一定会在 visitInvokeDynamicInsn 之后访问，故可直接在接下来的 onMethodEnter 和 onMethodExit 处理
@@ -268,7 +269,7 @@ internal class DesugarClassVisitor(
         }
 
         override fun onMethodEnter() {
-            val targetMethod = findTargetMethod(name, methodDesc) ?: return
+            val targetMethod = findTargetMethod(methodName ?: "", methodDesc) ?: return
             for (injectMethod in targetMethod.injectMethods) {
                 if (!injectMethod.isAfter && classIncluded(injectMethod.className)) {
                     visitInsn(ACONST_NULL)
@@ -286,7 +287,7 @@ internal class DesugarClassVisitor(
         }
 
         override fun onMethodExit(opcode: Int) {
-            val targetMethod = findTargetMethod(name, methodDesc) ?: return
+            val targetMethod = findTargetMethod(methodName ?: "", methodDesc) ?: return
             for (injectMethod in targetMethod.injectMethods) {
                 if (injectMethod.isAfter && classIncluded(injectMethod.className)) {
                     visitInsn(ACONST_NULL)

@@ -41,7 +41,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         tempFolder.newFolder("src", "main", "java", "growingio")
         tempFolder.newFolder("src", "test", "java", "growingio")
         tempFolder.newFolder("src", "main", "res")
-        addDependencies("implementation 'com.growingio.android:autotracker-cdp:3.4.0-SNAPSHOT'")
+        addDependencies("implementation 'com.growingio.android:autotracker-cdp:3.4.1'")
     }
 
     // Adds project dependencies, e.g. "implementation <group>:<id>:<version>"
