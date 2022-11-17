@@ -40,14 +40,18 @@ internal class AutoTrackerTransform(
     override fun getName() = "AutoTrackerTransform"
 
     override fun transform(context: AutoTrackerContext, bytecode: ByteArray): ByteArray {
+        var className: String = context.name
         try {
             val classReader = ClassReader(bytecode)
+            className = classReader.className
             if (!shouldClassModified(
                     gioExtension.excludePackages ?: arrayOf(),
                     gioExtension.includePackages ?: arrayOf(),
                     normalize(classReader.className)
                 )
-            ) { return bytecode }
+            ) {
+                return bytecode
+            }
 
 
             val autoTrackerWriter = object : ClassWriter(classReader, COMPUTE_MAXS) {
@@ -82,8 +86,8 @@ internal class AutoTrackerTransform(
             classReader.accept(visitor, ClassReader.EXPAND_FRAMES)
             return autoTrackerWriter.toByteArray()
         } catch (t: Throwable) {
-            e(
-                "Unfortunately, an error has occurred while processing " + context.name + ". Please copy your build logs and the jar containing this class and visit https://www.growingio.com, thanks!\n",
+            w(
+                "Unfortunately, an error has occurred while processing $className. Please check this class and decide whether to ignore it in plugin setting:「growingAutotracker -> excludePackages」. Or copy your build logs and the jar containing this class and visit https://www.growingio.com, thanks!\n",
                 t
             )
         }
