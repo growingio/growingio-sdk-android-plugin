@@ -75,6 +75,7 @@ val EXCLUDED_PACKAGES = arrayListOf(
     //"org.jetbrains.kotlin",
     "android.arch",
     "androidx.lifecycle.ReportFragment",
+    "androidx.navigation.fragment.NavHostFragment",
     //"com.google.android",
 
     //THIRD

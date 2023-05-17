@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.7.20"
     `java-gradle-plugin`
 
     id("io.codearte.nexus-staging") version ("0.30.0")
@@ -21,11 +21,11 @@ val testPluginImplementation: Configuration by configurations.creating {
 }
 
 ext {
-    set("releaseVersion", "3.4.2")
-    set("releaseVersionCode", 30402)
+    set("releaseVersion", "3.5.0")
+    set("releaseVersionCode", 30500)
     set("agp_version", "7.2.1")
     set("low_agp_version", "4.2.2")
-    set("kotlin_version", "1.6.21")
+    set("kotlin_version", "1.7.20")
 }
 
 dependencies {

@@ -22,9 +22,9 @@ dependencies{
     implementation(kotlin("stdlib"))
     implementation(project(":inject-annotation"))
 
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.6.21-1.0.5")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.7.20-1.0.6")
     // https://square.github.io/kotlinpoet/
-    implementation("com.squareup:kotlinpoet:1.11.0")
+    implementation("com.squareup:kotlinpoet:1.12.0")
 }
 
 // 运行 $ ./gradlew --stop     # 先停掉 daemon 进程
