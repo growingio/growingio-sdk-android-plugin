@@ -23,6 +23,7 @@ import android.widget.ExpandableListView.OnChildClickListener
 import android.widget.ExpandableListView.OnGroupClickListener
 import android.widget.RatingBar.OnRatingBarChangeListener
 import android.widget.SeekBar.OnSeekBarChangeListener
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.growingio.inject.annotation.SuperInject
 import com.growingio.inject.annotation.Belong
 
@@ -50,6 +51,18 @@ interface ViewClickInjector {
         parameterTypes = [RadioGroup::class, Int::class]
     )
     fun radioGroupOnChecked(listener: RadioGroup.OnCheckedChangeListener, radioGroup: RadioGroup, i: Int)
+
+    @SuperInject(
+        clazz = MaterialButtonToggleGroup.OnButtonCheckedListener::class,
+        method = "onButtonChecked",
+        parameterTypes = [MaterialButtonToggleGroup::class, Int::class, Boolean::class]
+    )
+    fun materialButtonToggleGroupOnButtonChecked(
+        listener: MaterialButtonToggleGroup.OnButtonCheckedListener,
+        materialButtonToggleGroup: MaterialButtonToggleGroup,
+        checkedId: Int,
+        isChecked: Boolean
+    )
 
     @SuperInject(
         clazz = OnRatingBarChangeListener::class,
