@@ -61,13 +61,6 @@ interface InvalidInjector {
 
 
     @SuperInject(
-        clazz = Slider.OnSliderTouchListener::class,
-        method = "onStopTrackingTouch",
-        parameterTypes = [Slider::class],
-    )
-    fun sliderTouch(slider: Slider)
-
-    @SuperInject(
         clazz = SearchView.OnQueryTextListener::class,
         method = "onQueryTextSubmit",
         parameterTypes = [SearchView::class, String::class],
@@ -85,12 +78,5 @@ interface InvalidInjector {
         listener: NavigationBarView.OnItemSelectedListener,
         item: MenuItem
     )
-
-    @SuperInject(
-        clazz = TabLayout.OnTabSelectedListener::class,
-        method = "onTabSelected",
-        parameterTypes = [TabLayout.Tab::class],
-    )
-    fun tabLayoutSelected(tab: TabLayout.Tab)
 
 }
