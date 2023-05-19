@@ -39,13 +39,6 @@ interface ViewClickInjector {
     fun viewOnClick(listener: View.OnClickListener, view: View)
 
     @SuperInject(
-        clazz = OnSeekBarChangeListener::class,
-        method = "onStopTrackingTouch",
-        parameterTypes = [SeekBar::class]
-    )
-    fun seekBarOnSeekBarChange(listener: OnSeekBarChangeListener, seekBar: SeekBar)
-
-    @SuperInject(
         clazz = RadioGroup.OnCheckedChangeListener::class,
         method = "onCheckedChanged",
         parameterTypes = [RadioGroup::class, Int::class]
@@ -64,17 +57,6 @@ interface ViewClickInjector {
         isChecked: Boolean
     )
 
-    @SuperInject(
-        clazz = OnRatingBarChangeListener::class,
-        method = "onRatingChanged",
-        parameterTypes = [RatingBar::class, Float::class, Boolean::class]
-    )
-    fun ratingBarOnRatingBarChange(
-        listener: OnRatingBarChangeListener,
-        ratingBar: RatingBar,
-        rating: Float,
-        fromUser: Boolean
-    )
 
     @SuperInject(
         clazz = OnItemClickListener::class,
@@ -129,16 +111,5 @@ interface ViewClickInjector {
         groupPosition: Int,
         childPosition: Int,
         id: Long
-    )
-
-    @SuperInject(
-        clazz = CompoundButton.OnCheckedChangeListener::class,
-        method = "onCheckedChanged",
-        parameterTypes = [CompoundButton::class, Boolean::class]
-    )
-    fun compoundButtonOnChecked(
-        listener: CompoundButton.OnCheckedChangeListener,
-        button: CompoundButton,
-        checked: Boolean
     )
 }

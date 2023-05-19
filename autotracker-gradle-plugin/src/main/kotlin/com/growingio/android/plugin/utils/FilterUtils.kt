@@ -110,6 +110,7 @@ val DEFAULT_INJECT_CLASS = arrayListOf(
     "com.growingio.android.sdk.autotrack.inject.WebViewInjector",
     "com.growingio.android.sdk.autotrack.inject.X5WebViewInjector",
     "com.growingio.android.sdk.autotrack.inject.ViewClickInjector",
+    "com.growingio.android.sdk.autotrack.inject.ViewChangeInjector",
 )
 
 fun initInjectClass(extension: AutoTrackerExtension) {
