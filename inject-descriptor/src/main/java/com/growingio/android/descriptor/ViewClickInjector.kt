@@ -21,9 +21,8 @@ import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ExpandableListView.OnChildClickListener
 import android.widget.ExpandableListView.OnGroupClickListener
-import android.widget.RatingBar.OnRatingBarChangeListener
-import android.widget.SeekBar.OnSeekBarChangeListener
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.tabs.TabLayout
 import com.growingio.inject.annotation.SuperInject
 import com.growingio.inject.annotation.Belong
 
@@ -112,4 +111,11 @@ interface ViewClickInjector {
         childPosition: Int,
         id: Long
     )
+
+    @SuperInject(
+        clazz = TabLayout.OnTabSelectedListener::class,
+        method = "onTabSelected",
+        parameterTypes = [TabLayout.Tab::class],
+    )
+    fun tabLayoutOnTabSelected(listener: TabLayout.OnTabSelectedListener, tab: TabLayout.Tab)
 }
