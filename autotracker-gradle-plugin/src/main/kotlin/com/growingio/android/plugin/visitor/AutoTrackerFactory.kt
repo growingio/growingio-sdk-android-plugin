@@ -25,6 +25,7 @@ import com.growingio.android.plugin.transform.ClassContextCompat
 import com.growingio.android.plugin.utils.DEFAULT_INJECT_CLASS
 import com.growingio.android.plugin.utils.normalize
 import com.growingio.android.plugin.utils.shouldClassModified
+import com.growingio.android.plugin.utils.w
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.objectweb.asm.ClassVisitor
@@ -50,7 +51,11 @@ internal abstract class AutoTrackerFactory :
             }
 
             override fun classIncluded(clazz: String): Boolean {
-                return DEFAULT_INJECT_CLASS.contains(normalize(clazz))
+                val included = DEFAULT_INJECT_CLASS.contains(normalize(clazz))
+                if (!included) {
+                    w("$clazz not included in default inject class")
+                }
+                return included
             }
         }
         val apiVersion = instrumentationContext.apiVersion.get()

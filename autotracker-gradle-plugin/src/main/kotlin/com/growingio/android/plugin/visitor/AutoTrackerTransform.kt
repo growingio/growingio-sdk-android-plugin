@@ -68,7 +68,11 @@ internal class AutoTrackerTransform(
                 }
 
                 override fun classIncluded(clazz: String): Boolean {
-                    return DEFAULT_INJECT_CLASS.contains(normalize(clazz))
+                    val included = DEFAULT_INJECT_CLASS.contains(normalize(clazz))
+                    if (!included) {
+                        w("$clazz not included in default inject class")
+                    }
+                    return included
                 }
             }
 
