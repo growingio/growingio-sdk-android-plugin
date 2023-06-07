@@ -42,6 +42,7 @@ internal class InjectSuperClassVisitor(
 
     private val mTargetClasses = arrayListOf<TargetClass>()
     private val mOverrideMethods = hashSetOf<TargetMethod>()
+    private lateinit var classType: Type
 
     override fun visit(
         version: Int,
@@ -52,6 +53,7 @@ internal class InjectSuperClassVisitor(
         interfaces: Array<out String>?
     ) {
         super.visit(version, access, name, signature, superName, interfaces)
+        classType = Type.getObjectType(name)
         // 使用 superName 来查找类，避免多重继承下的重复注入
         val targetClass = HookClassesConfig.superHookClasses[superName]
         if (targetClass != null) {
@@ -146,11 +148,16 @@ internal class InjectSuperClassVisitor(
 
         override fun onMethodEnter() {
             val targetArgs: Array<Type> = Type.getArgumentTypes(descriptor)
-            localVariables = IntArray(targetArgs.size)
+            localVariables = IntArray(targetArgs.size + 1)
+
+            loadThis()
+            localVariables[0] = newLocal(classType)
+            storeLocal(localVariables[0])
+
             for (i in targetArgs.indices) {
                 loadArg(i)
-                localVariables[i] = newLocal(targetArgs[i])
-                storeLocal(localVariables[i])
+                localVariables[i+1] = newLocal(targetArgs[i])
+                storeLocal(localVariables[i+1])
             }
 
             super.onMethodEnter()
@@ -165,10 +172,10 @@ internal class InjectSuperClassVisitor(
         private fun injectMethodExit(injectMethods: Set<InjectMethod>) {
             for (injectMethod in injectMethods) {
                 if (injectMethod.isAfter && classIncluded(injectMethod.className)) {
-                    loadThis()
+                    loadLocal(localVariables[0])
                     val args: Array<Type> = Type.getArgumentTypes(descriptor)
                     for (index in args.indices) {
-                        loadLocal(localVariables[index])
+                        loadLocal(localVariables[index + 1])
                     }
                     invokeStatic(
                         Type.getObjectType(injectMethod.className),
