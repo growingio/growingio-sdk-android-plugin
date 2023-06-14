@@ -110,7 +110,7 @@ class GioMenuItemTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onMenuItemClick" && it.desc == "(Landroid/view/MenuItem;)Z" }.let {
                 assertThat(it).isNotNull()
-                assertThat(it?.instructions?.size()).isEqualTo(10)
+                assertThat(it?.instructions?.size()).isEqualTo(12)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -129,7 +129,7 @@ class GioMenuItemTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onMenuItemClick" && it.desc == "(Landroid/view/MenuItem;)Z" }.let {
                 assertThat(it).isNotNull()
-                assertThat(it?.instructions?.size()).isEqualTo(10)
+                assertThat(it?.instructions?.size()).isEqualTo(12)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
@@ -148,7 +148,7 @@ class GioMenuItemTransformTest {
             classReader.accept(classNode, 0)
             classNode.methods.find { it.name == "onMenuItemClick" && it.desc == "(Landroid/view/MenuItem;)Z" }.let {
                 assertThat(it).isNotNull()
-                assertThat(it?.instructions?.size()).isEqualTo(10)
+                assertThat(it?.instructions?.size()).isEqualTo(12)
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)

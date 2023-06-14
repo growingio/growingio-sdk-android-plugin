@@ -28,7 +28,6 @@ import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 import org.objectweb.asm.commons.AdviceAdapter
-import org.objectweb.asm.commons.GeneratorAdapter
 import org.objectweb.asm.commons.Method
 
 /**
@@ -41,6 +40,7 @@ internal class InjectTargetClassVisitor(
 ) : ClassVisitor(api, ncv), ClassContextCompat by classContext {
 
     private val mTargetClasses = arrayListOf<TargetClass>()
+    private lateinit var classType: Type
 
     override fun visit(
         version: Int,
@@ -51,6 +51,7 @@ internal class InjectTargetClassVisitor(
         interfaces: Array<out String>?
     ) {
         super.visit(version, access, name, signature, superName, interfaces)
+        classType = Type.getObjectType(name)
         val targetClass = HookClassesConfig.targetHookClasses[name]
         if (targetClass != null) {
             mTargetClasses.add(targetClass)
@@ -91,11 +92,20 @@ internal class InjectTargetClassVisitor(
 
         override fun onMethodEnter() {
             val targetArgs: Array<Type> = Type.getArgumentTypes(descriptor)
-            localVariables = IntArray(targetArgs.size)
+            val thisSlot = if (methodAccess and Opcodes.ACC_STATIC == 0) 1 else 0
+            if (thisSlot != 0) {
+                localVariables = IntArray(targetArgs.size + 1)
+                loadThis()
+                localVariables[0] = newLocal(classType)
+                storeLocal(localVariables[0])
+            } else {
+                localVariables = IntArray(targetArgs.size)
+            }
+
             for (i in targetArgs.indices) {
                 loadArg(i)
-                localVariables[i] = newLocal(targetArgs[i])
-                storeLocal(localVariables[i])
+                localVariables[i + thisSlot] = newLocal(targetArgs[i])
+                storeLocal(localVariables[i + thisSlot])
             }
 
             super.onMethodEnter()
@@ -119,17 +129,18 @@ internal class InjectTargetClassVisitor(
                 }
                 if (injectMethod.isAfter == isAfter) {
                     when (visitCode(isAfter, injectMethod.methodDesc, opcode)) {
-                        1 -> loadThis()
+                        1 -> loadLocal(localVariables[0])
                         2 -> visitInsn(Opcodes.DUP)
                         3 -> {
                             visitInsn(Opcodes.DUP)
-                            loadThis()
+                            loadLocal(localVariables[0])
                         }
                         -1 -> return
                     }
                     val args: Array<Type> = Type.getArgumentTypes(descriptor)
+                    val thisSlot = if (methodAccess and Opcodes.ACC_STATIC == 0) 1 else 0
                     for (index in args.indices) {
-                        loadLocal(localVariables[index])
+                        loadLocal(localVariables[index + thisSlot])
                     }
                     invokeStatic(
                         Type.getObjectType(injectMethod.className),
