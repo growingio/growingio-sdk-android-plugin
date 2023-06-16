@@ -56,6 +56,16 @@ interface ViewClickInjector {
         isChecked: Boolean
     )
 
+    @SuperInject(
+        clazz = CompoundButton.OnCheckedChangeListener::class,
+        method = "onCheckedChanged",
+        parameterTypes = [CompoundButton::class, Boolean::class]
+    )
+    fun compoundButtonOnChecked(
+        listener: CompoundButton.OnCheckedChangeListener,
+        button: CompoundButton,
+        checked: Boolean
+    )
 
     @SuperInject(
         clazz = OnItemClickListener::class,
