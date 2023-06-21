@@ -29,8 +29,6 @@ import androidx.annotation.RequiresApi;
 
 import com.growingio.android.sdk.autotrack.CdpAutotrackConfiguration;
 import com.growingio.android.sdk.autotrack.GrowingAutotracker;
-import com.growingio.android.sdk.track.events.helper.EventExcludeFilter;
-import com.growingio.android.sdk.track.events.helper.FieldIgnoreFilter;
 import com.growingio.android.sdk.track.log.Logger;
 
 import java.util.List;
@@ -50,12 +48,9 @@ public class PluginApplication extends Application {
             sConfiguration = new CdpAutotrackConfiguration("ac04dfef4a1b6ec7", "growing.6b963145e9509ad0")
                     .setDataSourceId("ae1a372733eabfa8")
                     .setDataCollectionServerHost("https://collector-opdemo.growingio.com")
-                    .setUploadExceptionEnabled(false)
                     .setDebugEnabled(true)
-                    .setDataCollectionEnabled(true)
+                    .setDataCollectionEnabled(true);
                     //.setRequireAppProcessesEnabled(true)
-                    .setExcludeEvent(EventExcludeFilter.of(EventExcludeFilter.REENGAGE))
-                    .setIgnoreField(FieldIgnoreFilter.of(FieldIgnoreFilter.FIELD_IGNORE_ALL));
         }
 
         enableStrictMode();

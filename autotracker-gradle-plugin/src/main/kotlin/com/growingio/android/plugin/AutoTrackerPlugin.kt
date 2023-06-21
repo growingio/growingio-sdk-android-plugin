@@ -44,8 +44,7 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
 
         var inAndroidProject = false
 
-        val autoTrackerExtension =
-            project.extensions.create("growingAutotracker", AutoTrackerExtension::class.java, instantiator)
+        val autoTrackerExtension = project.extensions.create("growingAutotracker", AutoTrackerExtension::class.java, instantiator)
 
         project.plugins.withType(AndroidBasePlugin::class.java) {
             inAndroidProject = true

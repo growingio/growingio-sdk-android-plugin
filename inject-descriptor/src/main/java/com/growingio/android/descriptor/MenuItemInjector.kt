@@ -30,9 +30,11 @@ interface MenuItemInjector {
         returnType = Boolean::class
     )
     fun toolbarOnMenuItemClick(listener: Toolbar.OnMenuItemClickListener, item: MenuItem)
+
+
 /*
     // 支持库中的 toolbar 由 View.OnClickListener 转发
-    @BeforeSuper(
+    @SuperInject(
         clazz = androidx.appcompat.widget.Toolbar.OnMenuItemClickListener::class,
         method = "onMenuItemClick",
         parameterTypes = [MenuItem::class],
@@ -72,6 +74,15 @@ interface MenuItemInjector {
         returnType = Boolean::class
     )
     fun popupMenuOnMenuItemClick(listener: PopupMenu.OnMenuItemClickListener, item: MenuItem)
+
+
+    @SuperInject(
+        clazz = MenuItem.OnMenuItemClickListener::class,
+        method = "onMenuItemClick",
+        parameterTypes = [MenuItem::class],
+        returnType = Boolean::class
+    )
+    fun contextMenuOnMenuItemClick(listener: MenuItem.OnMenuItemClickListener, item: MenuItem)
 
 /*
     @BeforeSuper(

@@ -21,8 +21,8 @@ import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ExpandableListView.OnChildClickListener
 import android.widget.ExpandableListView.OnGroupClickListener
-import android.widget.RatingBar.OnRatingBarChangeListener
-import android.widget.SeekBar.OnSeekBarChangeListener
+import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.tabs.TabLayout
 import com.growingio.inject.annotation.SuperInject
 import com.growingio.inject.annotation.Belong
 
@@ -38,13 +38,6 @@ interface ViewClickInjector {
     fun viewOnClick(listener: View.OnClickListener, view: View)
 
     @SuperInject(
-        clazz = OnSeekBarChangeListener::class,
-        method = "onStopTrackingTouch",
-        parameterTypes = [SeekBar::class]
-    )
-    fun seekBarOnSeekBarChange(listener: OnSeekBarChangeListener, seekBar: SeekBar)
-
-    @SuperInject(
         clazz = RadioGroup.OnCheckedChangeListener::class,
         method = "onCheckedChanged",
         parameterTypes = [RadioGroup::class, Int::class]
@@ -52,15 +45,26 @@ interface ViewClickInjector {
     fun radioGroupOnChecked(listener: RadioGroup.OnCheckedChangeListener, radioGroup: RadioGroup, i: Int)
 
     @SuperInject(
-        clazz = OnRatingBarChangeListener::class,
-        method = "onRatingChanged",
-        parameterTypes = [RatingBar::class, Float::class, Boolean::class]
+        clazz = MaterialButtonToggleGroup.OnButtonCheckedListener::class,
+        method = "onButtonChecked",
+        parameterTypes = [MaterialButtonToggleGroup::class, Int::class, Boolean::class]
     )
-    fun ratingBarOnRatingBarChange(
-        listener: OnRatingBarChangeListener,
-        ratingBar: RatingBar,
-        rating: Float,
-        fromUser: Boolean
+    fun materialButtonToggleGroupOnButtonChecked(
+        listener: MaterialButtonToggleGroup.OnButtonCheckedListener,
+        materialButtonToggleGroup: MaterialButtonToggleGroup,
+        checkedId: Int,
+        isChecked: Boolean
+    )
+
+    @SuperInject(
+        clazz = CompoundButton.OnCheckedChangeListener::class,
+        method = "onCheckedChanged",
+        parameterTypes = [CompoundButton::class, Boolean::class]
+    )
+    fun compoundButtonOnChecked(
+        listener: CompoundButton.OnCheckedChangeListener,
+        button: CompoundButton,
+        checked: Boolean
     )
 
     @SuperInject(
@@ -119,13 +123,9 @@ interface ViewClickInjector {
     )
 
     @SuperInject(
-        clazz = CompoundButton.OnCheckedChangeListener::class,
-        method = "onCheckedChanged",
-        parameterTypes = [CompoundButton::class, Boolean::class]
+        clazz = TabLayout.OnTabSelectedListener::class,
+        method = "onTabSelected",
+        parameterTypes = [TabLayout.Tab::class],
     )
-    fun compoundButtonOnChecked(
-        listener: CompoundButton.OnCheckedChangeListener,
-        button: CompoundButton,
-        checked: Boolean
-    )
+    fun tabLayoutOnTabSelected(listener: TabLayout.OnTabSelectedListener, tab: TabLayout.Tab)
 }
