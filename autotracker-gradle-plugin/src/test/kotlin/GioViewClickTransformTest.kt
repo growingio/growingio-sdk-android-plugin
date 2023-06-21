@@ -160,8 +160,8 @@ class GioViewClickTransformTest {
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
-                        assertThat(method.owner).isEqualTo("com/growingio/android/sdk/autotrack/inject/ViewClickInjector")
-                        assertThat(method.name).isEqualTo("seekBarOnSeekBarChange")
+                        assertThat(method.owner).isEqualTo("com/growingio/android/sdk/autotrack/inject/ViewChangeInjector")
+                        assertThat(method.name).isEqualTo("seekBarOnStopTrackingTouch")
                         assertThat(method.desc).isEqualTo("(Landroid/widget/SeekBar${'$'}OnSeekBarChangeListener;Landroid/widget/SeekBar;)V")
                         true
                     }
@@ -198,8 +198,8 @@ class GioViewClickTransformTest {
                 it?.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)
                     ?.first { method ->
                         assertThat(method.opcode).isEqualTo(Opcodes.INVOKESTATIC)
-                        assertThat(method.owner).isEqualTo("com/growingio/android/sdk/autotrack/inject/ViewClickInjector")
-                        assertThat(method.name).isEqualTo("ratingBarOnRatingBarChange")
+                        assertThat(method.owner).isEqualTo("com/growingio/android/sdk/autotrack/inject/ViewChangeInjector")
+                        assertThat(method.name).isEqualTo("ratingBarOnRatingChange")
                         assertThat(method.desc).isEqualTo("(Landroid/widget/RatingBar${'$'}OnRatingBarChangeListener;Landroid/widget/RatingBar;FZ)V")
                         true
                     }
