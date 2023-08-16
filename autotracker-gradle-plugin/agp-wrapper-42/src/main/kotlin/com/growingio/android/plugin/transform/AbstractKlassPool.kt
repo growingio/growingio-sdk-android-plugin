@@ -1,5 +1,6 @@
-package com.growingio.android.plugin.utils
+package com.growingio.android.plugin.transform
 
+import com.growingio.android.plugin.util.normalize
 import java.io.Closeable
 import java.io.File
 import java.net.URLClassLoader

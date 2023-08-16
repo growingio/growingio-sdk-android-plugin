@@ -14,19 +14,14 @@
  *   limitations under the License.
  */
 
-@file:Suppress("DEPRECATION")
-
 package com.growingio.android.plugin.transform
 
-import com.android.build.api.transform.QualifiedContent
 import com.android.build.api.transform.Transform
 import com.android.build.api.transform.TransformInvocation
 import com.android.build.gradle.BaseExtension
-import com.android.build.api.transform.QualifiedContent.Scope
-import com.growingio.android.plugin.utils.AbstractKlassPool
-import com.growingio.android.plugin.utils.info
+import com.android.build.gradle.internal.pipeline.TransformManager
+import com.growingio.android.plugin.util.info
 import org.gradle.api.Project
-import org.jetbrains.kotlin.com.google.common.collect.ImmutableSet
 import java.lang.management.ManagementFactory
 import java.lang.management.ThreadMXBean
 
@@ -54,9 +49,9 @@ abstract class GrowingBaseTransform(
 
     override fun getName() = "GioAutotracker"
 
-    override fun getInputTypes() = ImmutableSet.of(QualifiedContent.DefaultContentType.CLASSES)
+    override fun getInputTypes() = TransformManager.CONTENT_CLASS
 
-    override fun getScopes() = ImmutableSet.of(Scope.PROJECT, Scope.SUB_PROJECTS, Scope.EXTERNAL_LIBRARIES)
+    override fun getScopes() = TransformManager.SCOPE_FULL_PROJECT
 
     override fun isIncremental() = true
 

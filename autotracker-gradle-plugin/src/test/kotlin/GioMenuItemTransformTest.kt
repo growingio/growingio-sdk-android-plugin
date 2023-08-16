@@ -15,8 +15,7 @@
  */
 
 import com.google.common.truth.Truth.assertThat
-import com.growingio.android.plugin.hook.HookInjectorClass
-import com.growingio.android.plugin.utils.asIterable
+import com.growingio.android.plugin.util.asIterable
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Assert
 import org.junit.Before

@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.growingio.android.autotracker'
+//    id 'com.growingio.android.autotracker'
 }
 
 android {
@@ -32,15 +32,15 @@ android {
     }
 }
 
-growingAutotracker {
-    logEnabled true
-    includePackages "com.growingio.android.plugin"
-    excludePackages "com.cpacm"
-    analyticsAdapter {
-        firebaseAnalytics false
-        googleAnalytics false
-    }
-}
+//growingAutotracker {
+//    logEnabled true
+//    includePackages "com.growingio.android.plugin"
+//    excludePackages "com.cpacm"
+//    analyticsAdapter {
+//        firebaseAnalytics false
+//        googleAnalytics false
+//    }
+//}
 
 
 dependencies {

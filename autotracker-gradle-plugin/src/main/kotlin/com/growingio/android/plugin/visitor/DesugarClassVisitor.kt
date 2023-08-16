@@ -19,8 +19,8 @@ package com.growingio.android.plugin.visitor
 import com.growingio.android.plugin.hook.HookClassesConfig
 import com.growingio.android.plugin.hook.TargetMethod
 import com.growingio.android.plugin.transform.ClassContextCompat
-import com.growingio.android.plugin.utils.info
-import com.growingio.android.plugin.utils.unNormalize
+import com.growingio.android.plugin.util.info
+import com.growingio.android.plugin.util.unNormalize
 import org.objectweb.asm.*
 import org.objectweb.asm.commons.AdviceAdapter
 import org.objectweb.asm.commons.GeneratorAdapter

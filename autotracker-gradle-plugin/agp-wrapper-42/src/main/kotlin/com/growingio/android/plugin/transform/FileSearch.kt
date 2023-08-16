@@ -1,5 +1,6 @@
-package com.growingio.android.plugin.utils
+package com.growingio.android.plugin.transform
 
+import com.growingio.android.plugin.util.asIterable
 import java.io.*
 import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.ForkJoinTask
@@ -52,9 +53,6 @@ fun Iterator<File>.search(filter: (File) -> Boolean = { true }): Collection<File
 
 @JvmOverloads
 fun Array<File>.search(filter: (File) -> Boolean = { true }): Collection<File> = FileSearch(this, filter).execute()
-
-
-fun <T> Iterator<T>.asIterable(): Iterable<T> = Iterable { this }
 
 fun <T> ForkJoinTask<T>.execute(): T {
     val pool = ForkJoinPool()
@@ -115,30 +113,3 @@ fun ByteArray.redirect(output: OutputStream): Long = this.inputStream().copyTo(o
 
 
 val NCPU = Runtime.getRuntime().availableProcessors()
-
-fun normalize(type: String) = if (type.contains('/')) {
-    type.replace('/', '.')
-} else {
-    type
-}
-
-fun String.unNormalize(): String {
-    return if (this.contains('.')) {
-        this.replace('.', '/')
-    } else {
-        this
-    }
-}
-
-
-fun String.simpleClass(): String {
-    return this.split("/").last()
-}
-
-fun isAndroidGenerated(className: String): Boolean {
-    return className.contains("R$") ||
-            className.contains("R2$") ||
-            className.contains("R.class") ||
-            className.contains("R2.class") ||
-            className.contains("BuildConfig.class")
-}

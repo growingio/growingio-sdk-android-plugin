@@ -23,9 +23,11 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.AndroidBasePlugin
 import com.growingio.android.plugin.visitor.AutoTrackerTransform
 import com.growingio.android.plugin.util.ComponentCompat
+import com.growingio.android.plugin.util.LOG_ENABLE
 import com.growingio.android.plugin.util.SimpleAGPVersion
 import com.growingio.android.plugin.util.getAndroidComponentsExtension
-import com.growingio.android.plugin.utils.*
+import com.growingio.android.plugin.util.w
+import com.growingio.android.plugin.util.*
 import com.growingio.android.plugin.visitor.AutoTrackerFactory
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin

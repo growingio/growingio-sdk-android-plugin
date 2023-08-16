@@ -20,8 +20,8 @@ import com.growingio.android.plugin.hook.HookClassesConfig
 import com.growingio.android.plugin.hook.TargetClass
 import com.growingio.android.plugin.hook.TargetMethod
 import com.growingio.android.plugin.transform.ClassContextCompat
-import com.growingio.android.plugin.utils.info
-import com.growingio.android.plugin.utils.simpleClass
+import com.growingio.android.plugin.util.info
+import com.growingio.android.plugin.util.simpleClass
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes

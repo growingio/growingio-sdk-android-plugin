@@ -22,10 +22,10 @@ import com.android.build.api.instrumentation.ClassData
 import com.android.build.api.instrumentation.InstrumentationParameters
 import com.growingio.android.plugin.AnalyticsAdapter
 import com.growingio.android.plugin.transform.ClassContextCompat
-import com.growingio.android.plugin.utils.DEFAULT_INJECT_CLASS
-import com.growingio.android.plugin.utils.normalize
-import com.growingio.android.plugin.utils.shouldClassModified
-import com.growingio.android.plugin.utils.w
+import com.growingio.android.plugin.util.DEFAULT_INJECT_CLASS
+import com.growingio.android.plugin.util.normalize
+import com.growingio.android.plugin.util.shouldClassModified
+import com.growingio.android.plugin.util.w
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.objectweb.asm.ClassVisitor
