@@ -1,11 +1,15 @@
 plugins {
-    kotlin("jvm") version "1.7.20"
+    kotlin("jvm") version "1.8.20"
     `java-gradle-plugin`
 
     id("io.codearte.nexus-staging") version ("0.30.0")
+    id("com.gradle.plugin-publish") version ("1.2.0")
 }
 
+@Suppress("UnstableApiUsage")
 gradlePlugin {
+    website.set("https://github.com/growingio/growingio-sdk-android-plugin")
+    vcsUrl.set("https://github.com/growingio/growingio-sdk-android-plugin")
     plugins {
         create("autotracker") {
             id = "com.growingio.android.autotracker"
@@ -23,9 +27,9 @@ val testPluginImplementation: Configuration by configurations.creating {
 ext {
     set("releaseVersion", "3.5.0")
     set("releaseVersionCode", 30500)
-    set("agp_version", "7.2.1")
+    set("agp_version", "8.1.0")
     set("low_agp_version", "4.2.2")
-    set("kotlin_version", "1.7.20")
+    set("kotlin_version", "1.8.20")
 }
 
 dependencies {
@@ -56,10 +60,13 @@ tasks.withType(PluginUnderTestMetadata::class.java).named("pluginUnderTestMetada
     pluginClasspath.from(testPluginImplementation)
 }
 
+
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 }
+
+
 // 调试 plugin
 // 1. 配置 gradle.properties ,设置host端口
 // 2. 放断点

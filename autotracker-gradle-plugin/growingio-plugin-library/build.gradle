@@ -11,7 +11,7 @@ java {
 
 configurations {
     // Config for dependencies that will be shadowed / jarjared
-    shadowed
+    //shadowed
     compileOnly.extendsFrom(shadowed)
     // Make all shadowed dependencies be compileOnly dependencies to not affect
     // main compilation / configuration

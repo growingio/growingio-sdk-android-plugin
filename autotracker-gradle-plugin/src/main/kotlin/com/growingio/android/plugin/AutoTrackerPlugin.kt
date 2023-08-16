@@ -98,7 +98,11 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
     }
 
     private fun checkJavaVersion() {
-        if (JavaVersion.current() < JavaVersion.VERSION_1_8) {
+        if (SimpleAGPVersion.ANDROID_GRADLE_PLUGIN_VERSION >= SimpleAGPVersion(7, 0)) {
+            if (JavaVersion.current() < JavaVersion.VERSION_11) {
+                error("GrowingIO AutoTracker Gradle Plugin request at least Java 11")
+            }
+        } else if (JavaVersion.current() < JavaVersion.VERSION_1_8) {
             error("GrowingIO AutoTracker Gradle Plugin request at least Java 8")
         }
     }

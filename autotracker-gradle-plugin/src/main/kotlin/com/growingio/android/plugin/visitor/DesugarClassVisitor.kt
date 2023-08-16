@@ -79,7 +79,7 @@ internal class DesugarClassVisitor(
         val adapter = GeneratorAdapter(visitor, methodBlock.access, methodBlock.methodName, methodBlock.methodDesc)
         adapter.visitCode()
         val arguments = Type.getArgumentTypes(methodBlock.methodDesc)
-        val isStaticOrigin = methodBlock.originHandle.tag == Opcodes.H_INVOKESTATIC
+        // val isStaticOrigin = methodBlock.originHandle.tag == Opcodes.H_INVOKESTATIC
 
         // 插入hook before
         for (injectMethod in methodBlock.targetMethod.injectMethods) {
