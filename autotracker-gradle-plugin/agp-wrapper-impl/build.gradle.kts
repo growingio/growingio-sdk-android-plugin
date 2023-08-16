@@ -15,5 +15,5 @@ dependencies {
     implementation(project(":agp-wrapper-72"))
     implementation(project(":agp-wrapper-81"))
     implementation(gradleApi())
-    compileOnly("com.android.tools.build:gradle-api:${rootProject.extra("kotlin_version")}")
+    compileOnly("com.android.tools.build:gradle-api:${rootProject.extra["agp_version"]}")
 }

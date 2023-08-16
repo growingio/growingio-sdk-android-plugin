@@ -27,9 +27,10 @@ gradlePlugin {
     plugins {
         create("autotracker") {
             id = "com.growingio.android.autotracker"
+            displayName = providers.gradleProperty("POM_NAME").get()
             implementationClass = "com.growingio.android.plugin.AutoTrackerPlugin"
             description = providers.gradleProperty("POM_DESCRIPTION").get()
-            tags.set(listOf("growingio", "autotracker", "plugin"))
+            tags.set(listOf("growingio", "autotracker", "agp8"))
         }
     }
 }
@@ -64,15 +65,15 @@ dependencies {
 //    implementation("org.ow2.asm:asm-commons:9.2")
 
 //    compileOnly(kotlin("stdlib"))
-    compileOnly("com.android.tools.build:gradle-api:${rootProject.extra("agp_version")}")
-    compileOnly("com.android.tools.build:gradle:${rootProject.extra("low_agp_version")}")
+    compileOnly("com.android.tools.build:gradle-api:${rootProject.extra["agp_version"]}")
+    compileOnly("com.android.tools.build:gradle:${rootProject.extra["low_agp_version"]}")
 
     testImplementation(gradleTestKit())
     testImplementation("junit:junit:4.13.2")
     testImplementation("com.google.truth:truth:1.1.3")
-    testImplementation("com.android.tools.build:gradle:${rootProject.extra("low_agp_version")}")
+    testImplementation("com.android.tools.build:gradle:${rootProject.extra["low_agp_version"]}")
 
-    testPluginImplementation("com.android.tools.build:gradle:${rootProject.extra("low_agp_version")}")
+    testPluginImplementation("com.android.tools.build:gradle:${rootProject.extra["low_agp_version"]}")
     testPluginImplementation("com.google.guava:guava:30.1.1-jre")
 }
 
