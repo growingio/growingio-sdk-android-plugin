@@ -57,7 +57,6 @@ configurations {
 
 dependencies {
 
-    //implementation(project(":growingio-plugin-library"))
     shadowed(project(":agp-wrapper-impl"))
     compileOnly(project(":agp-wrapper-42"))
 
