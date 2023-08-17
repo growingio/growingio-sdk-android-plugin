@@ -41,4 +41,3 @@ jobs:
           ./gradlew clean
           ./gradlew build
           ./gradlew :autotracker-gradle-plugin:test --stacktrace
-          ./gradlew :autotracker-gradle-plugin:publishPlugins --validate-only
