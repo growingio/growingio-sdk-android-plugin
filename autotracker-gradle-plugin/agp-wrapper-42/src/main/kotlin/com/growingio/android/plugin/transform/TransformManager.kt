@@ -7,7 +7,7 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
-import com.growingio.android.plugin.utils.*
+import com.growingio.android.plugin.util.e
 import org.apache.commons.compress.archivers.jar.JarArchiveEntry
 import org.apache.commons.compress.archivers.zip.ParallelScatterZipCreator
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream

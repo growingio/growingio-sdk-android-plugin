@@ -21,8 +21,10 @@ import com.growingio.android.plugin.AutoTrackerExtension
 import com.growingio.android.plugin.transform.AutoTrackerContext
 import com.growingio.android.plugin.transform.ClassContextCompat
 import com.growingio.android.plugin.transform.GrowingBaseTransform
-import com.growingio.android.plugin.utils.*
-import com.growingio.android.plugin.utils.shouldClassModified
+import com.growingio.android.plugin.util.normalize
+import com.growingio.android.plugin.util.w
+import com.growingio.android.plugin.util.*
+import com.growingio.android.plugin.util.shouldClassModified
 import org.gradle.api.Project
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassWriter

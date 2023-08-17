@@ -19,8 +19,8 @@ package com.growingio.android.plugin.visitor
 import com.growingio.android.plugin.hook.HookClassesConfig
 import com.growingio.android.plugin.hook.TargetMethod
 import com.growingio.android.plugin.transform.ClassContextCompat
-import com.growingio.android.plugin.utils.info
-import com.growingio.android.plugin.utils.unNormalize
+import com.growingio.android.plugin.util.info
+import com.growingio.android.plugin.util.unNormalize
 import org.objectweb.asm.*
 import org.objectweb.asm.commons.AdviceAdapter
 import org.objectweb.asm.commons.GeneratorAdapter
@@ -79,7 +79,7 @@ internal class DesugarClassVisitor(
         val adapter = GeneratorAdapter(visitor, methodBlock.access, methodBlock.methodName, methodBlock.methodDesc)
         adapter.visitCode()
         val arguments = Type.getArgumentTypes(methodBlock.methodDesc)
-        val isStaticOrigin = methodBlock.originHandle.tag == Opcodes.H_INVOKESTATIC
+        // val isStaticOrigin = methodBlock.originHandle.tag == Opcodes.H_INVOKESTATIC
 
         // 插入hook before
         for (injectMethod in methodBlock.targetMethod.injectMethods) {

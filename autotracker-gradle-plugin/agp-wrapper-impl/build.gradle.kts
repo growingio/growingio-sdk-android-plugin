@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":agp-wrapper-70"))
     implementation(project(":agp-wrapper-71"))
     implementation(project(":agp-wrapper-72"))
+    implementation(project(":agp-wrapper-81"))
     implementation(gradleApi())
-    compileOnly("com.android.tools.build:gradle-api:${rootProject.ext.get("agp_version")}")
+    compileOnly("com.android.tools.build:gradle-api:${rootProject.extra["agp_version"]}")
 }

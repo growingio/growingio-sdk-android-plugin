@@ -1,6 +1,5 @@
 package com.growingio.android.plugin.transform
 
-import com.growingio.android.plugin.utils.KlassPool
 import java.io.File
 
 interface AutoTrackerContext {

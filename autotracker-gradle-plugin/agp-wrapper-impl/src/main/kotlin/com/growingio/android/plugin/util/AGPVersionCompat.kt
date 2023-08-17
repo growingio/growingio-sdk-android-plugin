@@ -5,6 +5,9 @@ import org.gradle.api.Project
 fun getAndroidComponentsExtension(project: Project): AndroidComponentsExtensionCompat {
     val version = SimpleAGPVersion.ANDROID_GRADLE_PLUGIN_VERSION
     return when {
+        version >= SimpleAGPVersion(8, 1) -> {
+            AndroidComponentsExtensionCompatApi81Impl(project)
+        }
         version >= SimpleAGPVersion(7, 2) -> {
             AndroidComponentsExtensionCompatApi72Impl(project)
         }

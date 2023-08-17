@@ -17,7 +17,6 @@
 pluginManagement {
     repositories {
         mavenLocal()
-        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
         gradlePluginPortal()
         google()
         mavenCentral()
@@ -42,5 +41,5 @@ include ':agp-wrapper-42'
 include ':agp-wrapper-70'
 include ':agp-wrapper-71'
 include ':agp-wrapper-72'
+include ':agp-wrapper-81'
 include ':agp-wrapper-impl'
-include ':growingio-plugin-library'

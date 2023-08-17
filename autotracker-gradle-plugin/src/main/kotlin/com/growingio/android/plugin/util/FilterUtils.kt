@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.growingio.android.plugin.utils
+package com.growingio.android.plugin.util
 
 import com.growingio.android.plugin.AutoTrackerExtension
 

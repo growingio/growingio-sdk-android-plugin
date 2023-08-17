@@ -23,9 +23,11 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.AndroidBasePlugin
 import com.growingio.android.plugin.visitor.AutoTrackerTransform
 import com.growingio.android.plugin.util.ComponentCompat
+import com.growingio.android.plugin.util.LOG_ENABLE
 import com.growingio.android.plugin.util.SimpleAGPVersion
 import com.growingio.android.plugin.util.getAndroidComponentsExtension
-import com.growingio.android.plugin.utils.*
+import com.growingio.android.plugin.util.w
+import com.growingio.android.plugin.util.*
 import com.growingio.android.plugin.visitor.AutoTrackerFactory
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
@@ -98,7 +100,11 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
     }
 
     private fun checkJavaVersion() {
-        if (JavaVersion.current() < JavaVersion.VERSION_1_8) {
+        if (SimpleAGPVersion.ANDROID_GRADLE_PLUGIN_VERSION >= SimpleAGPVersion(7, 0)) {
+            if (JavaVersion.current() < JavaVersion.VERSION_11) {
+                error("GrowingIO AutoTracker Gradle Plugin request at least Java 11")
+            }
+        } else if (JavaVersion.current() < JavaVersion.VERSION_1_8) {
             error("GrowingIO AutoTracker Gradle Plugin request at least Java 8")
         }
     }

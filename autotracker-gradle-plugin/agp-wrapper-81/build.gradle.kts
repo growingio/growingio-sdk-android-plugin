@@ -8,6 +8,7 @@ java {
 }
 
 dependencies {
+    implementation(project(":agp-wrapper"))
     implementation(gradleApi())
-    compileOnly("com.android.tools.build:gradle-api:${rootProject.extra["agp_version"]}")
+    compileOnly("com.android.tools.build:gradle-api:8.1.0")
 }

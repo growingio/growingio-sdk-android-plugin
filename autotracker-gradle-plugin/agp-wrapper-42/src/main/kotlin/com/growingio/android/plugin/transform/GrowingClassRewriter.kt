@@ -17,10 +17,8 @@
 package com.growingio.android.plugin.transform
 
 import com.android.build.api.transform.*
-import com.growingio.android.plugin.utils.AbstractKlassPool
-import com.growingio.android.plugin.utils.NCPU
-import com.growingio.android.plugin.utils.e
-import com.growingio.android.plugin.utils.info
+import com.growingio.android.plugin.util.e
+import com.growingio.android.plugin.util.info
 import java.io.File
 import java.net.URI
 import java.util.concurrent.Executors

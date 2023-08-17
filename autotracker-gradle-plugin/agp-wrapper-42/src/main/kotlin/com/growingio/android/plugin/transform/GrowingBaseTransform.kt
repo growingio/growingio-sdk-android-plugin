@@ -14,16 +14,13 @@
  *   limitations under the License.
  */
 
-@file:Suppress("DEPRECATION")
-
 package com.growingio.android.plugin.transform
 
 import com.android.build.api.transform.Transform
 import com.android.build.api.transform.TransformInvocation
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.pipeline.TransformManager
-import com.growingio.android.plugin.utils.AbstractKlassPool
-import com.growingio.android.plugin.utils.info
+import com.growingio.android.plugin.util.info
 import org.gradle.api.Project
 import java.lang.management.ManagementFactory
 import java.lang.management.ThreadMXBean

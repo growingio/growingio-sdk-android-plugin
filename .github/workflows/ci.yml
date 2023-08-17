@@ -35,7 +35,6 @@ jobs:
       - name: Before script
         run: |
           chmod +x gradlew
-          chmod +x gradle/publishPluginToMavenLocal.sh
 
       - name: Run Gradle command
         run: |
