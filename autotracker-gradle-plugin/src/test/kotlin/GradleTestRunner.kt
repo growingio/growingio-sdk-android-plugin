@@ -41,7 +41,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         tempFolder.newFolder("src", "main", "java", "growingio")
         tempFolder.newFolder("src", "test", "java", "growingio")
         tempFolder.newFolder("src", "main", "res")
-        addDependencies("implementation 'com.growingio.android:autotracker-cdp:3.5.0-SNAPSHOT'")
+        addDependencies("implementation 'com.growingio.android:autotracker-cdp:3.5.0'")
     }
 
     // Adds project dependencies, e.g. "implementation <group>:<id>:<version>"
@@ -127,7 +127,6 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
           repositories {
             google()
             mavenLocal()
-            maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
             mavenCentral()
           }
           dependencies {
@@ -160,7 +159,6 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         allprojects {
           repositories {
             mavenLocal()
-            maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
             google()
             mavenCentral()
           }

@@ -35,10 +35,10 @@ jobs:
       - name: Before script
         run: |
           chmod +x gradlew
-          chmod +x gradle/publishPluginToMavenLocal.sh
 
       - name: Run Gradle command
         run: |
           ./gradlew clean
           ./gradlew build
           ./gradlew :autotracker-gradle-plugin:test --stacktrace
+          ./gradlew :autotracker-gradle-plugin:publishPlugins --validate-only

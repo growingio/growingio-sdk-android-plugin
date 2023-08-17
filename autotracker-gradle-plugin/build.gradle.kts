@@ -50,6 +50,9 @@ configurations {
     compileOnly {
         extendsFrom(shadowed)
     }
+    testImplementation{
+        extendsFrom(shadowed)
+    }
 }
 
 dependencies {
@@ -72,6 +75,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("com.google.truth:truth:1.1.3")
     testImplementation("com.android.tools.build:gradle:${rootProject.extra["low_agp_version"]}")
+    testImplementation(project(":agp-wrapper-42"))
 
     testPluginImplementation("com.android.tools.build:gradle:${rootProject.extra["low_agp_version"]}")
     testPluginImplementation("com.google.guava:guava:30.1.1-jre")
@@ -101,6 +105,3 @@ tasks.jar {
 // 2. 放断点
 // 3. 新建 remote JVM debug ,运行 debug
 // 4. 运行构建，开始调试 ./gradlew assembleDebug
-
-//apply("publishMavenWithPluginMarker.gradle")
-//apply("stagingMaven.gradle")
