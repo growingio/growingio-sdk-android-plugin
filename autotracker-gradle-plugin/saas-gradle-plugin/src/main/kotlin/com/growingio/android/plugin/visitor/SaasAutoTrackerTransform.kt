@@ -17,10 +17,10 @@
 package com.growingio.android.plugin.visitor
 
 import com.android.build.gradle.BaseExtension
-import com.growingio.android.plugin.AutoTrackerExtension
+import com.growingio.android.plugin.SaasAutoTrackerExtension
 import com.growingio.android.plugin.transform.AutoTrackerContext
-import com.growingio.android.plugin.transform.GrowingBaseTransform
 import com.growingio.android.plugin.util.ClassContextCompat
+import com.growingio.android.plugin.transform.GrowingBaseTransform
 import com.growingio.android.plugin.util.normalize
 import com.growingio.android.plugin.util.w
 import com.growingio.android.plugin.util.*
@@ -34,12 +34,12 @@ import org.objectweb.asm.ClassWriter
  *
  * @author cpacm 2022/4/2
  */
-internal class AutoTrackerTransform(
+internal class SaasAutoTrackerTransform(
     project: Project, android: BaseExtension,
-    private val gioExtension: AutoTrackerExtension
+    private val gioExtension: SaasAutoTrackerExtension
 ) : GrowingBaseTransform(project, android) {
 
-    override fun getName() = "AutoTrackerTransform"
+    override fun getName() = "SaasAutoTrackerTransform"
 
     override fun transform(context: AutoTrackerContext, bytecode: ByteArray): ByteArray {
         var className: String = context.name
@@ -78,7 +78,6 @@ internal class AutoTrackerTransform(
                 }
             }
 
-
             val visitor = DesugarClassVisitor(
                 apiVersion,
                 InjectTargetClassVisitor(
@@ -89,7 +88,10 @@ internal class AutoTrackerTransform(
                     ), classContextCompat
                 ), classContextCompat
             )
-            classReader.accept(visitor, ClassReader.EXPAND_FRAMES)
+
+            val saasVisitor = SaasConfigClassVisitor(apiVersion, visitor, classContextCompat)
+
+            classReader.accept(saasVisitor, ClassReader.EXPAND_FRAMES)
             return autoTrackerWriter.toByteArray()
         } catch (t: Throwable) {
             w(

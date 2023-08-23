@@ -49,6 +49,8 @@ dependencies {
 
 tasks.register<Copy>("copyHookClass") {
     from("build/generated/ksp/debug/kotlin/com/growingio/android/plugin/hook/")
-    into("../autotracker-gradle-plugin/src/main/kotlin/com/growingio/android/plugin/hook/")
+    into("../autotracker-gradle-plugin/agp-wrapper-impl/src/main/kotlin/com/growingio/android/plugin/hook/")
 }
-tasks.named("build") { finalizedBy("copyHookClass") }
+tasks.named("build") {
+    finalizedBy("copyHookClass")
+}

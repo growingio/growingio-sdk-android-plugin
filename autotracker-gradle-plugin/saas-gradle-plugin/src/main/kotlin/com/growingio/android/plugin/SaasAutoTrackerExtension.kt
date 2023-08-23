@@ -30,6 +30,8 @@ open class SaasAutoTrackerExtension(var instantiator: Instantiator) {
 
     var skipDependencyCheck = false
 
+    var enableRn = false
+
     var excludePackages: Array<String>? = null
 
     var includePackages: Array<String>? = null

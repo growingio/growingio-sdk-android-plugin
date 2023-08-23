@@ -19,7 +19,7 @@ package com.growingio.android.plugin.visitor
 import com.growingio.android.plugin.hook.HookClassesConfig
 import com.growingio.android.plugin.hook.TargetClass
 import com.growingio.android.plugin.hook.TargetMethod
-import com.growingio.android.plugin.transform.ClassContextCompat
+import com.growingio.android.plugin.util.ClassContextCompat
 import com.growingio.android.plugin.util.info
 import com.growingio.android.plugin.util.simpleClass
 import org.objectweb.asm.ClassVisitor
@@ -34,7 +34,7 @@ import org.objectweb.asm.commons.Method
  *
  * @author cpacm 2022/4/26
  */
-internal class InjectAroundClassVisitor(
+class InjectAroundClassVisitor(
     api: Int, ncv: ClassVisitor, classContext: ClassContextCompat
 ) : ClassVisitor(api, ncv), ClassContextCompat by classContext {
 

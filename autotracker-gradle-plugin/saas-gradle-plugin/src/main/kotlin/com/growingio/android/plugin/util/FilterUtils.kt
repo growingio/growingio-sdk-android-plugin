@@ -17,6 +17,7 @@
 package com.growingio.android.plugin.util
 
 import com.growingio.android.plugin.SaasAutoTrackerExtension
+import com.growingio.android.plugin.hook.HookClassesConfig
 
 /**
  * <p>
@@ -55,7 +56,9 @@ internal fun shouldClassModified(
     return true
 }
 
-val INCLUDED_PACKAGES = arrayListOf<String>()
+val INCLUDED_PACKAGES = arrayListOf(
+    "com.growingio.android.sdk.collection"
+)
 
 val EXCLUDED_PACKAGES = arrayListOf(
     "com.growingio.android",
@@ -97,7 +100,11 @@ val EXCLUDED_PACKAGES = arrayListOf(
     "com.heytap.msp.push",
     "com.tencent.tinker",
     "com.amap.api",
-    "com.google.iot"
+    "com.google.iot",
+
+    //ignore RN 6.0 fragment page
+    "com.swmansion.rnscreens.ScreenFragment",
+    "com.swmansion.rnscreens.ScreenStackFragment",
 )
 
 val DEFAULT_INJECT_CLASS = arrayListOf(
@@ -111,10 +118,17 @@ val DEFAULT_INJECT_CLASS = arrayListOf(
     "com.growingio.android.sdk.autotrack.inject.X5WebViewInjector",
     "com.growingio.android.sdk.autotrack.inject.ViewClickInjector",
     "com.growingio.android.sdk.autotrack.inject.ViewChangeInjector",
+    "com.growingio.android.sdk.autotrack.inject.WebChromeClientInjector",
+    "com.growingio.android.sdk.autotrack.inject.WindowShowInjector",
 )
 
 fun initInjectClass(extension: SaasAutoTrackerExtension) {
     extension.injectClasses?.let {
         DEFAULT_INJECT_CLASS.addAll(it)
     }
+    with("com.growingio.android.sdk.plugin.rn.ReactNativeInjector") {
+        if (extension.enableRn) DEFAULT_INJECT_CLASS.add(this)
+        else DEFAULT_INJECT_CLASS.remove(this)
+    }
+    HookClassesConfig.initDefaultInjector(DEFAULT_INJECT_CLASS)
 }

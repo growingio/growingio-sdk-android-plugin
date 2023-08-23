@@ -21,14 +21,13 @@ import com.android.build.api.instrumentation.FramesComputationMode
 import com.android.build.api.instrumentation.InstrumentationScope
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.AndroidBasePlugin
-import com.growingio.android.plugin.visitor.AutoTrackerTransform
+import com.growingio.android.plugin.visitor.SaasAutoTrackerTransform
 import com.growingio.android.plugin.util.ComponentCompat
 import com.growingio.android.plugin.util.LOG_ENABLE
 import com.growingio.android.plugin.util.SimpleAGPVersion
 import com.growingio.android.plugin.util.getAndroidComponentsExtension
-import com.growingio.android.plugin.util.w
 import com.growingio.android.plugin.util.*
-import com.growingio.android.plugin.visitor.AutoTrackerFactory
+import com.growingio.android.plugin.visitor.SaasAutoTrackerFactory
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -74,7 +73,7 @@ class SaasAutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) 
     private fun configureBytecodeTransformASM(project: Project, gioExtension: SaasAutoTrackerExtension) {
         fun registerTransform(androidComponent: ComponentCompat) {
             androidComponent.transformClassesWith(
-                classVisitorFactoryImplClass = AutoTrackerFactory::class.java,
+                classVisitorFactoryImplClass = SaasAutoTrackerFactory::class.java,
                 scope = InstrumentationScope.ALL
             ) { params ->
                 //val classesDir = File(project.buildDir, "intermediates/javac/${androidComponent.name}/classes")
@@ -95,7 +94,7 @@ class SaasAutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) 
             "registerTransform",
             Class.forName("com.android.build.api.transform.Transform"),
             Array<Any>::class.java
-        ).invoke(androidExtension, AutoTrackerTransform(project, androidExtension, gioExtension), emptyArray<Any>())
+        ).invoke(androidExtension, SaasAutoTrackerTransform(project, androidExtension, gioExtension), emptyArray<Any>())
     }
 
     private fun checkJavaVersion() {

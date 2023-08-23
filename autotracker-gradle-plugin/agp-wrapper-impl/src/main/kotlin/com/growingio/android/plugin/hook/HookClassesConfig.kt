@@ -16,6 +16,7 @@
 
 package com.growingio.android.plugin.hook
 
+import com.growingio.android.plugin.util.normalize
 import java.util.*
 
 /**
@@ -47,8 +48,15 @@ object HookClassesConfig {
     }
 
     init {
+        initDefaultInjector(null)
+    }
+
+    fun initDefaultInjector(includeList: List<String>?) {
+        AROUND_HOOK_CLASSES.clear()
         val aroundList = HookInjectorClass.initAroundClass()
-        for (around in aroundList) {
+        aroundList.filter {
+            includeList?.contains(normalize(it.injectClassName)) ?: true
+        }.forEach { around ->
             putHookMethod(
                 AROUND_HOOK_CLASSES,
                 around.targetClassName,
@@ -61,8 +69,11 @@ object HookClassesConfig {
             )
         }
 
+        SUPER_HOOK_CLASSES.clear()
         val superList = HookInjectorClass.initSuperClass()
-        for (s in superList) {
+        superList.filter {
+            includeList?.contains(normalize(it.injectClassName)) ?: true
+        }.forEach { s ->
             putHookMethod(
                 SUPER_HOOK_CLASSES,
                 s.targetClassName,
@@ -75,8 +86,11 @@ object HookClassesConfig {
             )
         }
 
+        TARGET_HOOK_CLASSES.clear()
         val targetList = HookInjectorClass.initTargetClass()
-        for (t in targetList) {
+        targetList.filter {
+            includeList?.contains(normalize(it.injectClassName)) ?: true
+        }.forEach { t ->
             putHookMethod(
                 TARGET_HOOK_CLASSES,
                 t.targetClassName,

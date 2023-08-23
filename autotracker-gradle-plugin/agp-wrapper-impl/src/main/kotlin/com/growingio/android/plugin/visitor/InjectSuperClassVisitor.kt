@@ -20,7 +20,7 @@ import com.growingio.android.plugin.hook.HookClassesConfig
 import com.growingio.android.plugin.hook.InjectMethod
 import com.growingio.android.plugin.hook.TargetClass
 import com.growingio.android.plugin.hook.TargetMethod
-import com.growingio.android.plugin.transform.ClassContextCompat
+import com.growingio.android.plugin.util.ClassContextCompat
 import com.growingio.android.plugin.util.info
 import com.growingio.android.plugin.util.simpleClass
 import org.objectweb.asm.ClassVisitor
@@ -36,7 +36,7 @@ import org.objectweb.asm.commons.Method
  *
  * @author cpacm 2022/4/7
  */
-internal class InjectSuperClassVisitor(
+class InjectSuperClassVisitor(
     api: Int, ncv: ClassVisitor, classContext: ClassContextCompat
 ) : ClassVisitor(api, ncv), ClassContextCompat by classContext {
 
@@ -156,8 +156,8 @@ internal class InjectSuperClassVisitor(
 
             for (i in targetArgs.indices) {
                 loadArg(i)
-                localVariables[i+1] = newLocal(targetArgs[i])
-                storeLocal(localVariables[i+1])
+                localVariables[i + 1] = newLocal(targetArgs[i])
+                storeLocal(localVariables[i + 1])
             }
 
             super.onMethodEnter()

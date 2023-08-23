@@ -17,6 +17,7 @@
 package com.growingio.android.plugin.util
 
 import com.growingio.android.plugin.AutoTrackerExtension
+import com.growingio.android.plugin.hook.HookClassesConfig
 
 /**
  * <p>
@@ -141,5 +142,5 @@ fun initInjectClass(extension: AutoTrackerExtension) {
             }
         }
     }
-
+    HookClassesConfig.initDefaultInjector(null)
 }
