@@ -20,7 +20,6 @@ import com.android.build.api.instrumentation.AsmClassVisitorFactory
 import com.android.build.api.instrumentation.ClassContext
 import com.android.build.api.instrumentation.ClassData
 import com.android.build.api.instrumentation.InstrumentationParameters
-import com.growingio.android.plugin.AnalyticsAdapter
 import com.growingio.android.plugin.util.ClassContextCompat
 import com.growingio.android.plugin.util.DEFAULT_INJECT_CLASS
 import com.growingio.android.plugin.util.normalize
@@ -35,7 +34,7 @@ import org.objectweb.asm.ClassVisitor
  *
  * @author cpacm 2022/4/6
  */
-internal abstract class AutoTrackerFactory :
+internal abstract class SaasAutoTrackerFactory :
     AsmClassVisitorFactory<AutoTrackerParams> {
 
     override fun createClassVisitor(classContext: ClassContext, nextClassVisitor: ClassVisitor): ClassVisitor {
@@ -60,7 +59,7 @@ internal abstract class AutoTrackerFactory :
         }
         val apiVersion = instrumentationContext.apiVersion.get()
 
-        return DesugarClassVisitor(
+        val visitor = DesugarClassVisitor(
             apiVersion,
             InjectTargetClassVisitor(
                 apiVersion,
@@ -72,6 +71,9 @@ internal abstract class AutoTrackerFactory :
             ),
             classContextCompat
         )
+        val saasVisitor = SaasConfigClassVisitor(apiVersion, visitor, classContextCompat)
+
+        return saasVisitor
     }
 
     override fun isInstrumentable(classData: ClassData): Boolean {
@@ -91,8 +93,6 @@ internal interface AutoTrackerParams : InstrumentationParameters {
      * https://issuetracker.google.com/issues/190082518#comment4. This is just a dummy parameter
      * that is used solely for that purpose.
      */
-    @get:Input
-    val analytics: Property<AnalyticsAdapter>
 
     @get:Input
     val injectClasses: Property<Array<String>>

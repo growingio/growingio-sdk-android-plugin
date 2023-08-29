@@ -18,10 +18,14 @@ package com.growingio.android.plugin.visitor
 
 import com.growingio.android.plugin.hook.HookClassesConfig
 import com.growingio.android.plugin.hook.TargetMethod
-import com.growingio.android.plugin.transform.ClassContextCompat
+import com.growingio.android.plugin.util.ClassContextCompat
 import com.growingio.android.plugin.util.info
 import com.growingio.android.plugin.util.unNormalize
-import org.objectweb.asm.*
+import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.Handle
+import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.Opcodes
+import org.objectweb.asm.Type
 import org.objectweb.asm.commons.AdviceAdapter
 import org.objectweb.asm.commons.GeneratorAdapter
 import org.objectweb.asm.commons.Method
@@ -31,7 +35,7 @@ import org.objectweb.asm.commons.Method
  *     优化了原版的 DesugarVisit
  * @author cpacm 2022/4/19
  */
-internal class DesugarClassVisitor(
+class DesugarClassVisitor(
     api: Int, ncv: ClassVisitor, classContext: ClassContextCompat
 ) : ClassVisitor(api, ncv), ClassContextCompat by classContext {
 
@@ -140,11 +144,11 @@ internal class DesugarClassVisitor(
         adapter.visitLdcInsn("[GenerateDynamicMethod]")
         adapter.visitLdcInsn(methodBlock.methodName)
         adapter.visitInsn(Opcodes.ICONST_0)
-        adapter.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object");
+        adapter.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object")
         adapter.visitMethodInsn(
             Opcodes.INVOKESTATIC,
-            "com/growingio/android/sdk/track/log/Logger",
-            "d",
+            "com/growingio/android/sdk/autotrack/inject/UtilsInjector",
+            "log",
             "(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V",
             false
         )
@@ -191,7 +195,7 @@ internal class DesugarClassVisitor(
                 super.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, *bootstrapMethodArguments)
                 return
             }
-            if(bootstrapMethodArguments.isEmpty()) return
+            if (bootstrapMethodArguments.isEmpty()) return
             //info("[visitInvokeDynamicInsn]${className}-${name}==>${(bootstrapMethodArguments[1] as Handle).name}")
             val handle = bootstrapMethodArguments[1] as Handle
             if (name == handle.name) {

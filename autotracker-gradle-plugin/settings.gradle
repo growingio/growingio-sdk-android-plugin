@@ -43,3 +43,5 @@ include ':agp-wrapper-71'
 include ':agp-wrapper-72'
 include ':agp-wrapper-81'
 include ':agp-wrapper-impl'
+
+include ':saas-gradle-plugin'

@@ -5,6 +5,9 @@ buildscript {
         set("low_agp_version", "4.2.2")
         set("releaseVersion", "3.5.1")
         set("releaseVersionCode", 30501)
+
+        set("saasVersion", "2.10.0")
+        set("saasVersionCode", "21000")
     }
 }
 
@@ -50,20 +53,19 @@ configurations {
     compileOnly {
         extendsFrom(shadowed)
     }
-    testImplementation{
+    testImplementation {
         extendsFrom(shadowed)
     }
 }
 
 dependencies {
 
-    //implementation(project(":growingio-plugin-library"))
     shadowed(project(":agp-wrapper-impl"))
     compileOnly(project(":agp-wrapper-42"))
 
     implementation(gradleApi())
 
-    implementation("org.ow2.asm:asm:9.2")
+    compileOnly("org.ow2.asm:asm:9.5")
 //    implementation("org.ow2.asm:asm-util:9.2")
 //    implementation("org.ow2.asm:asm-commons:9.2")
 
@@ -94,9 +96,17 @@ java {
 tasks.jar {
     val dependencies = shadowed.filter {
         it.name.startsWith("agp-")
-    }.map { zipTree(it) }
+    }.map {
+        zipTree(it)
+    }
     from(dependencies)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.clean {
+    subprojects {
+        delete(this.buildDir)
+    }
 }
 
 
@@ -105,3 +115,4 @@ tasks.jar {
 // 2. 放断点
 // 3. 新建 remote JVM debug ,运行 debug
 // 4. 运行构建，开始调试 ./gradlew assembleDebug
+apply("publishMavenWithPluginMarker.gradle")

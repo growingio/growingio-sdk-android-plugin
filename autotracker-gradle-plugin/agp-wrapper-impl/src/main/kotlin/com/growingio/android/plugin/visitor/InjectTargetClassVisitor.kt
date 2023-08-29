@@ -19,7 +19,7 @@ package com.growingio.android.plugin.visitor
 import com.growingio.android.plugin.hook.HookClassesConfig
 import com.growingio.android.plugin.hook.InjectMethod
 import com.growingio.android.plugin.hook.TargetClass
-import com.growingio.android.plugin.transform.ClassContextCompat
+import com.growingio.android.plugin.util.ClassContextCompat
 import com.growingio.android.plugin.util.info
 import com.growingio.android.plugin.util.simpleClass
 import com.growingio.android.plugin.util.w
@@ -35,7 +35,7 @@ import org.objectweb.asm.commons.Method
  *
  * @author cpacm 2022/5/21
  */
-internal class InjectTargetClassVisitor(
+class InjectTargetClassVisitor(
     api: Int, ncv: ClassVisitor, classContext: ClassContextCompat
 ) : ClassVisitor(api, ncv), ClassContextCompat by classContext {
 
@@ -135,6 +135,7 @@ internal class InjectTargetClassVisitor(
                             visitInsn(Opcodes.DUP)
                             loadLocal(localVariables[0])
                         }
+
                         -1 -> return
                     }
                     val args: Array<Type> = Type.getArgumentTypes(descriptor)
@@ -190,6 +191,7 @@ internal class InjectTargetClassVisitor(
                         return 2
                     }
                 }
+
                 2 -> {
                     if (!isStatic && hasReturnOpcode) {
                         return 3
