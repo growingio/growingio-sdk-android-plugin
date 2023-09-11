@@ -24,12 +24,13 @@ class AndroidComponentsExtensionCompatApi42Impl(
     private val project: Project
 ) : AndroidComponentsExtensionCompat {
 
-    override fun onAllVariants(block: (ComponentCompat) -> Unit) {
+    override fun onAllVariants(block: (ComponentCompat) -> Unit, testBlock: (ComponentCompat) -> Unit) {
         val actual = project.extensions.getByType(AndroidComponentsExtension::class.java)
         val allSelectors = actual.selector().all()
         val wrapFunction: (Component) -> Unit = { block.invoke(ComponentCompatApi42Impl(it)) }
+        val testWrapFunction: (Component) -> Unit = { testBlock.invoke(ComponentCompatApi42Impl(it)) }
         actual.onVariants(allSelectors, wrapFunction)
-        actual.androidTests(allSelectors, wrapFunction)
-        actual.unitTests(allSelectors, wrapFunction)
+        actual.androidTests(allSelectors, testWrapFunction)
+        actual.unitTests(allSelectors, testWrapFunction)
     }
 }

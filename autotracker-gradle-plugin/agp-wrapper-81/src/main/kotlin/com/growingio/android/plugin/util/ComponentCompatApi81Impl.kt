@@ -5,6 +5,7 @@ import com.android.build.api.instrumentation.FramesComputationMode
 import com.android.build.api.instrumentation.InstrumentationParameters
 import com.android.build.api.instrumentation.InstrumentationScope
 import com.android.build.api.variant.Component
+import com.android.build.api.variant.Variant
 
 internal class ComponentCompatApi81Impl(private val component: Component) : ComponentCompat() {
 
@@ -16,14 +17,18 @@ internal class ComponentCompatApi81Impl(private val component: Component) : Comp
         scope: InstrumentationScope,
         instrumentationParamsConfig: (ParamT) -> Unit
     ) {
-        component.instrumentation.transformClassesWith(
-            classVisitorFactoryImplClass,
-            scope,
-            instrumentationParamsConfig
-        )
+        component.instrumentation.transformClassesWith(classVisitorFactoryImplClass, scope, instrumentationParamsConfig)
     }
 
     override fun setAsmFramesComputationMode(mode: FramesComputationMode) {
         component.instrumentation.setAsmFramesComputationMode(mode)
+    }
+
+    override fun getComponentVariant(): Variant? {
+        if (component is Variant) {
+            return component
+        }
+        // unitTest and androidTest isn't an variant
+        return null
     }
 }
