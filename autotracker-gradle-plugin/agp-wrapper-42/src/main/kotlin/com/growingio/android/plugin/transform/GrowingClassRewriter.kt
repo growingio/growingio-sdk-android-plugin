@@ -29,7 +29,6 @@ import java.util.concurrent.TimeUnit
 * Transform agent
 * @author cpacm 2022.4.1
 */
-@Suppress("DEPRECATION")
 internal class GrowingClassRewriter(
     private val delegate: TransformInvocation,
     internal val transform: GrowingBaseTransform,
@@ -55,6 +54,8 @@ internal class GrowingClassRewriter(
     override val applicationId = getVariant(project)?.applicationId ?: "unknown"
 
     override val isDebuggable = getVariant(project)?.buildType?.isDebuggable ?: false
+
+    override val gioScheme: String by lazy { getGioScheme(project) }
 
     override fun hasProperty(name: String) = project.hasProperty(name)
 
@@ -129,6 +130,7 @@ internal class GrowingClassRewriter(
                     )
                 }
             }
+
             else -> {}
         }
     }
@@ -152,6 +154,7 @@ internal class GrowingClassRewriter(
                     }
                     file.delete()
                 }
+
                 Status.ADDED, Status.CHANGED -> {
                     info("Transforming $file")
                     outputProvider?.let { provider ->
@@ -167,6 +170,7 @@ internal class GrowingClassRewriter(
                         }
                     }
                 }
+
                 else -> {}
             }
         }

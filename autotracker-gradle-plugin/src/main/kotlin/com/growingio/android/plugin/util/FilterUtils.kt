@@ -17,6 +17,7 @@
 package com.growingio.android.plugin.util
 
 import com.growingio.android.plugin.AutoTrackerExtension
+import com.growingio.android.plugin.giokit.GioKitInjectData
 import com.growingio.android.plugin.hook.HookClassesConfig
 
 /**
@@ -101,7 +102,7 @@ val EXCLUDED_PACKAGES = arrayListOf(
     "com.google.iot"
 )
 
-val DEFAULT_INJECT_CLASS = arrayListOf(
+private val defaultInjectClass = arrayListOf(
     "com.growingio.android.sdk.autotrack.inject.ActivityInjector",
     "com.growingio.android.sdk.autotrack.inject.DialogInjector",
     "com.growingio.android.sdk.autotrack.inject.FragmentInjector",
@@ -114,33 +115,44 @@ val DEFAULT_INJECT_CLASS = arrayListOf(
     "com.growingio.android.sdk.autotrack.inject.ViewChangeInjector",
 )
 
+val ANALYTIC_ADAPTER_INJECT_CLASS = arrayListOf(
+    "com.growingio.android.analytics.firebase.FirebaseAnalyticsInjector",
+    "com.growingio.android.analytics.google.GoogleAnalyticsInjector",
+    "com.growingio.android.analytics.sensor.SensorAnalyticsInjector"
+)
+
+val EXECUTE_INJECT_CLASS = arrayListOf<String>()
+
 fun initInjectClass(extension: AutoTrackerExtension) {
+    EXECUTE_INJECT_CLASS.clear()
+    EXECUTE_INJECT_CLASS.addAll(defaultInjectClass)
+
     extension.injectClasses?.let {
-        DEFAULT_INJECT_CLASS.addAll(it)
+        EXECUTE_INJECT_CLASS.addAll(it)
     }
 
     extension.analyticsAdapter?.apply {
-        with("com.growingio.android.analytics.firebase.FirebaseAnalyticsInjector") {
-            if (firebaseAnalytics) DEFAULT_INJECT_CLASS.add(this)
-            else DEFAULT_INJECT_CLASS.remove(this)
+        if (firebaseAnalytics) {
+            EXECUTE_INJECT_CLASS.add(ANALYTIC_ADAPTER_INJECT_CLASS[0])
         }
-
-        with("com.growingio.android.analytics.google.GoogleAnalyticsInjector") {
-            if (googleAnalytics) DEFAULT_INJECT_CLASS.add(this)
-            else DEFAULT_INJECT_CLASS.remove(this)
+        if (googleAnalytics) {
+            EXECUTE_INJECT_CLASS.add(ANALYTIC_ADAPTER_INJECT_CLASS[1])
         }
-
-        with("com.growingio.android.analytics.sensor.SensorAnalyticsInjector") {
-            if (sensorAnalytics) {
-                DEFAULT_INJECT_CLASS.add(this)
-                INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.SensorsDataAPI")
-                INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.AbstractSensorsDataAPI")
-            } else {
-                DEFAULT_INJECT_CLASS.remove(this)
-                INCLUDED_PACKAGES.remove("com.sensorsdata.analytics.android.sdk.SensorsDataAPI")
-                INCLUDED_PACKAGES.remove("com.sensorsdata.analytics.android.sdk.AbstractSensorsDataAPI")
-            }
+        if (sensorAnalytics) {
+            EXECUTE_INJECT_CLASS.add(ANALYTIC_ADAPTER_INJECT_CLASS[2])
+            INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.SensorsDataAPI")
+            INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.AbstractSensorsDataAPI")
+        } else {
+            INCLUDED_PACKAGES.remove("com.sensorsdata.analytics.android.sdk.SensorsDataAPI")
+            INCLUDED_PACKAGES.remove("com.sensorsdata.analytics.android.sdk.AbstractSensorsDataAPI")
         }
     }
-    HookClassesConfig.initDefaultInjector(null)
+
+    extension.giokit?.apply {
+        if (this.enabled) {
+            EXECUTE_INJECT_CLASS.addAll(GioKitInjectData.GIOKIT_INJECT_CLASS)
+        }
+    }
+
+    HookClassesConfig.initDefaultInjector(EXECUTE_INJECT_CLASS)
 }

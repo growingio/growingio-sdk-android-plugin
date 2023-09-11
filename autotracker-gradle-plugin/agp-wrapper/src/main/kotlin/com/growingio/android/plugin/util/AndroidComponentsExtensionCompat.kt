@@ -22,5 +22,5 @@ interface AndroidComponentsExtensionCompat {
      * [com.android.build.api.variant.AndroidComponentsExtension.onVariants] that includes also
      * [AndroidTest] and [UnitTest] variants.
      */
-    fun onAllVariants(block: (ComponentCompat) -> Unit)
+    fun onAllVariants(block: (ComponentCompat) -> Unit, testBlock: (ComponentCompat) -> Unit)
 }

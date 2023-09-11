@@ -14,6 +14,8 @@
  *   limitations under the License.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.growingio.android.descriptor
 
 import android.app.Dialog

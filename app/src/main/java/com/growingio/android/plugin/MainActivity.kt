@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import com.growingio.android.sdk.autotrack.GrowingAutotracker
 
 class MainActivity : AppCompatActivity() {
     private val mAllFragments = arrayListOf<Fragment>()
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         tttt.setOnClickListener {
             tttt.visibility = if (tttt.isVisible == true) View.GONE else View.VISIBLE
         }
+
+        GrowingAutotracker.get().autotrackPage(this, javaClass.simpleName)
     }
 
     private fun setFragment(index: Int) {

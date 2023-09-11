@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.growingio.android.plugin"
         minSdk 21
-        targetSdk 31
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -40,6 +40,10 @@ growingAutotracker {
         firebaseAnalytics false
         googleAnalytics false
     }
+    giokit {
+        enabled true
+        autoInstallVersion "2.0.0-SNAPSHOT"
+    }
 }
 
 
@@ -50,7 +54,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
 
-    implementation 'com.growingio.android:autotracker-cdp:3.5.0'
+    implementation 'com.growingio.android:autotracker:4.0.0'
+    //debugImplementation 'com.growingio.giokit:giokit:2.0.0-SNAPSHOT'
+    //releaseImplementation 'com.growingio.giokit:giokit-no-op:2.0.0-SNAPSHOT'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

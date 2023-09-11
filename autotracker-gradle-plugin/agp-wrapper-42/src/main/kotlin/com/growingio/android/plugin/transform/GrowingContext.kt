@@ -46,6 +46,11 @@ interface AutoTrackerContext {
     val isDebuggable: Boolean
 
     /**
+     * The data with growing.xxxxxx in intent-filter
+      */
+    val gioScheme: String
+
+    /**
      * Check if has the specified property. Generally, the property is equivalent to project property
      *
      * @param name the name of property

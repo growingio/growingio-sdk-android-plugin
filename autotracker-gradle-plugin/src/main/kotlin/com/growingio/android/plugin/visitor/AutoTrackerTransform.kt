@@ -18,6 +18,12 @@ package com.growingio.android.plugin.visitor
 
 import com.android.build.gradle.BaseExtension
 import com.growingio.android.plugin.AutoTrackerExtension
+import com.growingio.android.plugin.giokit.GioKitCodeVisitor
+import com.growingio.android.plugin.giokit.GioKitExtension
+import com.growingio.android.plugin.giokit.GioKitInjectData
+import com.growingio.android.plugin.giokit.GioKitInjectVisitor
+import com.growingio.android.plugin.giokit.GioKitParams
+import com.growingio.android.plugin.giokit.GioKitProcessor
 import com.growingio.android.plugin.transform.AutoTrackerContext
 import com.growingio.android.plugin.transform.GrowingBaseTransform
 import com.growingio.android.plugin.util.ClassContextCompat
@@ -27,12 +33,13 @@ import com.growingio.android.plugin.util.*
 import com.growingio.android.plugin.util.shouldClassModified
 import org.gradle.api.Project
 import org.objectweb.asm.ClassReader
+import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
 
 /**
  * <p>
  *
- * @author cpacm 2022/4/2
+ * @author cpacm 2023/9/11
  */
 internal class AutoTrackerTransform(
     project: Project, android: BaseExtension,
@@ -40,21 +47,48 @@ internal class AutoTrackerTransform(
 ) : GrowingBaseTransform(project, android) {
 
     override fun getName() = "AutoTrackerTransform"
+    private val giokitParams: GioKitParams
+
+    init {
+        giokitParams = if (GioKitProcessor.checkGiokitEnabled(project, gioExtension)) {
+            val scheme = ""
+            val dependLibs = GioKitProcessor.getGioDepends(project)
+            val gioKitExtension = gioExtension.giokit ?: GioKitExtension()
+            val trackerFinderEnabled = gioKitExtension.trackerFinderEnabled
+            val trackerFinderDomain: Array<String> = gioKitExtension.trackerFinderDomain ?: arrayOf()
+            val trackerCalledMethod: Array<String> = gioKitExtension.trackerCalledMethod ?: arrayOf()
+            val autoAttachEnabled: Boolean = gioKitExtension.autoAttachEnabled
+            GioKitParams(
+                true,
+                scheme,
+                dependLibs,
+                trackerFinderEnabled,
+                trackerFinderDomain,
+                trackerCalledMethod,
+                autoAttachEnabled,
+            )
+        } else {
+            GioKitParams(false)
+        }
+    }
 
     override fun transform(context: AutoTrackerContext, bytecode: ByteArray): ByteArray {
         var className: String = context.name
         try {
             val classReader = ClassReader(bytecode)
             className = classReader.className
-            if (!shouldClassModified(
-                    gioExtension.excludePackages ?: arrayOf(),
-                    gioExtension.includePackages ?: arrayOf(),
-                    normalize(classReader.className)
-                )
-            ) {
-                return bytecode
-            }
 
+            val shouldVisit = shouldClassModified(
+                gioExtension.excludePackages ?: arrayOf(),
+                gioExtension.includePackages ?: arrayOf(),
+                normalize(className)
+            )
+            if (!shouldVisit) {
+                if (!giokitParams.enabled) return bytecode
+                if (!GioKitProcessor.shouldClassModified(normalize(className))) {
+                    return bytecode
+                }
+            }
 
             val autoTrackerWriter = object : ClassWriter(classReader, COMPUTE_MAXS) {
                 fun getApi(): Int {
@@ -70,11 +104,39 @@ internal class AutoTrackerTransform(
                 }
 
                 override fun classIncluded(clazz: String): Boolean {
-                    val included = DEFAULT_INJECT_CLASS.contains(normalize(clazz))
+                    val included = EXECUTE_INJECT_CLASS.contains(normalize(clazz))
                     if (!included) {
                         w("$clazz not included in default inject class")
                     }
+
+                    if (GioKitInjectData.GIOKIT_INJECT_CLASS.contains(normalize(clazz))) {
+                        return giokitParams.enabled
+                    }
+
                     return included
+                }
+            }
+
+            var classVisitor: ClassVisitor = autoTrackerWriter
+            if (giokitParams.enabled) {
+                if (giokitParams.trackerFinderEnabled) {
+                    val applicationId = context.applicationId
+                    val domains = GioKitProcessor.getDefaultFindDomains(giokitParams.trackerFinderDomain, applicationId)
+                    domains.firstOrNull {
+                        normalize(className).startsWith(it)
+                    }?.apply {
+                        classVisitor = GioKitCodeVisitor(
+                            apiVersion, classVisitor, classContextCompat,
+                            GioKitProcessor.getDefaultCalledMethods(giokitParams.trackerCalledMethod),
+                            GioKitProcessor.getGeneratedDir(context.buildDir, context.name),
+                            GioKitProcessor.getVisitorCodeFile(context.buildDir),
+                        )
+                    }
+                }
+
+                if (GioKitProcessor.shouldClassModified(normalize(className))) {
+                    giokitParams.xmlScheme = context.gioScheme
+                    classVisitor = GioKitInjectVisitor(apiVersion, classVisitor, classContextCompat, giokitParams)
                 }
             }
 
@@ -84,7 +146,7 @@ internal class AutoTrackerTransform(
                 InjectTargetClassVisitor(
                     apiVersion, InjectAroundClassVisitor(
                         apiVersion,
-                        InjectSuperClassVisitor(apiVersion, autoTrackerWriter, classContextCompat),
+                        InjectSuperClassVisitor(apiVersion, classVisitor, classContextCompat),
                         classContextCompat
                     ), classContextCompat
                 ), classContextCompat

@@ -57,7 +57,9 @@ dependencies {
 tasks.jar {
     val dependencies = shadowed.filter {
         it.name.startsWith("agp-")
-    }.map { zipTree(it) }
+    }.map {
+        zipTree(it)
+    }
     from(dependencies)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

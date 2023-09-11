@@ -20,15 +20,21 @@ import com.android.build.api.instrumentation.AsmClassVisitorFactory
 import com.android.build.api.instrumentation.ClassContext
 import com.android.build.api.instrumentation.ClassData
 import com.android.build.api.instrumentation.InstrumentationParameters
-import com.growingio.android.plugin.AnalyticsAdapter
+import com.growingio.android.plugin.AutoTrackerParams
+import com.growingio.android.plugin.giokit.GioKitCodeVisitor
+import com.growingio.android.plugin.giokit.GioKitInjectData
+import com.growingio.android.plugin.giokit.GioKitInjectVisitor
+import com.growingio.android.plugin.giokit.GioKitParams
+import com.growingio.android.plugin.giokit.GioKitProcessor
 import com.growingio.android.plugin.util.ClassContextCompat
-import com.growingio.android.plugin.util.DEFAULT_INJECT_CLASS
+import com.growingio.android.plugin.util.EXECUTE_INJECT_CLASS
 import com.growingio.android.plugin.util.normalize
 import com.growingio.android.plugin.util.shouldClassModified
 import com.growingio.android.plugin.util.w
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.objectweb.asm.ClassVisitor
+import java.io.File
 
 /**
  * <p>
@@ -36,7 +42,7 @@ import org.objectweb.asm.ClassVisitor
  * @author cpacm 2022/4/6
  */
 internal abstract class AutoTrackerFactory :
-    AsmClassVisitorFactory<AutoTrackerParams> {
+    AsmClassVisitorFactory<AutoTrackerParameters> {
 
     override fun createClassVisitor(classContext: ClassContext, nextClassVisitor: ClassVisitor): ClassVisitor {
         val classContextCompat = object : ClassContextCompat {
@@ -51,14 +57,43 @@ internal abstract class AutoTrackerFactory :
             }
 
             override fun classIncluded(clazz: String): Boolean {
-                val included = DEFAULT_INJECT_CLASS.contains(normalize(clazz))
+                val included = EXECUTE_INJECT_CLASS.contains(normalize(clazz))
                 if (!included) {
                     w("$clazz not included in default inject class")
+                    return false
                 }
-                return included
+                if (GioKitInjectData.GIOKIT_INJECT_CLASS.contains(normalize(clazz))) {
+                    val gioKitParams = parameters.get().gioKitParams.get()
+                    return gioKitParams.enabled
+                }
+                // classContext.loadClassData(normalize(clazz)) ?: return false
+                return true
             }
         }
         val apiVersion = instrumentationContext.apiVersion.get()
+
+        val gioKitParams = parameters.get().gioKitParams.get()
+        var classVisitor = nextClassVisitor
+        if (gioKitParams.enabled) {
+            if (gioKitParams.trackerFinderEnabled) {
+                val applicationId = parameters.get().applicationId.get()
+                val domains = GioKitProcessor.getDefaultFindDomains(gioKitParams.trackerFinderDomain, applicationId)
+                domains.firstOrNull {
+                    normalize(classContext.currentClassData.className).startsWith(it)
+                }?.apply {
+                    classVisitor = GioKitCodeVisitor(
+                        apiVersion, classVisitor, classContextCompat,
+                        GioKitProcessor.getDefaultCalledMethods(gioKitParams.trackerCalledMethod),
+                        GioKitProcessor.getGeneratedDir(parameters.get().buildDir.get(), parameters.get().name.get()),
+                        GioKitProcessor.getVisitorCodeFile(parameters.get().buildDir.get()),
+                    )
+                }
+            }
+
+            if (GioKitProcessor.shouldClassModified(classContext.currentClassData.className)) {
+                classVisitor = GioKitInjectVisitor(apiVersion, classVisitor, classContextCompat, gioKitParams)
+            }
+        }
 
         return DesugarClassVisitor(
             apiVersion,
@@ -66,7 +101,7 @@ internal abstract class AutoTrackerFactory :
                 apiVersion,
                 InjectAroundClassVisitor(
                     apiVersion,
-                    InjectSuperClassVisitor(apiVersion, nextClassVisitor, classContextCompat),
+                    InjectSuperClassVisitor(apiVersion, classVisitor, classContextCompat),
                     classContextCompat
                 ), classContextCompat
             ),
@@ -75,16 +110,23 @@ internal abstract class AutoTrackerFactory :
     }
 
     override fun isInstrumentable(classData: ClassData): Boolean {
-        return shouldClassModified(
-            parameters.get().excludePackages.get(),
-            parameters.get().includePackages.get(),
+        val autoTrackerParams = parameters.get().autoTrackerParams.get()
+        val shouldVisit = shouldClassModified(
+            autoTrackerParams.excludePackages,
+            autoTrackerParams.includePackages,
             classData.className
         )
+        if (!shouldVisit) {
+            val gioKitParams = parameters.get().gioKitParams.get()
+            if (!gioKitParams.enabled) return shouldVisit
+            return GioKitProcessor.shouldClassModified(classData.className)
+        }
+        return shouldVisit
     }
 }
 
 
-internal interface AutoTrackerParams : InstrumentationParameters {
+internal interface AutoTrackerParameters : InstrumentationParameters {
 
     /**
      * AGP will re-instrument dependencies, when the [InstrumentationParameters] changed
@@ -92,15 +134,18 @@ internal interface AutoTrackerParams : InstrumentationParameters {
      * that is used solely for that purpose.
      */
     @get:Input
-    val analytics: Property<AnalyticsAdapter>
+    val name: Property<String>
 
     @get:Input
-    val injectClasses: Property<Array<String>>
+    val applicationId: Property<String>
 
     @get:Input
-    val excludePackages: Property<Array<String>>
+    val buildDir: Property<File>
 
     @get:Input
-    val includePackages: Property<Array<String>>
+    val autoTrackerParams: Property<AutoTrackerParams>
+
+    @get:Input
+    val gioKitParams: Property<GioKitParams>
 
 }

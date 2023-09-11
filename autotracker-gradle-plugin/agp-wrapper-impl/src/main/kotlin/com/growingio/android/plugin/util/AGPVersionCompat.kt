@@ -11,9 +11,6 @@ fun getAndroidComponentsExtension(project: Project): AndroidComponentsExtensionC
         version >= SimpleAGPVersion(7, 2) -> {
             AndroidComponentsExtensionCompatApi72Impl(project)
         }
-        version >= SimpleAGPVersion(7, 1) -> {
-            AndroidComponentsExtensionCompatApi71Impl(project)
-        }
         version >= SimpleAGPVersion(7, 0) -> {
             AndroidComponentsExtensionCompatApi70Impl(project)
         }
