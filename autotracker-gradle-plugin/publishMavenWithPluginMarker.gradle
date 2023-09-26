@@ -141,6 +141,9 @@ publishing {
     afterEvaluate {
         publications {
             autotrackerPluginMarkerMaven {
+                artifact(fakeJar)
+                artifact(fakeSourcesJar)
+                artifact(fakeJavadocJar)
                 // customize marker publications here
                 pom {
                     configurePom(owner)
@@ -162,9 +165,9 @@ publishing {
     }
 }
 
-signing {
-    required { isReleaseBuild() && gradle.taskGraph.hasTask("publish") }
-    publishing.publications.all { publication ->
-        sign publication
-    }
-}
+//signing {
+//    required { isReleaseBuild() && gradle.taskGraph.hasTask("publish") }
+//    publishing.publications.all { publication ->
+//        sign publication
+//    }
+//}

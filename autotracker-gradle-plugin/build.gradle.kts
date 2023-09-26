@@ -90,7 +90,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-tasks.jar {
+tasks.jar{
     val dependencies = shadowed.filter {
         it.name.startsWith("agp-")
     }.map {

@@ -142,9 +142,9 @@ publishing {
     }
 }
 
-signing {
-    required { isReleaseBuild() && gradle.taskGraph.hasTask("publish") }
-    publishing.publications.all { publication ->
-        sign publication
-    }
-}
+//signing {
+//    required { isReleaseBuild() && gradle.taskGraph.hasTask("publish") }
+//    publishing.publications.all { publication ->
+//        sign publication
+//    }
+//}
