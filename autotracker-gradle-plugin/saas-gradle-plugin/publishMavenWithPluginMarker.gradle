@@ -83,6 +83,25 @@ def configurePom(pom) {
     }
 }
 
+tasks.register("fakeJar", Jar).configure {
+    description = "plugin fake JAR"
+    archiveBaseName.set("empty")
+}
+
+tasks.register("fakeSourcesJar", Jar).configure {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "plugin fake sources JAR"
+    archiveBaseName.set("empty")
+    archiveClassifier.set("sources")
+}
+
+tasks.register("fakeJavadocJar", Jar).configure {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "plugin fake javadoc JAR"
+    archiveBaseName.set("empty")
+    archiveClassifier.set("javadoc")
+}
+
 // Create sources Jar from main kotlin sources
 tasks.register("sourcesJar", Jar).configure {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
@@ -121,6 +140,9 @@ publishing {
     afterEvaluate {
         publications {
             saasPluginMarkerMaven {
+                artifact(fakeJar)
+                artifact(fakeSourcesJar)
+                artifact(fakeJavadocJar)
                 // customize marker publications here
                 pom {
                     configurePom(owner)
