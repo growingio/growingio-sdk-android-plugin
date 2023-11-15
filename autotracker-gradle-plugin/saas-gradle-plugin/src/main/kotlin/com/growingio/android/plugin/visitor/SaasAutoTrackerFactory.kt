@@ -103,4 +103,7 @@ internal interface AutoTrackerParams : InstrumentationParameters {
     @get:Input
     val includePackages: Property<Array<String>>
 
+    @get:Input
+    val enableRn: Property<Boolean>
+
 }
