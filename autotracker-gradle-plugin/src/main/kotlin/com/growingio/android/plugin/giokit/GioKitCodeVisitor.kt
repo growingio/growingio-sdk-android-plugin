@@ -87,7 +87,7 @@ internal class GioKitCodeVisitor(
 
         g("creating a class with public modifier and writing it to genDir-${generatedDir.canonicalPath}")
 
-        // creating a class DlkanthDemo with public modifier and writing it to genDir
+        // creating a class with public modifier and writing it to genDir
         val classBuilder = TypeSpec.classBuilder("GioCode").superclass(
             ParameterizedTypeName.get(
                 HashSet::class.java,

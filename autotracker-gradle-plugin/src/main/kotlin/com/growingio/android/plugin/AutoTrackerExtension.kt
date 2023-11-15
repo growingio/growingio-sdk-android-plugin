@@ -58,7 +58,7 @@ open class AnalyticsAdapter(
     var firebaseAnalytics: Boolean = false,
     var googleAnalytics: Boolean = false,
     var sensorAnalytics: Boolean = false
-) {
+) : Serializable {
     override fun toString(): String {
         return "$firebaseAnalytics+$googleAnalytics+$sensorAnalytics"
     }
@@ -67,4 +67,6 @@ open class AnalyticsAdapter(
 internal class AutoTrackerParams(
     val excludePackages: Array<String>,
     val includePackages: Array<String>,
+    val injectClassed: Array<String>,
+    val analyticsAdapter: AnalyticsAdapter,
 ) : Serializable

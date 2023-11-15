@@ -80,7 +80,9 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
             val buildDir = project.buildDir
             val autoTrackerParams = AutoTrackerParams(
                 gioExtension.excludePackages ?: arrayOf(),
-                gioExtension.includePackages ?: arrayOf()
+                gioExtension.includePackages ?: arrayOf(),
+                gioExtension.injectClasses ?: arrayOf(),
+                gioExtension.analyticsAdapter ?: AnalyticsAdapter()
             )
 
             val gioKitParams = GioKitProcessor.processGiokitParams(project, gioExtension)
