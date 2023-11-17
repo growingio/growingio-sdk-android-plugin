@@ -31,8 +31,10 @@ fun info(message: String) {
 }
 
 fun w(message: String, cause: Throwable? = null) {
-    System.err.println("[GIO.warn] $message")
-    cause?.printStackTrace(System.err)
+    if (LOG_ENABLE) {
+        System.err.println("[GIO.warn] $message")
+        cause?.printStackTrace(System.err)
+    }
 }
 
 fun e(message: String, cause: Throwable? = null) {

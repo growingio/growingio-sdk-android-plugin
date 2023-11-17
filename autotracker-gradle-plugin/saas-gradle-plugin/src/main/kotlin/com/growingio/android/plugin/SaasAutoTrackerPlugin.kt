@@ -81,6 +81,7 @@ class SaasAutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) 
                 params.excludePackages.set(gioExtension.excludePackages ?: arrayOf())
                 params.includePackages.set(gioExtension.includePackages ?: arrayOf())
                 params.injectClasses.set(gioExtension.injectClasses ?: arrayOf())
+                params.enableRn.set(gioExtension.enableRn)
             }
             androidComponent.setAsmFramesComputationMode(FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS)
         }

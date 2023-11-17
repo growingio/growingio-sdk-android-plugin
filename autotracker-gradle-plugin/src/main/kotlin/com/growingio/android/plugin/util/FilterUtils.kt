@@ -142,5 +142,5 @@ fun initInjectClass(extension: AutoTrackerExtension) {
             }
         }
     }
-    HookClassesConfig.initDefaultInjector(null)
+    HookClassesConfig.initDefaultInjector(DEFAULT_INJECT_CLASS)
 }
