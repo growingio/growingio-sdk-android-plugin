@@ -93,10 +93,11 @@ internal sealed class GioKitInjectData(
         injectMethodDesc = "(Landroid/content/Context;Ljava/util/Map;)V",
     )
 
+
     object GioKitInjectOkhttpV3 : GioKitInjectData(
         targetClassName = "com/growingio/android/okhttp3/OkHttpDataLoader\$Factory",
         targetMethodName = "getsInternalClient",
-        targetMethodDesc = "()Lokhttp3/Call\$Factory;",
+        targetMethodDesc = "(Lcom/growingio/android/okhttp3/OkHttpConfig;)Lokhttp3/Call\$Factory;",
         injectClassName = "com/growingio/giokit/hook/GioHttpCaptureInterceptor",
         injectMethodName = "<init>",
         injectMethodDesc = "()V",
