@@ -92,6 +92,10 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
                     gioExtension.giokit?.releaseEnabled ?: false,
                     gioExtension.giokit?.autoInstallVersion
                 )
+                if (gioExtension.giokit?.trackerFinderEnabled == true) {
+                    val sourcePath = GioKitProcessor.getGeneratedDir(buildDir, androidComponent.name)
+                    GioKitProcessor.createGiokitSourceSets(project, sourcePath.absolutePath)
+                }
             }
 
             androidComponent.transformClassesWith(

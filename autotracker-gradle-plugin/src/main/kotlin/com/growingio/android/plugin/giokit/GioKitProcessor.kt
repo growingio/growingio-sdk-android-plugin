@@ -67,8 +67,8 @@ object GioKitProcessor {
     fun checkGiokitEnabled(project: Project, gioExtension: AutoTrackerExtension): Boolean {
         val giokitExtension = gioExtension.giokit ?: return false
         if (!giokitExtension.enabled) return false
-        if (!giokitExtension.releaseEnabled && isReleaseTask(project)) {
-            return false
+        if (isReleaseTask(project)) {
+            return giokitExtension.releaseEnabled
         }
         return true
     }
@@ -112,6 +112,16 @@ object GioKitProcessor {
         return xmlScheme
     }
 
+    fun createGiokitSourceSets(project: Project, path: String) {
+        val appExtension = project.extensions.getByName("android") as? ApplicationExtension
+        appExtension?.let { extension ->
+            extension.sourceSets.forEach {sourceSet->
+                if (sourceSet.name == "main") {
+                    sourceSet.java.srcDir(path)
+                }
+            }
+        }
+    }
 
     private fun getGioDepend(sdks: Set<Pair<String, String>>): String {
         val sb = StringBuilder()
@@ -185,7 +195,6 @@ object GioKitProcessor {
             }
             g("giokit was successfully installed with version: $gioKitVersion")
         }
-
     }
 
     private fun isReleaseTask(project: Project): Boolean {
@@ -195,7 +204,7 @@ object GioKitProcessor {
     }
 
     fun getGeneratedDir(buildDir: File, name: String): File {
-        return File(buildDir, "generated/source/buildConfig/$name/")
+        return File(buildDir, "generated/source/giokit/$name/")
     }
 
     fun getVisitorCodeFile(buildDir: File): File {

@@ -132,6 +132,13 @@ internal class AutoTrackerTransform(
                             GioKitProcessor.getVisitorCodeFile(context.buildDir),
                         )
                     }
+
+                    val sourcePath = GioKitProcessor.getGeneratedDir(context.buildDir, context.name)
+                    android.sourceSets.forEach {sourceSet->
+                        if (sourceSet.name == "main") {
+                            sourceSet.java.srcDirs.plus(sourcePath)
+                        }
+                    }
                 }
 
                 if (GioKitProcessor.shouldClassModified(normalize(className))) {
