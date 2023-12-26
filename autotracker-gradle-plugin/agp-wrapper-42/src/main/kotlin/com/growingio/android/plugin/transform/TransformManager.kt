@@ -7,7 +7,9 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
+import com.growingio.android.plugin.util.AndroidManifestHandler
 import com.growingio.android.plugin.util.e
+import com.growingio.android.plugin.util.g
 import org.apache.commons.compress.archivers.jar.JarArchiveEntry
 import org.apache.commons.compress.archivers.zip.ParallelScatterZipCreator
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
@@ -23,6 +25,7 @@ import java.util.concurrent.TimeUnit
 import java.util.jar.JarFile
 import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
+import javax.xml.parsers.SAXParserFactory
 
 inline fun <reified T : BaseExtension> Project.getAndroid(): T = extensions.getByName("android") as T
 
@@ -56,26 +59,33 @@ fun TransformInvocation.getVariant(project: Project): BaseVariant? {
                 variant = it
             }
         }
+
         is LibraryExtension -> {
             androidExtension.libraryVariants.all { variant = it }
         }
     }
     return variant
+}
 
-//    return project.getAndroid<BaseExtension>().let { android ->
-//        this.context.variantName.let { variant ->
-//            when (android) {
-//                is AppExtension -> when {
-//                    variant.endsWith("AndroidTest") -> android.testVariants.single { it.name == variant }
-//                    variant.endsWith("UnitTest") -> android.unitTestVariants.single { it.name == variant }
-//                    else -> android.applicationVariants.single { it.name == variant }
-//                }
-//                is LibraryExtension -> android.libraryVariants.single { it.name == variant }
-//                else -> error("variant not found")
-//            }
-//
-//        }
-//    }
+fun getGioScheme(project: Project): String {
+    var urlScheme = ""
+    val appExtension = project.extensions.getByName("android") as? AppExtension
+    appExtension?.let {
+        val manifest = it.sourceSets.getAt("main").manifest.srcFile
+        // 获取 AndroidManifest 下配置的 url scheme 如"growing.d80871b41ef40518"
+        // 执行clean之后，无法再在 build 文件中找到 build/intermediates/merged_manifest/debug/AndroidManifest.xml，故无法找到 urlscheme
+        // 第二次build时将会找到。。
+        // 同样，如果只改变xml值未改变代码由于无法触发插件也不能实时更新
+        manifest.let {
+            val parser = SAXParserFactory.newInstance().newSAXParser()
+            val handler = AndroidManifestHandler()
+            parser.parse(manifest, handler)
+            urlScheme = handler.growingioScheme ?: ""
+            g("growingio scheme is ${urlScheme}")
+            g("app package is ${handler.appPackageName}")
+        }
+    }
+    return urlScheme
 }
 
 fun TransformInvocation.getBootClasspath(project: Project): Collection<File> {
@@ -107,15 +117,19 @@ fun File.transform(output: File, transformer: (ByteArray) -> ByteArray = { it ->
                 it.transform(File(output, base.relativize(it.toURI()).path), transformer)
             }
         }
+
         isFile -> when (extension.toLowerCase(Locale.getDefault())) {
             "jar" -> JarFile(this).use {
                 it.transform(output, transformer)
             }
+
             "class" -> this.inputStream().use {
                 it.transform(transformer).redirect(output)
             }
+
             else -> this.copyTo(output, true)
         }
+
         else -> throw IOException("Unexpected file: ${this.canonicalPath}")
     }
 }
@@ -155,6 +169,7 @@ fun ZipFile.transform(
                             getInputStream(entry)
                         }
                     }
+
                     else -> getInputStream(entry)
                 }
             }

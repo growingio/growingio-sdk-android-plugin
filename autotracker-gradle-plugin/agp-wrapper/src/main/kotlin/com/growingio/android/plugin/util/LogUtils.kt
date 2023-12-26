@@ -30,6 +30,12 @@ fun info(message: String) {
     }
 }
 
+fun g(message: String){
+    if (LOG_ENABLE) {
+        println("[GioKit] $message")
+    }
+}
+
 fun w(message: String, cause: Throwable? = null) {
     if (LOG_ENABLE) {
         System.err.println("[GIO.warn] $message")

@@ -27,7 +27,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.growingio.android.sdk.autotrack.CdpAutotrackConfiguration;
+import com.growingio.android.sdk.autotrack.AutotrackConfiguration;
 import com.growingio.android.sdk.autotrack.GrowingAutotracker;
 import com.growingio.android.sdk.track.log.Logger;
 
@@ -36,7 +36,7 @@ import java.util.List;
 public class PluginApplication extends Application {
     private static final String TAG = "PluginApplication";
 
-    private static CdpAutotrackConfiguration sConfiguration;
+    private static AutotrackConfiguration sConfiguration;
 
     @RequiresApi(api = Build.VERSION_CODES.O_MR1)
     @Override
@@ -45,7 +45,7 @@ public class PluginApplication extends Application {
         super.onCreate();
 
         if (sConfiguration == null) {
-            sConfiguration = new CdpAutotrackConfiguration("ac04dfef4a1b6ec7", "growing.6b963145e9509ad0")
+            sConfiguration = new AutotrackConfiguration("ac04dfef4a1b6ec7", "growing.6b963145e9509ad0")
                     .setDataSourceId("ae1a372733eabfa8")
                     .setDataCollectionServerHost("https://collector-opdemo.growingio.com")
                     .setDebugEnabled(true)
@@ -55,9 +55,7 @@ public class PluginApplication extends Application {
 
         enableStrictMode();
 
-        long startTime = System.currentTimeMillis();
         GrowingAutotracker.startWithConfiguration(this, sConfiguration);
-        Log.d(TAG, "start time: " + (System.currentTimeMillis() - startTime));
     }
 
     private boolean isMainProcess() {

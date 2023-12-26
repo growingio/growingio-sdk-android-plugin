@@ -9,14 +9,15 @@ class AndroidComponentsExtensionCompatApi81Impl(
     private val project: Project
 ) : AndroidComponentsExtensionCompat {
 
-    override fun onAllVariants(block: (ComponentCompat) -> Unit) {
+    override fun onAllVariants(block: (ComponentCompat) -> Unit, testBlock: (ComponentCompat) -> Unit) {
         val actual = project.extensions.getByType(AndroidComponentsExtension::class.java)
         actual.onVariants { variant ->
+
             block.invoke(ComponentCompatApi81Impl(variant))
 
-            (variant as? HasAndroidTest)?.androidTest?.let { block.invoke(ComponentCompatApi81Impl(it)) }
+            (variant as? HasAndroidTest)?.androidTest?.let { testBlock.invoke(ComponentCompatApi81Impl(it)) }
 
-            (variant as? HasUnitTest)?.unitTest?.let { block.invoke(ComponentCompatApi81Impl(it)) }
+            (variant as? HasUnitTest)?.unitTest?.let { testBlock.invoke(ComponentCompatApi81Impl(it)) }
         }
     }
 }

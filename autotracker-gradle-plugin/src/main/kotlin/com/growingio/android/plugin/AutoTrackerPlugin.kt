@@ -19,15 +19,17 @@ package com.growingio.android.plugin
 
 import com.android.build.api.instrumentation.FramesComputationMode
 import com.android.build.api.instrumentation.InstrumentationScope
+import com.android.build.api.variant.ApplicationVariant
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.AndroidBasePlugin
+import com.growingio.android.plugin.giokit.GioKitProcessor
 import com.growingio.android.plugin.visitor.AutoTrackerTransform
 import com.growingio.android.plugin.util.ComponentCompat
 import com.growingio.android.plugin.util.LOG_ENABLE
 import com.growingio.android.plugin.util.SimpleAGPVersion
 import com.growingio.android.plugin.util.getAndroidComponentsExtension
+import com.growingio.android.plugin.util.initInjectClass
 import com.growingio.android.plugin.util.w
-import com.growingio.android.plugin.util.*
 import com.growingio.android.plugin.visitor.AutoTrackerFactory
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
@@ -46,7 +48,8 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
 
         var inAndroidProject = false
 
-        val autoTrackerExtension = project.extensions.create("growingAutotracker", AutoTrackerExtension::class.java, instantiator)
+        val autoTrackerExtension =
+            project.extensions.create("growingAutotracker", AutoTrackerExtension::class.java, instantiator)
 
         project.plugins.withType(AndroidBasePlugin::class.java) {
             inAndroidProject = true
@@ -68,30 +71,62 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
             initInjectClass(autoTrackerExtension)
             checkAutoTrackerDependency(it, autoTrackerExtension.skipDependencyCheck)
         }
-
     }
 
     private fun configureBytecodeTransformASM(project: Project, gioExtension: AutoTrackerExtension) {
         fun registerTransform(androidComponent: ComponentCompat) {
+            val variant = androidComponent.getComponentVariant() as? ApplicationVariant
+            val applicationId = variant?.applicationId?.get() ?: ""
+            val buildDir = project.buildDir
+            val autoTrackerParams = AutoTrackerParams(
+                gioExtension.excludePackages ?: arrayOf(),
+                gioExtension.includePackages ?: arrayOf(),
+                gioExtension.injectClasses ?: arrayOf(),
+                gioExtension.analyticsAdapter ?: AnalyticsAdapter()
+            )
+
+            val gioKitParams = GioKitProcessor.processGiokitParams(project, gioExtension)
+            if (gioExtension.giokit?.enabled == true) {
+                GioKitProcessor.autoInstallGioKit(
+                    project,
+                    gioExtension.giokit?.releaseEnabled ?: false,
+                    gioExtension.giokit?.autoInstallVersion
+                )
+                if (gioExtension.giokit?.trackerFinderEnabled == true) {
+                    val sourcePath = GioKitProcessor.getGeneratedDir(buildDir, androidComponent.name)
+                    GioKitProcessor.createGiokitSourceSets(project, sourcePath.absolutePath)
+                }
+            }
+
             androidComponent.transformClassesWith(
                 classVisitorFactoryImplClass = AutoTrackerFactory::class.java,
                 scope = InstrumentationScope.ALL
             ) { params ->
                 //val classesDir = File(project.buildDir, "intermediates/javac/${androidComponent.name}/classes")
                 //params.additionalClassesDir.set(classesDir)
-                params.excludePackages.set(gioExtension.excludePackages ?: arrayOf())
-                params.includePackages.set(gioExtension.includePackages ?: arrayOf())
-                params.injectClasses.set(gioExtension.injectClasses ?: arrayOf())
-                params.analytics.set(gioExtension.analyticsAdapter ?: AnalyticsAdapter())
+                params.name.set(androidComponent.name)
+                params.applicationId.set(applicationId)
+                params.buildDir.set(buildDir)
+                params.autoTrackerParams.set(autoTrackerParams)
+                params.gioKitParams.set(gioKitParams)
             }
             androidComponent.setAsmFramesComputationMode(FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS)
         }
-        getAndroidComponentsExtension(project).onAllVariants { registerTransform(it) }
+        getAndroidComponentsExtension(project).onAllVariants({ registerTransform(it) }, {})
     }
 
     private fun configureBytecodeTransform(project: Project, gioExtension: AutoTrackerExtension) {
         val androidExtension =
             project.extensions.findByType(BaseExtension::class.java) ?: error("Android BaseExtension not found.")
+
+        if (gioExtension.giokit?.enabled == true) {
+            GioKitProcessor.autoInstallGioKit(
+                project,
+                gioExtension.giokit?.releaseEnabled ?: false,
+                gioExtension.giokit?.autoInstallVersion
+            )
+        }
+
         androidExtension::class.java.getMethod(
             "registerTransform",
             Class.forName("com.android.build.api.transform.Transform"),
@@ -126,7 +161,9 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
 
         if (dependencies.contains(LIBRARY_GROUP to "autotracker-core")) {
             w("The Growingio autotracker core sdk dependency was found And you need custom owns sdk.")
-        } else if (!dependencies.contains(LIBRARY_GROUP to "autotracker-cdp") && !dependencies.contains(LIBRARY_GROUP to "autotracker")) {
+        } else if (dependencies.contains(LIBRARY_GROUP to "autotracker-cdp")) {
+            w("The Growingio autotracker-cdp was deprecated.")
+        } else if (!dependencies.contains(LIBRARY_GROUP to "autotracker")) {
             error("The GrowingIO Gradle plugin is applied but no growingio autotracker sdk dependency was found. Or you have added autotracker dependency and skip dependency check through set <skipDependencyCheck true> in build.gradle extension")
         }
 

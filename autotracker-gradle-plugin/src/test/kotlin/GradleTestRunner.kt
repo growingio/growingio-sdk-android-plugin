@@ -41,7 +41,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         tempFolder.newFolder("src", "main", "java", "growingio")
         tempFolder.newFolder("src", "test", "java", "growingio")
         tempFolder.newFolder("src", "main", "res")
-        addDependencies("implementation 'com.growingio.android:autotracker-cdp:3.5.0'")
+        addDependencies("implementation 'com.growingio.android:autotracker:4.0.0-SNAPSHOT'")
     }
 
     // Adds project dependencies, e.g. "implementation <group>:<id>:<version>"
@@ -130,7 +130,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
             mavenCentral()
           }
           dependencies {
-            classpath 'com.android.tools.build:gradle:4.2.2'
+            classpath 'com.android.tools.build:gradle:7.4.2'
           }
         }
 
@@ -140,19 +140,20 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         }
 
         android {
-          compileSdkVersion 30
-          buildToolsVersion "30.0.2"
+          compileSdk 33
 
           defaultConfig {
             applicationId "plugin.test"
-            minSdkVersion 21
-            targetSdkVersion 30
+            applicationId "com.growingio.android.plugin"
+            minSdk 21
+            targetSdk 33
           }
 
           compileOptions {
-              sourceCompatibility 1.8
-              targetCompatibility 1.8
+            sourceCompatibility JavaVersion.VERSION_11
+            targetCompatibility JavaVersion.VERSION_11
           }
+          
           ${additionalAndroidOptions.joinToString(separator = "\n")}
         }
 
@@ -161,6 +162,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
             mavenLocal()
             google()
             mavenCentral()
+            maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
           }
         }
 
@@ -220,7 +222,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         .withProjectDir(tempFolder.root)
         .withArguments(listOf("--stacktrace", "assembleDebug") + additionalTasks)
         .withPluginClasspath()
-//    .withDebug(true) // Add this line to enable attaching a debugger to the gradle test invocation
+        .withDebug(true) // Add this line to enable attaching a debugger to the gradle test invocation
         .forwardOutput()
 
     // Data class representing a Gradle Test run result.

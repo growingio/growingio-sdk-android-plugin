@@ -45,7 +45,8 @@ class SaasAutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) 
 
         var inAndroidProject = false
 
-        val autoTrackerExtension = project.extensions.create("growingio", SaasAutoTrackerExtension::class.java, instantiator)
+        val autoTrackerExtension =
+            project.extensions.create("growingio", SaasAutoTrackerExtension::class.java, instantiator)
 
         project.plugins.withType(AndroidBasePlugin::class.java) {
             inAndroidProject = true
@@ -85,7 +86,7 @@ class SaasAutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) 
             }
             androidComponent.setAsmFramesComputationMode(FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS)
         }
-        getAndroidComponentsExtension(project).onAllVariants { registerTransform(it) }
+        getAndroidComponentsExtension(project).onAllVariants({ registerTransform(it) }, {})
     }
 
     private fun configureBytecodeTransform(project: Project, gioExtension: SaasAutoTrackerExtension) {

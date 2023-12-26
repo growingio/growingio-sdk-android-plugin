@@ -16,6 +16,7 @@
 
 package com.growingio.android.plugin
 
+import com.growingio.android.plugin.giokit.GioKitExtension
 import org.gradle.api.Action
 import org.gradle.internal.reflect.Instantiator
 import java.io.Serializable
@@ -38,6 +39,12 @@ open class AutoTrackerExtension(var instantiator: Instantiator) {
 
     var injectClasses: Array<String>? = null
 
+    var giokit: GioKitExtension? = null
+
+    open fun giokit(configuration: Action<in GioKitExtension>) {
+        giokit = (instantiator.newInstance(GioKitExtension::class.java)).apply { configuration.execute(this) }
+    }
+
     var analyticsAdapter: AnalyticsAdapter? = null
 
     open fun analyticsAdapter(configuration: Action<in AnalyticsAdapter>) {
@@ -46,17 +53,20 @@ open class AutoTrackerExtension(var instantiator: Instantiator) {
     }
 }
 
-//用于配置是否可以对第三方分析服务进行适配
+//Adapter third-party analysis services
 open class AnalyticsAdapter(
-    // 适配 FirebaseAnalytics
     var firebaseAnalytics: Boolean = false,
-    // 适配 GoogleAnalytics
     var googleAnalytics: Boolean = false,
-    // 适配 sensorAnalytics
     var sensorAnalytics: Boolean = false
 ) : Serializable {
-
     override fun toString(): String {
         return "$firebaseAnalytics+$googleAnalytics+$sensorAnalytics"
     }
 }
+
+internal class AutoTrackerParams(
+    val excludePackages: Array<String>,
+    val includePackages: Array<String>,
+    val injectClassed: Array<String>,
+    val analyticsAdapter: AnalyticsAdapter,
+) : Serializable

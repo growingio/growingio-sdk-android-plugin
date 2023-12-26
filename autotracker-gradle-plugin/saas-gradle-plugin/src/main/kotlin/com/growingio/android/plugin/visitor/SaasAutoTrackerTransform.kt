@@ -95,7 +95,7 @@ internal class SaasAutoTrackerTransform(
             return autoTrackerWriter.toByteArray()
         } catch (t: Throwable) {
             w(
-                "Unfortunately, an error has occurred while processing $className. Please check this class and decide whether to ignore it in plugin setting:「growingAutotracker -> excludePackages」. Or copy your build logs and the jar containing this class and visit https://www.growingio.com, thanks!\n",
+                "Unfortunately, an error has occurred while processing $className. Please check this class and decide whether to ignore it in plugin setting:「growingio -> excludePackages」. Or copy your build logs and the jar containing this class and visit https://www.growingio.com, thanks!\n",
                 t
             )
         }

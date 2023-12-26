@@ -11,7 +11,6 @@ dependencies {
     api(project(":agp-wrapper"))
     implementation(project(":agp-wrapper-42"))
     implementation(project(":agp-wrapper-70"))
-    implementation(project(":agp-wrapper-71"))
     implementation(project(":agp-wrapper-72"))
     implementation(project(":agp-wrapper-81"))
     implementation(gradleApi())

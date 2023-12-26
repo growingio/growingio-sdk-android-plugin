@@ -21,11 +21,14 @@ package com.growingio.android.plugin.util
  *
  * @author cpacm 2022/6/9
  */
+import com.android.build.api.component.AndroidTest
 import com.android.build.api.component.Component
+import com.android.build.api.component.UnitTest
 import com.android.build.api.instrumentation.AsmClassVisitorFactory
 import com.android.build.api.instrumentation.FramesComputationMode
 import com.android.build.api.instrumentation.InstrumentationParameters
 import com.android.build.api.instrumentation.InstrumentationScope
+import com.android.build.api.variant.Variant
 
 @Suppress("UnstableApiUsage")
 internal class ComponentCompatApi42Impl(private val component: Component) : ComponentCompat() {
@@ -43,5 +46,20 @@ internal class ComponentCompatApi42Impl(private val component: Component) : Comp
 
     override fun setAsmFramesComputationMode(mode: FramesComputationMode) {
         component.setAsmFramesComputationMode(mode)
+    }
+
+    override fun getComponentVariant(): Variant {
+        if (component is Variant) {
+            return component
+        }
+        if (component is UnitTest) {
+            return component.testedVariant
+        }
+
+        if (component is AndroidTest) {
+            return component.testedVariant
+        }
+
+        throw IllegalAccessException("error component type")
     }
 }

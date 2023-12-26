@@ -3,11 +3,8 @@ buildscript {
         set("kotlin_version", "1.8.20")
         set("agp_version", "8.1.0")
         set("low_agp_version", "4.2.2")
-        set("releaseVersion", "3.5.3")
-        set("releaseVersionCode", 30503)
-
-        set("saasVersion", "2.10.0")
-        set("saasVersionCode", "21000")
+        set("releaseVersion", "4.0.0")
+        set("releaseVersionCode", 40000)
     }
 }
 
@@ -76,10 +73,12 @@ dependencies {
     testImplementation(gradleTestKit())
     testImplementation("junit:junit:4.13.2")
     testImplementation("com.google.truth:truth:1.1.3")
-    testImplementation("com.android.tools.build:gradle:${rootProject.extra["low_agp_version"]}")
-    testImplementation(project(":agp-wrapper-42"))
+    testImplementation("org.ow2.asm:asm:9.5")
+    testImplementation("org.ow2.asm:asm-commons:9.5")
+    testImplementation("com.android.tools.build:gradle:7.4.2")
+    testImplementation(project(":agp-wrapper-72"))
 
-    testPluginImplementation("com.android.tools.build:gradle:${rootProject.extra["low_agp_version"]}")
+    testPluginImplementation("com.android.tools.build:gradle:7.4.2")
     testPluginImplementation("com.google.guava:guava:30.1.1-jre")
 }
 
@@ -93,7 +92,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-tasks.jar {
+tasks.jar{
     val dependencies = shadowed.filter {
         it.name.startsWith("agp-")
     }.map {

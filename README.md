@@ -4,22 +4,13 @@
 
 该项目为 [growingio-sdk-android-autotracker](https://github.com/growingio/growingio-sdk-android-autotracker/) 的插件部分，主要用于实现无埋点的代码插入功能。
 
-项目主要模块为二个部分：
-
-1. autotracker-gradle-plugin 插件代码实现部分，主要功能为：
-  * 适配 AGP 8.0  Instrumentation API；
-  * 兼容 AGP4.2及其更早版本的 Transform API；
-  * 优化插件对脱糖的处理；
-  * 兼容 AGP 7.0 及其以上 `pluginManagement` 的依赖方式；
-  * 提供了完整的单元测试。
-
-2. inject-annotation 无埋点代码Hook注解及其处理器, 用于生成无埋点Hook配置类以便插件进行无埋点代码插入
-  * 提供两种注解方式，一是指向对应的类二是自己填入需要注解的类的描述符；
-  * 使用 KSP kotlin 注解处理器生成 kotlin 代码，比传统的APT和KAPT效率更高；
-  * inject-descriptor 为注解的描述文件，全部由接口文件组成；
+Growingio Sdk Gradle Plugin 4.0 具有以下的功能特性：
+* 适配 AGP 8.0 Instrumentation API；
+* 兼容 AGP4.2及其更早版本的 Transform API；
+* 在插件中可以配置集成Giokit;
 
 ## 如何集成
-这里只说明在 Android Gradle插件为7.0及以上版本时的集成方式，若是AGP7以下则按照 [插件集成](https://growingio.github.io/growingio-sdk-docs/docs/android/base/Introduce#添加插件) 集成即可
+这里只说明在 Android Gradle插件为7.0及以上版本时的集成方式。
 
 ### 添加 Maven 仓库
 需要在 project 中的 `settings.gradle` 文件中添加Maven仓库
@@ -29,10 +20,9 @@
 pluginManagement {
     repositories {
         // 添加maven仓库
-        mavenCentral()
+        gradlePluginPortal()
         //如果使用 SNAPSHOT 版本，则需要使用如下该仓库。
         maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
-        gradlePluginPortal()
         google()
       
     }
@@ -58,7 +48,7 @@ plugins {
 
     ···
     // 添加GrowingIO 无埋点 SDK 插件
-    id 'com.growingio.android.autotracker' version '3.4.0' apply false
+    id 'com.growingio.android.autotracker' version '4.0.0' apply false
 }
 ```
 
@@ -71,6 +61,7 @@ plugins {
     // 使用 GrowingIO 无埋点 SDK 插件
     id 'com.growingio.android.autotracker'
 }
+
 ```
 
 ## 插件配置说明
@@ -79,13 +70,11 @@ plugins {
 
 | Extension                    | 参数类型         | 是否必填 | 默认值 | 说明 |  版本 |
 | :-------------------------   | :------         | :----:  |:------  |:------| --------------------------   |
-| `logEnabled`                 | `Boolean`       | 否      | `false`  | 编译时是否输出log日志          |  |
-| `includePackages`            | `Array<String>` | 否      | `null`   | 需要额外包含编译的包名          |  |
-| `excludePackages`            | `Array<String>` | 否      | `null`   | 需要跳过编译的包名             |  |
-| `analyticsAdapter`           | `Extension`     | 否      | -        | 用于配置是否适配第三方分析数据   |  |
-|     - `firebaseAnalytics`    | `Boolean`       | 否      | `false`  | 用于配置是否适配Firebase分析SDK |  |
-|     - `googleAnalytics`      | `Boolean`       | 否      | `false`  | 用于配置是否适配GoogleAnalyticsSDK |  |
-
+| logEnabled                 | _Boolean_       | 否      | `false`  | 编译时是否输出log日志          |  |
+| skipDependencyCheck       | _Boolean_       | 否      | `false`  | 编译时检测当前project是否配置SDK依赖（模块中依赖时配置为true）          |  |
+| includePackages            | _Array<String\>_ | 否      | `null`   | 需要额外包含编译的包名          |  |
+| excludePackages            | _Array<String\>_ | 否      | `null`   | 需要跳过编译的包名             |  |
+| giokit                     | _GiokitExtension_ | 否    | `null`   | 可以用来配置是否引入 Giokit | | 
 
 配置代码示例
 ```groony
@@ -99,15 +88,43 @@ growingAutotracker {
     logEnabled false
     includePackages "com.growingio.xxx1","com.growingio.xxx2"
     excludePackages "com.cpacm.xxx1"
-    analyticsAdapter {
-        firebaseAnalytics = false
-        googleAnalytics = false
+    giokit {
+        //...
     }
 }
 
 
 dependencies {
   ···
+}
+```
+
+### Giokit 配置
+
+| Extension                    | 参数类型         | 是否必填 | 默认值 | 说明 |
+| :-------------------------   | :------         | :----:  |:------  |:------|
+| enabled                   | _Boolean_       | 否      | `false`  |  是否添加 Giokit        |
+| trackerFinderEnabled      | _Boolean_       | 否      | `true`  | 查找App下调用App埋点接口的信息      |
+| trackerFinderDomain        | _Array<String\>_ | 否      | 默认为应用 ApplicationId   | 查找的范围  |
+| trackerCalledMethod        | _Array<String\>_ | 否      | 默认为SDK相应接口   | 要查找的类和方法  |
+| autoAttachEnabled          | _Boolean_       | 否      | `true`  |  GioKit 是否自动依附在Activity上，若设为false，需要自行调用api打开GioKit  |
+| releaseEnabled             | _Boolean_       | 否      | `false`   |  **请不要打开**，否则会在 Release 打包中包含 GioKit 代码    |
+| autoInstallVersion         | _String_        | 否      | `2.0.0`   |  自动依赖的GioKit版本号             |
+
+现在SDK不用再额外引入 Giokit，只需要在插件中开启即可。示例如下：
+
+```groovy
+growingAutotracker {
+    logEnabled true
+    giokit {
+        enabled false  //开启则会引入 GioKit
+        trackerFinderEnabled true
+        trackerFinderDomain "com.xxxx.yourapplication"
+        trackerCalledMethod "com.growingio.android.tracker#trackCumtomEvent"
+        autoAttachEnabled true
+        releaseEnabled false
+        autoInstallVersion "2.0.0"
+    }
 }
 ```
 

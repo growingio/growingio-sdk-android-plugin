@@ -20,6 +20,7 @@ import com.android.build.api.instrumentation.AsmClassVisitorFactory
 import com.android.build.api.instrumentation.FramesComputationMode
 import com.android.build.api.instrumentation.InstrumentationParameters
 import com.android.build.api.instrumentation.InstrumentationScope
+import com.android.build.api.variant.Variant
 
 /**
  * <p>
@@ -28,8 +29,9 @@ import com.android.build.api.instrumentation.InstrumentationScope
  * - In AGP 7.0 its packages is 'com.android.build.api.variant'
  * @author cpacm 2022/6/9
  */
-@Suppress("UnstableApiUsage") // ASM Pipeline APIs
+// ASM Pipeline APIs
 abstract class ComponentCompat {
+
     /** Redeclaration of [com.android.build.api.variant.ComponentIdentity.name] */
     abstract val name: String
 
@@ -42,4 +44,6 @@ abstract class ComponentCompat {
 
     /** Redeclaration of [com.android.build.api.variant.Component.setAsmFramesComputationMode] */
     abstract fun setAsmFramesComputationMode(mode: FramesComputationMode)
+
+    abstract fun getComponentVariant(): Variant?
 }
