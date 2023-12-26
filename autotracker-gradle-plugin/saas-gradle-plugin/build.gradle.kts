@@ -64,4 +64,4 @@ tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-apply("publishMavenWithPluginMarker.gradle")
+//apply("publishMavenWithPluginMarker.gradle")
