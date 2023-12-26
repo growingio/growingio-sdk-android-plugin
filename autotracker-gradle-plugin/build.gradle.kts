@@ -114,4 +114,4 @@ tasks.clean {
 // 2. 放断点
 // 3. 新建 remote JVM debug ,运行 debug
 // 4. 运行构建，开始调试 ./gradlew assembleDebug
-apply("publishMavenWithPluginMarker.gradle")
+// apply("publishMavenWithPluginMarker.gradle")
