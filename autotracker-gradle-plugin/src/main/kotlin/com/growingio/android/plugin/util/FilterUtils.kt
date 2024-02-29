@@ -142,9 +142,11 @@ fun initInjectClass(extension: AutoTrackerExtension) {
             EXECUTE_INJECT_CLASS.add(ANALYTIC_ADAPTER_INJECT_CLASS[2])
             INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.SensorsDataAPI")
             INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.AbstractSensorsDataAPI")
+            INCLUDED_PACKAGES.add("com.sensorsdata.analytics.android.sdk.core.event.imp.TrackEventAssemble")
         } else {
             INCLUDED_PACKAGES.remove("com.sensorsdata.analytics.android.sdk.SensorsDataAPI")
             INCLUDED_PACKAGES.remove("com.sensorsdata.analytics.android.sdk.AbstractSensorsDataAPI")
+            INCLUDED_PACKAGES.remove("com.sensorsdata.analytics.android.sdk.core.event.imp.TrackEventAssemble")
         }
     }
 

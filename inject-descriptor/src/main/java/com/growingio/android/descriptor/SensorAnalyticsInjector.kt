@@ -59,4 +59,16 @@ interface SensorAnalyticsInjector {
         type = 0
     )
     fun trackEvent()
+
+    // for sensor sdk >=6.6.9
+    @Inject(
+        targetClazz = "com/sensorsdata/analytics/android/sdk/core/event/imp/TrackEventAssemble",
+        targetMethod = "assembleData",
+        targetMethodDesc = "(Lcom/sensorsdata/analytics/android/sdk/core/event/InputData;)Lcom/sensorsdata/analytics/android/sdk/core/event/Event;",
+        injectMethod = "trackItemEvent",
+        injectMethodDesc = "(Lcom/sensorsdata/analytics/android/sdk/core/event/InputData;)V",
+        isAfter = true,
+        type = 0
+    )
+    fun trackItemEvent()
 }
