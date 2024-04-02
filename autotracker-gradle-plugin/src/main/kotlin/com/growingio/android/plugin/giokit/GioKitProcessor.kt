@@ -213,5 +213,5 @@ object GioKitProcessor {
 
     private const val GIOKIT_DEPEND = "com.growingio.giokit:giokit"
     private const val GIOKIT_DEPEND_NOOP = "com.growingio.giokit:giokit-no-op"
-    private const val GIOKIT_DEFAULT_VERSION = "2.0.0"
+    private const val GIOKIT_DEFAULT_VERSION = "2.1.0"
 }
