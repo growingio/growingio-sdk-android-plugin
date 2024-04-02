@@ -42,7 +42,7 @@ growingAutotracker {
     }
     giokit {
         enabled true
-        autoInstallVersion "2.1.0"
+        autoInstallVersion "2.1.1"
     }
 }
 
