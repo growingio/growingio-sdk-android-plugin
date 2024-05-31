@@ -1,7 +1,7 @@
 buildscript {
     extra.apply {
-        set("saasVersion", "2.10.0")
-        set("saasVersionCode", "21000")
+        set("saasVersion", "2.10.2")
+        set("saasVersionCode", "21002")
     }
 }
 

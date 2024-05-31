@@ -94,7 +94,7 @@ class InjectSuperClassVisitor(
         // 生成未实现的 override 方法
         for (targetClass in mTargetClasses) {
             // 若是该方法是需要接口实现的，则不做方法生成
-            if (targetClass.isInterface) return
+            if (targetClass.isInterface) break
             for (targetMethod in targetClass.targetMethods) {
                 if (!mOverrideMethods.contains(targetMethod)) {
                     val injectMethods = targetMethod.injectMethods

@@ -3,8 +3,8 @@ buildscript {
         set("kotlin_version", "1.8.20")
         set("agp_version", "8.1.0")
         set("low_agp_version", "4.2.2")
-        set("releaseVersion", "4.2.0")
-        set("releaseVersionCode", 40200)
+        set("releaseVersion", "4.3.0")
+        set("releaseVersionCode", 40300)
     }
 }
 

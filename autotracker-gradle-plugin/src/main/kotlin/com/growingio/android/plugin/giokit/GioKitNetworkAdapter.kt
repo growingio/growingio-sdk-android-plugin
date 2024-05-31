@@ -49,7 +49,7 @@ internal class GioKitNetworkAdapter(
                 super.visitMethodInsn(
                     Opcodes.INVOKEVIRTUAL,
                     "okhttp3/OkHttpClient\$Builder",
-                    "addInterceptor",
+                    "addNetworkInterceptor",
                     "(Lokhttp3/Interceptor;)Lokhttp3/OkHttpClient\$Builder;",
                     false
                 )
