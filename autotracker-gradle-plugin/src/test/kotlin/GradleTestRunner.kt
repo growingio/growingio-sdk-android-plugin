@@ -41,7 +41,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         tempFolder.newFolder("src", "main", "java", "growingio")
         tempFolder.newFolder("src", "test", "java", "growingio")
         tempFolder.newFolder("src", "main", "res")
-        addDependencies("implementation 'com.growingio.android:autotracker:4.0.0-SNAPSHOT'")
+        addDependencies("implementation 'com.growingio.android:autotracker:4.3.0'")
     }
 
     // Adds project dependencies, e.g. "implementation <group>:<id>:<version>"
@@ -223,7 +223,8 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         .withArguments(listOf("--stacktrace", "assembleDebug") + additionalTasks)
         .withPluginClasspath()
         .withDebug(true) // Add this line to enable attaching a debugger to the gradle test invocation
-        .forwardOutput()
+        .forwardStdError(System.err.writer())
+        .forwardStdOutput(System.out.writer())
 
     // Data class representing a Gradle Test run result.
     data class Result(
