@@ -3,8 +3,9 @@ buildscript {
         set("kotlin_version", "1.8.20")
         set("agp_version", "8.1.0")
         set("low_agp_version", "4.2.2")
-        set("releaseVersion", "4.3.0")
-        set("releaseVersionCode", 40300)
+        set("releaseVersion", "4.4.0-SNAPSHOT")
+        set("releaseVersionCode", 40400)
+        set("composeVersion", "1.0.0")
     }
 }
 
@@ -13,6 +14,7 @@ plugins {
     `java-gradle-plugin`
 
     id("com.gradle.plugin-publish") version ("1.2.0")
+    id("com.github.gmazzo.buildconfig") version ("3.1.0")
 }
 
 group = providers.gradleProperty("GROUP").get()
@@ -32,7 +34,21 @@ gradlePlugin {
             description = providers.gradleProperty("POM_DESCRIPTION").get()
             tags.set(listOf("growingio", "autotracker", "agp8"))
         }
+
+        create("compose") {
+            id = "com.growingio.compose.plugin"
+            implementationClass = "com.growingio.compose.plugin.GrowingKotlinCompilerGradlePlugin"
+            tags.set(listOf("growingio", "compose", "kotlin compiler plugin"))
+        }
     }
+}
+
+// provide by "com.github.gmazzo.buildconfig" plugin
+buildConfig {
+    packageName("com.growingio")
+    className("BuildConfig")
+
+    buildConfigField("String", "Version", provider { "\"${project.extra["composeVersion"]}\"" })
 }
 
 val testPluginImplementation: Configuration by configurations.creating {
@@ -55,6 +71,7 @@ configurations {
     }
 }
 
+
 dependencies {
 
     shadowed(project(":agp-wrapper-impl"))
@@ -69,6 +86,9 @@ dependencies {
 //    compileOnly(kotlin("stdlib"))
     compileOnly("com.android.tools.build:gradle-api:${rootProject.extra["agp_version"]}")
     compileOnly("com.android.tools.build:gradle:${rootProject.extra["low_agp_version"]}")
+
+    // kotlin compiler plugin
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20")
 
     testImplementation(gradleTestKit())
     testImplementation("junit:junit:4.13.2")
@@ -92,7 +112,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-tasks.jar{
+tasks.jar {
     val dependencies = shadowed.filter {
         it.name.startsWith("agp-")
     }.map {
@@ -115,3 +135,9 @@ tasks.clean {
 // 3. 新建 remote JVM debug ,运行 debug
 // 4. 运行构建，开始调试 ./gradlew assembleDebug
 // apply("publishMavenWithPluginMarker.gradle")
+
+// fix sign plugin error
+// val signingTasks = tasks.withType<Sign>()
+// tasks.withType<AbstractPublishToMaven>().configureEach {
+//     mustRunAfter(signingTasks)
+// }
