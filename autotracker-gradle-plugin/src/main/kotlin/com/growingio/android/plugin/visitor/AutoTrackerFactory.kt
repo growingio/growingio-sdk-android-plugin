@@ -46,7 +46,9 @@ internal abstract class AutoTrackerFactory :
 
     override fun createClassVisitor(classContext: ClassContext, nextClassVisitor: ClassVisitor): ClassVisitor {
         val classContextCompat = object : ClassContextCompat {
-            override val className = classContext.currentClassData.className
+            // AsmInstrumentationManager#instrumentClassesFromDirectoryToDirectory 移除文件名方法无包名（相对路径为当前路径）时不生效
+            // 非日志输出时，尽可能使用visit方法参数中返回的name
+            override var className = classContext.currentClassData.className
 
             override fun isAssignable(subClazz: String, superClazz: String): Boolean {
                 return classContext.loadClassData(normalize(subClazz))?.let {

@@ -21,6 +21,7 @@ import com.growingio.android.plugin.hook.TargetMethod
 import com.growingio.android.plugin.util.ClassContextCompat
 import com.growingio.android.plugin.util.info
 import com.growingio.android.plugin.util.unNormalize
+import com.growingio.android.plugin.util.normalize
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.Handle
 import org.objectweb.asm.MethodVisitor
@@ -52,6 +53,7 @@ class DesugarClassVisitor(
         interfaces: Array<out String>?
     ) {
         super.visit(version, access, name, signature, superName, interfaces)
+        if (!name.isNullOrBlank()) className = normalize(name)
     }
 
     override fun visitMethod(
