@@ -39,7 +39,7 @@ internal abstract class SaasAutoTrackerFactory :
 
     override fun createClassVisitor(classContext: ClassContext, nextClassVisitor: ClassVisitor): ClassVisitor {
         val classContextCompat = object : ClassContextCompat {
-            override val className = classContext.currentClassData.className
+            override var className = classContext.currentClassData.className
 
             override fun isAssignable(subClazz: String, superClazz: String): Boolean {
                 return classContext.loadClassData(normalize(subClazz))?.let {

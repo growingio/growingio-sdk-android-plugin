@@ -1,6 +1,7 @@
 package com.growingio.android.plugin.giokit
 
 import com.growingio.android.plugin.util.ClassContextCompat
+import com.growingio.android.plugin.util.normalize
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.MethodVisitor
 
@@ -15,6 +16,18 @@ internal class GioKitInjectVisitor(
     private val classContext: ClassContextCompat,
     private val giokitParams: GioKitParams
 ) : ClassVisitor(api, ncv), ClassContextCompat by classContext {
+
+    override fun visit(
+        version: Int,
+        access: Int,
+        name: String?,
+        signature: String?,
+        superName: String?,
+        interfaces: Array<out String>?
+    ) {
+        super.visit(version, access, name, signature, superName, interfaces)
+        if (!name.isNullOrBlank()) classContext.className = normalize(name)
+    }
 
     override fun visitMethod(
         access: Int,

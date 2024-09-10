@@ -64,7 +64,7 @@ internal class SaasAutoTrackerTransform(
             val apiVersion = autoTrackerWriter.getApi()
 
             val classContextCompat = object : ClassContextCompat {
-                override val className = classReader.className
+                override var className = classReader.className
                 override fun isAssignable(subClazz: String, superClazz: String): Boolean {
                     return context.klassPool.get(superClazz).isAssignableFrom(subClazz)
                 }

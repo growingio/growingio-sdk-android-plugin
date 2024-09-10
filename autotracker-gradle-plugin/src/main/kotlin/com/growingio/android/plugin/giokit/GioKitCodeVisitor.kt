@@ -59,6 +59,7 @@ internal class GioKitCodeVisitor(
         interfaces: Array<out String>?
     ) {
         super.visit(version, access, name, signature, superName, interfaces)
+        if (!name.isNullOrBlank()) context.className = normalize(name)
     }
 
     override fun visitMethod(

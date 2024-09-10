@@ -6,7 +6,7 @@ package com.growingio.android.plugin.util
  * @author cpacm 2023/8/18
  */
 interface ClassContextCompat {
-    val className: String
+    var className: String
 
     fun isAssignable(subClazz: String, superClazz: String): Boolean
 
