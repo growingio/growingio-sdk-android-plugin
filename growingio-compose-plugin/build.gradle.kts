@@ -1,3 +1,5 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     kotlin("jvm") version "1.9.24"
     kotlin("kapt") version "1.9.24"
@@ -63,6 +65,13 @@ mavenPublishing {
             developerConnection.set("scm:git@github.com:growingio/growingio-sdk-android-plugin.git")
         }
     }
+
+    publishToMavenCentral(SonatypeHost.S01)
+    signAllPublications()
+
+    // How to publish
+    // 1. set mavenCentralUsername=<> mavenCentralPassword=<> in your gradle.properties
+    // 2. ./gradlew :growingio-compose-plugin:publishToMavenCentral
 }
 
 tasks.named("distZip") {
