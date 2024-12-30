@@ -37,6 +37,8 @@ gradlePlugin {
 
         create("compose") {
             id = "com.growingio.compose.plugin"
+            displayName = providers.gradleProperty("POM_KOTLIN_NAME").get()
+            description = providers.gradleProperty("POM_KOTLIN_DESCRIPTION").get()
             implementationClass = "com.growingio.compose.plugin.GrowingKotlinCompilerGradlePlugin"
             tags.set(listOf("growingio", "compose", "kotlin compiler plugin"))
         }
