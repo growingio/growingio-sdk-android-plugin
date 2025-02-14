@@ -41,6 +41,13 @@ interface FragmentInjector {
     @SuperInject(clazz = WebViewFragment::class, method = "onResume", isAfter = true)
     fun systemFragmentOnResume(fragment: Fragment)
 
+    @SuperInject(clazz = Fragment::class, method = "onStop", isAfter = true)
+    @SuperInject(clazz = DialogFragment::class, method = "onStop", isAfter = true)
+    @SuperInject(clazz = ListFragment::class, method = "onStop", isAfter = true)
+    @SuperInject(clazz = PreferenceFragment::class, method = "onStop", isAfter = true)
+    @SuperInject(clazz = WebViewFragment::class, method = "onStop", isAfter = true)
+    fun systemFragmentOnStop(fragment: Fragment)
+
     @SuperInject(
         clazz = Fragment::class,
         method = "setUserVisibleHint",
@@ -109,6 +116,9 @@ interface FragmentInjector {
 
     @SuperInject(clazz = androidx.fragment.app.Fragment::class, method = "onResume", isAfter = true)
     fun androidxFragmentOnResume(fragment: androidx.fragment.app.Fragment?)
+
+    @SuperInject(clazz = androidx.fragment.app.Fragment::class, method = "onStop", isAfter = true)
+    fun androidxFragmentOnStop(fragment: androidx.fragment.app.Fragment?)
 
     @Deprecated("新版本的AndroidX Fragment setUserVisibleHint 将通过 FragmentTransaction setMaxLifecycle 来控制生命周期实现")
     @SuperInject(

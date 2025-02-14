@@ -42,6 +42,17 @@ interface FragmentSupportInjector {
 
     @Inject(
         targetClazz = "android/support/v4/app/Fragment",
+        targetMethod = "onStop",
+        targetMethodDesc = "()V",
+        injectMethod = "v4FragmentOnStop",
+        injectMethodDesc = "(Landroid/support/v4/app/Fragment;)V",
+        isAfter = true,
+        type = 1
+    )
+    fun v4FragmentOnStop()
+
+    @Inject(
+        targetClazz = "android/support/v4/app/Fragment",
         targetMethod = "setUserVisibleHint",
         targetMethodDesc = "(Z)V",
         injectMethod = "v4FragmentSetUserVisibleHint",
