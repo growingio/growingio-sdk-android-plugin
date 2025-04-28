@@ -101,6 +101,7 @@ val EXCLUDED_PACKAGES = arrayListOf(
     "com.tencent.tinker",
     "com.amap.api",
     "com.google.iot",
+    "com.mobile.auth",
 
     //ignore RN 6.0 fragment page
     "com.swmansion.rnscreens.ScreenFragment",

@@ -99,7 +99,8 @@ val EXCLUDED_PACKAGES = arrayListOf(
     "com.heytap.msp.push",
     "com.tencent.tinker",
     "com.amap.api",
-    "com.google.iot"
+    "com.google.iot",
+    "com.mobile.auth",
 )
 
 private val defaultInjectClass = arrayListOf(
