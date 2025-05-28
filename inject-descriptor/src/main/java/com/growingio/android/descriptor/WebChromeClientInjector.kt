@@ -20,6 +20,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.growingio.inject.annotation.AroundInject
 import com.growingio.inject.annotation.Belong
+import com.growingio.inject.annotation.Inject
 import com.growingio.inject.annotation.SuperInject
 
 /**
@@ -106,6 +107,29 @@ interface WebChromeClientInjector {
         webView: com.uc.webview.export.WebView,
         webChromeClient: com.uc.webview.export.WebChromeClient
     )
+
+
+    @Inject(
+        targetClazz = "io/flutter/plugins/webviewflutter/WebChromeClientProxyApi\$WebChromeClientImpl",
+        targetMethod = "onProgressChanged",
+        targetMethodDesc = "(Landroid/webkit/WebView;I)V",
+        injectMethod = "onProgressChangedStart",
+        injectMethodDesc = "(Landroid/webkit/WebView;I)V",
+        isAfter = false,
+        type = 0
+    )
+    fun onProgressChangedStart()
+
+    @Inject(
+        targetClazz = "io/flutter/plugins/webviewflutter/WebChromeClientProxyApi\$WebChromeClientImpl",
+        targetMethod = "onProgressChanged",
+        targetMethodDesc = "(Landroid/webkit/WebView;I)V",
+        injectMethod = "onProgressChangedEnd",
+        injectMethodDesc = "(Landroid/webkit/WebView;I)V",
+        isAfter = true,
+        type = 0
+    )
+    fun onProgressChangedEnd()
 
 
 }

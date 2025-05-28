@@ -1,7 +1,7 @@
 buildscript {
     extra.apply {
-        set("kotlin_version", "1.8.20")
-        set("agp_version", "8.1.0")
+        set("kotlin_version", "2.1.20")
+        set("agp_version", "8.9.1")
         set("low_agp_version", "4.2.2")
         set("releaseVersion", "4.4.2-SNAPSHOT")
         set("releaseVersionCode", 40402)
@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version ("1.8.20")
+    kotlin("jvm") version ("2.1.20")
     `java-gradle-plugin`
 
     id("com.gradle.plugin-publish") version ("1.2.0")
@@ -90,17 +90,17 @@ dependencies {
     compileOnly("com.android.tools.build:gradle:${rootProject.extra["low_agp_version"]}")
 
     // kotlin compiler plugin
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20")
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.20")
 
     testImplementation(gradleTestKit())
     testImplementation("junit:junit:4.13.2")
     testImplementation("com.google.truth:truth:1.1.3")
     testImplementation("org.ow2.asm:asm:9.5")
     testImplementation("org.ow2.asm:asm-commons:9.5")
-    testImplementation("com.android.tools.build:gradle:7.4.2")
+    testImplementation("com.android.tools.build:gradle:8.9.1")
     testImplementation(project(":agp-wrapper-72"))
 
-    testPluginImplementation("com.android.tools.build:gradle:7.4.2")
+    testPluginImplementation("com.android.tools.build:gradle:8.9.1")
     testPluginImplementation("com.google.guava:guava:30.1.1-jre")
 }
 
@@ -110,8 +110,8 @@ tasks.withType(PluginUnderTestMetadata::class.java).named("pluginUnderTestMetada
 
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 tasks.jar {
@@ -126,7 +126,7 @@ tasks.jar {
 
 tasks.clean {
     subprojects {
-        delete(this.buildDir)
+        delete(this.getLayout().getBuildDirectory())
     }
 }
 

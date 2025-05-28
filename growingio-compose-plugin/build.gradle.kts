@@ -1,8 +1,8 @@
 import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
-    kotlin("jvm") version "1.9.24"
-    kotlin("kapt") version "1.9.24"
+    kotlin("jvm") version "2.1.20"
+    kotlin("kapt") version "2.1.20"
     id("distribution")
     id("com.vanniktech.maven.publish") version "0.29.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.2.1"

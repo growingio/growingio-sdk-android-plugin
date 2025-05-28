@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    namespace "com.growingio.android.plugin"
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.growingio.android.plugin"
         minSdk 21
-        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -26,9 +26,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = '11'
     }
 }
 
@@ -54,7 +51,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
 
-    implementation 'com.growingio.android:autotracker:4.3.2'
+    implementation 'com.growingio.android:autotracker:4.4.3'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

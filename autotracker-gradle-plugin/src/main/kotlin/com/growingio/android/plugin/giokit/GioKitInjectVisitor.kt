@@ -38,6 +38,7 @@ internal class GioKitInjectVisitor(
     ): MethodVisitor {
         val mv = super.visitMethod(access, methodName, descriptor, signature, exceptions)
         val data = GioKitInjectData.matchGioKitData(classContext.className, methodName, descriptor) ?: return mv
+        @Suppress("REDUNDANT_ELSE_IN_WHEN")
         return when (data) {
             GioKitInjectData.GioKitInjectInit -> {
                 val config = hashMapOf<String, Any>()

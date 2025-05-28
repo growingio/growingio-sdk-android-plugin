@@ -155,6 +155,8 @@ public object HookInjectorClass {
     TARGET_HOOK_CLASSES.add(HookData("com/sensorsdata/analytics/android/sdk/SensorsDataAPI","enableSDK","()V","com/growingio/android/analytics/sensor/SensorAnalyticsInjector","enableSDK","()V",false))
     TARGET_HOOK_CLASSES.add(HookData("com/sensorsdata/analytics/android/sdk/AbstractSensorsDataAPI","trackEvent","(Lcom/sensorsdata/analytics/android/sdk/internal/beans/EventType;Ljava/lang/String;Lorg/json/JSONObject;Ljava/lang/String;)V","com/growingio/android/analytics/sensor/SensorAnalyticsInjector","trackEvent","(Lcom/sensorsdata/analytics/android/sdk/internal/beans/EventType;Ljava/lang/String;Lorg/json/JSONObject;Ljava/lang/String;)V",false))
     TARGET_HOOK_CLASSES.add(HookData("com/sensorsdata/analytics/android/sdk/core/event/imp/TrackEventAssemble","assembleData","(Lcom/sensorsdata/analytics/android/sdk/core/event/InputData;)Lcom/sensorsdata/analytics/android/sdk/core/event/Event;","com/growingio/android/analytics/sensor/SensorAnalyticsInjector","trackItemEvent","(Lcom/sensorsdata/analytics/android/sdk/core/event/InputData;)V",true))
+    TARGET_HOOK_CLASSES.add(HookData("io/flutter/plugins/webviewflutter/WebChromeClientProxyApi${'$'}WebChromeClientImpl","onProgressChanged","(Landroid/webkit/WebView;I)V","com/growingio/android/sdk/autotrack/inject/WebChromeClientInjector","onProgressChangedStart","(Landroid/webkit/WebView;I)V",false))
+    TARGET_HOOK_CLASSES.add(HookData("io/flutter/plugins/webviewflutter/WebChromeClientProxyApi${'$'}WebChromeClientImpl","onProgressChanged","(Landroid/webkit/WebView;I)V","com/growingio/android/sdk/autotrack/inject/WebChromeClientInjector","onProgressChangedEnd","(Landroid/webkit/WebView;I)V",true))
     return TARGET_HOOK_CLASSES
   }
 
