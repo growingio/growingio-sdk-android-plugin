@@ -41,7 +41,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         tempFolder.newFolder("src", "main", "java", "growingio")
         tempFolder.newFolder("src", "test", "java", "growingio")
         tempFolder.newFolder("src", "main", "res")
-        addDependencies("implementation 'com.growingio.android:autotracker:4.3.0'")
+        addDependencies("implementation 'com.growingio.android:autotracker:4.4.3'")
     }
 
     // Adds project dependencies, e.g. "implementation <group>:<id>:<version>"
@@ -140,6 +140,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         }
 
         android {
+          namespace "plugin.test"
           compileSdk 33
 
           defaultConfig {
@@ -206,7 +207,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
             writeText(
                 """
         <?xml version="1.0" encoding="utf-8"?>
-        <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="growingio">
+        <manifest xmlns:android="http://schemas.android.com/apk/res/android">
             <application
                 android:name="${appClassName ?: "android.app.Application"}"
                 >
@@ -242,7 +243,8 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
 
         // Finds a transformed file. The srcFilePath is relative to the app's package.
         fun getTransformedFile(srcFilePath: String): File {
-            val parentDir = File(projectRoot, "build/intermediates/asm_instrumented_project_classes/debug")
+            val parentDir = File(projectRoot, "build/intermediates/classes/debug/transformDebugClassesWithAsm/dirs")
+
             return File(parentDir, srcFilePath).also {
                 if (!it.exists()) {
                     error("Unable to find transformed class ${it.path}")
