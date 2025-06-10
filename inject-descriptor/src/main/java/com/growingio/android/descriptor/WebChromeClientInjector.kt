@@ -37,7 +37,7 @@ interface WebChromeClientInjector {
         parameterTypes = [WebView::class, Int::class],
         isAfter = false
     )
-    fun onProgressChangedStart(webView: WebView, progress: Int)
+    fun onProgressChangedStart(webChromeClient: WebChromeClient, webView: WebView, progress: Int)
 
     @SuperInject(
         clazz = WebChromeClient::class,
@@ -45,7 +45,7 @@ interface WebChromeClientInjector {
         parameterTypes = [WebView::class, Int::class],
         isAfter = true
     )
-    fun onProgressChangedEnd(webView: WebView, progress: Int)
+    fun onProgressChangedEnd(webChromeClient: WebChromeClient, webView: WebView, progress: Int)
 
 
     @SuperInject(
@@ -54,7 +54,10 @@ interface WebChromeClientInjector {
         parameterTypes = [com.tencent.smtt.sdk.WebView::class, Int::class],
         isAfter = false
     )
-    fun onX5ProgressChangedStart(webView: com.tencent.smtt.sdk.WebView, progress: Int)
+    fun onX5ProgressChangedStart(
+        webChromeClient: com.tencent.smtt.sdk.WebChromeClient,
+        webView: com.tencent.smtt.sdk.WebView, progress: Int
+    )
 
     @SuperInject(
         clazz = com.tencent.smtt.sdk.WebChromeClient::class,
@@ -62,7 +65,10 @@ interface WebChromeClientInjector {
         parameterTypes = [com.tencent.smtt.sdk.WebView::class, Int::class],
         isAfter = true
     )
-    fun onX5ProgressChangedEnd(webView: com.tencent.smtt.sdk.WebView, progress: Int)
+    fun onX5ProgressChangedEnd(
+        webChromeClient: com.tencent.smtt.sdk.WebChromeClient,
+        webView: com.tencent.smtt.sdk.WebView, progress: Int
+    )
 
     @SuperInject(
         clazz = com.uc.webview.export.WebChromeClient::class,
@@ -70,7 +76,10 @@ interface WebChromeClientInjector {
         parameterTypes = [com.uc.webview.export.WebView::class, Int::class],
         isAfter = false
     )
-    fun onUcProgressChangedStart(webView: com.uc.webview.export.WebView, progress: Int)
+    fun onUcProgressChangedStart(
+        webChromeClient: com.uc.webview.export.WebChromeClient,
+        webView: com.uc.webview.export.WebView, progress: Int
+    )
 
     @SuperInject(
         clazz = com.uc.webview.export.WebChromeClient::class,
@@ -78,7 +87,9 @@ interface WebChromeClientInjector {
         parameterTypes = [com.uc.webview.export.WebView::class, Int::class],
         isAfter = true
     )
-    fun onUcProgressChangedEnd(webView: com.uc.webview.export.WebView, progress: Int)
+    fun onUcProgressChangedEnd(
+        webChromeClient: com.uc.webview.export.WebChromeClient,
+        webView: com.uc.webview.export.WebView, progress: Int)
 
 
     @AroundInject(
