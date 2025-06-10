@@ -101,7 +101,7 @@ dependencies {
     testImplementation(project(":agp-wrapper-72"))
 
     testPluginImplementation("com.android.tools.build:gradle:8.9.1")
-    testPluginImplementation("com.google.guava:guava:30.1.1-jre")
+    testPluginImplementation("com.google.guava:guava:33.3.1-jre")
 }
 
 tasks.withType(PluginUnderTestMetadata::class.java).named("pluginUnderTestMetadata").configure {
@@ -117,6 +117,13 @@ java {
 kotlin {
     jvmToolchain(11)
 }
+
+testing {
+    kotlin {
+        jvmToolchain(17)
+    }
+}
+
 
 tasks.jar {
     val dependencies = shadowed.filter {

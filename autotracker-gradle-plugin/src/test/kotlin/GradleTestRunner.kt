@@ -145,14 +145,13 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
 
           defaultConfig {
             applicationId "plugin.test"
-            applicationId "com.growingio.android.plugin"
             minSdk 21
             targetSdk 33
           }
 
           compileOptions {
-            sourceCompatibility JavaVersion.VERSION_11
-            targetCompatibility JavaVersion.VERSION_11
+            sourceCompatibility JavaVersion.VERSION_17
+            targetCompatibility JavaVersion.VERSION_17
           }
           
           ${additionalAndroidOptions.joinToString(separator = "\n")}
@@ -244,6 +243,7 @@ class GradleTestRunner(val tempFolder: TemporaryFolder) {
         // Finds a transformed file. The srcFilePath is relative to the app's package.
         fun getTransformedFile(srcFilePath: String): File {
             val parentDir = File(projectRoot, "build/intermediates/classes/debug/transformDebugClassesWithAsm/dirs")
+            //val parentDir = File(projectRoot, "build/intermediates/asm_instrumented_project_classes/debug")
 
             return File(parentDir, srcFilePath).also {
                 if (!it.exists()) {
