@@ -1,4 +1,4 @@
-package com.growingio.compose.plugin.compose
+package com.growingio.compose.plugin
 
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.ir.expressions.IrComposite
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
+import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.IrSimpleType
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.createType
@@ -21,7 +22,7 @@ import org.jetbrains.kotlin.ir.util.kotlinFqName
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.SpecialNames
 
-class GrowingModifierWrapTransformer(
+class GrowingModifierWrapTransformer21(
     private val pluginContext: IrPluginContext,
     private val growingModifierTagFunctionRef: IrSimpleFunctionSymbol,
     private val modifierCompanionClassRef: IrClassSymbol,
@@ -40,6 +41,7 @@ class GrowingModifierWrapTransformer(
     private var visitingFunctionNames = ArrayDeque<String?>()
     private var visitingDeclarationIrBuilder = ArrayDeque<DeclarationIrBuilder?>()
 
+    @OptIn(UnsafeDuringIrConstructionAPI::class)
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
         val anonymous = declaration.name == SpecialNames.ANONYMOUS
 
@@ -71,6 +73,7 @@ class GrowingModifierWrapTransformer(
     }
 
 
+    @OptIn(UnsafeDuringIrConstructionAPI::class)
     override fun visitCall(expression: IrCall): IrExpression {
         val composableName = visitingFunctionNames.lastOrNull() ?: expression.symbol.owner.name.toString()
         val builder = visitingDeclarationIrBuilder.lastOrNull() ?: DeclarationIrBuilder(pluginContext, expression.symbol)
@@ -122,10 +125,7 @@ class GrowingModifierWrapTransformer(
             // Modifier.then()
             val thenCall = builder.irCall(
                 modifierThen,
-                modifierType,
-                1,
-                0,
-                null
+                modifierType
             )
             thenCall.putValueArgument(0, expression)
             thenCall.dispatchReceiver = growingTagCall
@@ -141,10 +141,7 @@ class GrowingModifierWrapTransformer(
     ): IrCall {
         val growingTagCall = builder.irCall(
             growingModifierTagFunctionRef,
-            modifierType,
-            2,
-            0,
-            null
+            type = modifierType
         ).also {
             it.extensionReceiver = builder.irGetObjectValue(
                 type = modifierCompanionClassRef.createType(false, emptyList()),

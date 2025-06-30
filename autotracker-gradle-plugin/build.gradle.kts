@@ -5,7 +5,7 @@ buildscript {
         set("low_agp_version", "4.2.2")
         set("releaseVersion", "4.4.2-SNAPSHOT")
         set("releaseVersionCode", 40402)
-        set("composeVersion", "1.0.0")
+        set("composeVersion", "1.1.0")
     }
 }
 

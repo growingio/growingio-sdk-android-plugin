@@ -1,7 +1,6 @@
 package com.growingio.compose.plugin
 
 import com.google.auto.service.AutoService
-import com.growingio.compose.plugin.compose.JetpackComposeTracingIrExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.cli.common.CLIConfigurationKeys
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
@@ -21,8 +20,7 @@ class GrowingIOKotlinCompilerPlugin : CompilerPluginRegistrar() {
             CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY,
             MessageCollector.NONE
         )
-        IrGenerationExtension.registerExtension(
-            extension = JetpackComposeTracingIrExtension(messageCollector)
-        )
+
+        IrGenerationExtension.registerExtension(JetpackComposeTracingIrExtension(messageCollector))
     }
 }

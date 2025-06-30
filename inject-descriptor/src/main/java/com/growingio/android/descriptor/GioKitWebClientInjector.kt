@@ -35,7 +35,7 @@ interface GioKitWebClientInjector {
         parameterTypes = [WebView::class, Int::class],
         isAfter = false
     )
-    fun addCircleJsToWebView(webView: WebView, progress: Int)
+    fun addCircleJsToWebView(webChromeClient: WebChromeClient, webView: WebView, progress: Int)
 
     @SuperInject(
         clazz = com.tencent.smtt.sdk.WebChromeClient::class,
@@ -43,7 +43,7 @@ interface GioKitWebClientInjector {
         parameterTypes = [com.tencent.smtt.sdk.WebView::class, Int::class],
         isAfter = false
     )
-    fun addCircleJsToX5(webView: com.tencent.smtt.sdk.WebView, progress: Int)
+    fun addCircleJsToX5(webChromeClient: com.tencent.smtt.sdk.WebChromeClient, webView: com.tencent.smtt.sdk.WebView, progress: Int)
 
     @SuperInject(
         clazz = com.uc.webview.export.WebChromeClient::class,
@@ -51,5 +51,5 @@ interface GioKitWebClientInjector {
         parameterTypes = [com.uc.webview.export.WebView::class, Int::class],
         isAfter = false
     )
-    fun addCircleJsToUc(webView: com.uc.webview.export.WebView, progress: Int)
+    fun addCircleJsToUc(webChromeClient: com.uc.webview.export.WebChromeClient, webView: com.uc.webview.export.WebView, progress: Int)
 }
