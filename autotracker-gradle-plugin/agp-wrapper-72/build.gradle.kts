@@ -7,6 +7,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+kotlin {
+    jvmToolchain(11)
+}
+
 dependencies {
     implementation(project(":agp-wrapper"))
     implementation(gradleApi())

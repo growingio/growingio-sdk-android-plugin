@@ -40,7 +40,7 @@ internal class GrowingClassRewriter(
 
     override val projectDir: File = project.projectDir
 
-    override val buildDir: File = project.buildDir
+    override val buildDir: File = project.layout.buildDirectory.get().asFile
 
     override val bootClasspath = delegate.getBootClasspath(project)
 

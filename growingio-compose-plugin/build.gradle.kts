@@ -1,10 +1,9 @@
-import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
-    kotlin("jvm") version "1.9.24"
-    kotlin("kapt") version "1.9.24"
+    kotlin("jvm") version "2.1.20"
+    kotlin("kapt") version "2.1.20"
     id("distribution")
-    id("com.vanniktech.maven.publish") version "0.29.0"
+    id("com.vanniktech.maven.publish") version "0.33.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
 }
 
@@ -38,8 +37,53 @@ distributions {
     }
 }
 
+tasks.named("distZip") {
+    dependsOn("publishToMavenLocal")
+    onlyIf {
+        inputs.sourceFiles.isEmpty.not().also {
+            require(it) { "No distribution to zip." }
+        }
+    }
+}
+
+repositories {
+    google()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+}
+
+val kce19: SourceSet by sourceSets.creating
+val kce21: SourceSet by sourceSets.creating
+
+dependencies {
+    compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable")
+
+    kapt("com.google.auto.service:auto-service:1.0.1")
+    compileOnly("com.google.auto.service:auto-service-annotations:1.0.1")
+
+    testImplementation(kce19.output)
+    testImplementation(kce21.output)
+    testImplementation(kotlin("test-junit"))
+    testImplementation("org.jetbrains.kotlin:kotlin-compiler-embeddable")
+    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.6.0")
+    testImplementation("org.jetbrains.compose.desktop:desktop:1.6.10")
+
+    kce19.compileOnlyConfigurationName("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.9.20")
+    kce21.compileOnlyConfigurationName("org.jetbrains.kotlin:kotlin-compiler-embeddable:2.1.20")
+    compileOnly(kce19.output)
+    compileOnly(kce21.output)
+}
+
+tasks.withType<Jar>().configureEach {
+    from(kce19.output)
+    from(kce21.output)
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
 mavenPublishing {
-    coordinates("com.growingio", "growingio-compose-plugin", "1.0.0")
+    coordinates("com.growingio", "growingio-compose-plugin", "1.1.0")
 
     pom {
         name.set("growingio-compose-plugin")
@@ -66,40 +110,10 @@ mavenPublishing {
         }
     }
 
-    publishToMavenCentral(SonatypeHost.S01)
+    publishToMavenCentral(true)
     signAllPublications()
 
     // How to publish
     // 1. set mavenCentralUsername=<> mavenCentralPassword=<> in your gradle.properties
     // 2. ./gradlew :growingio-compose-plugin:publishToMavenCentral
-}
-
-tasks.named("distZip") {
-    dependsOn("publishToMavenLocal")
-    onlyIf {
-        inputs.sourceFiles.isEmpty.not().also {
-            require(it) { "No distribution to zip." }
-        }
-    }
-}
-
-repositories {
-    google()
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-}
-
-dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable")
-
-    kapt("com.google.auto.service:auto-service:1.0.1")
-    compileOnly("com.google.auto.service:auto-service-annotations:1.0.1")
-
-    testImplementation(kotlin("test-junit"))
-    testImplementation("org.jetbrains.kotlin:kotlin-compiler-embeddable")
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.6.0")
-    testImplementation("org.jetbrains.compose.desktop:desktop:1.6.10")
-}
-
-kapt {
-    correctErrorTypes = true
 }

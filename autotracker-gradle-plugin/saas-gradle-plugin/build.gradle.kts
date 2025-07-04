@@ -1,7 +1,7 @@
 buildscript {
     extra.apply {
-        set("saasVersion", "2.10.3-SNAPSHOT")
-        set("saasVersionCode", "21003")
+        set("saasVersion", "2.10.5")
+        set("saasVersionCode", "21005")
     }
 }
 
@@ -14,6 +14,10 @@ plugins {
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+}
+
+kotlin {
+    jvmToolchain(11)
 }
 
 group = providers.gradleProperty("GROUP").get()

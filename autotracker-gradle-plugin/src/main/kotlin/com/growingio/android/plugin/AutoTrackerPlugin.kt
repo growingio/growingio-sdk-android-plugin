@@ -77,7 +77,7 @@ class AutoTrackerPlugin @Inject constructor(val instantiator: Instantiator) : Pl
         fun registerTransform(androidComponent: ComponentCompat) {
             val variant = androidComponent.getComponentVariant() as? ApplicationVariant
             val applicationId = variant?.applicationId?.get() ?: ""
-            val buildDir = project.buildDir
+            val buildDir = project.layout.buildDirectory.get().asFile
             val autoTrackerParams = AutoTrackerParams(
                 gioExtension.excludePackages ?: arrayOf(),
                 gioExtension.includePackages ?: arrayOf(),
