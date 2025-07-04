@@ -3,8 +3,8 @@ buildscript {
         set("kotlin_version", "2.1.20")
         set("agp_version", "8.9.1")
         set("low_agp_version", "4.2.2")
-        set("releaseVersion", "4.4.2-SNAPSHOT")
-        set("releaseVersionCode", 40402)
+        set("releaseVersion", "4.4.4")
+        set("releaseVersionCode", 40404)
         set("composeVersion", "1.1.0")
     }
 }
@@ -151,7 +151,7 @@ tasks.clean {
 // 2. 放断点
 // 3. 新建 remote JVM debug ,运行 debug
 // 4. 运行构建，开始调试 ./gradlew assembleDebug
-// apply("publishMavenWithPluginMarker.gradle")
+apply("publishMavenWithPluginMarker.gradle")
 
 // fix sign plugin error
 // val signingTasks = tasks.withType<Sign>()

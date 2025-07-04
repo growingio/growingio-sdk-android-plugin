@@ -1,19 +1,19 @@
 pluginManagement {
     repositories {
         mavenLocal()
-        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
         gradlePluginPortal()
         google()
         mavenCentral()
+        maven { url "https://central.sonatype.com/repository/maven-snapshots/" }
     }
 }
 dependencyResolutionManagement {
     //repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        mavenLocal()
-        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+        //mavenLocal()
         google()
         mavenCentral()
+        maven { url "https://central.sonatype.com/repository/maven-snapshots/" }
     }
 }
 rootProject.name = "growingio-sdk-plugin"
