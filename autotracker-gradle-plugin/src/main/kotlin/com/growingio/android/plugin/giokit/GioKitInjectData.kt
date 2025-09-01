@@ -112,24 +112,6 @@ internal sealed class GioKitInjectData(
         injectMethodDesc = "(Ljava/net/HttpURLConnection;Ljava/util/Map;[B)V",
     )
 
-    object GioKitInjectVolleySuccess : GioKitInjectData(
-        targetClassName = "com/growingio/android/volley/VolleyDataFetcher\$GioRequest",
-        targetMethodName = "parseNetworkResponse",
-        targetMethodDesc = "(Lcom/android/volley/NetworkResponse;)V",
-        injectClassName = "com/growingio/giokit/hook/GioHttp",
-        injectMethodName = "parseGioKitVolleySuccess",
-        injectMethodDesc = "(Lcom/android/volley/Request;Lcom/android/volley/NetworkResponse;)V",
-    )
-
-    object GioKitInjectVolleyFail : GioKitInjectData(
-        targetClassName = "com/growingio/android/volley/VolleyDataFetcher\$GioRequest",
-        targetMethodName = "parseNetworkError",
-        targetMethodDesc = "(Lcom/android/volley/VolleyError;)V",
-        injectClassName = "com/growingio/giokit/hook/GioHttp",
-        injectMethodName = "parseGioKitVolleyError",
-        injectMethodDesc = "(Lcom/android/volley/Request;Lcom/android/volley/VolleyError;)V",
-    )
-
     object GioKitInjectDatabaseInsert : GioKitInjectData(
         targetClassName = "com/growingio/android/database/EventDataManager",
         targetMethodName = "insertEvents",

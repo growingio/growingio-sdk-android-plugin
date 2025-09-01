@@ -49,7 +49,7 @@ internal class GioKitNetworkAdapter(
                 super.visitMethodInsn(
                     Opcodes.INVOKEVIRTUAL,
                     "okhttp3/OkHttpClient\$Builder",
-                    "addNetworkInterceptor",
+                    "addInterceptor",
                     "(Lokhttp3/Interceptor;)Lokhttp3/OkHttpClient\$Builder;",
                     false
                 )
@@ -88,42 +88,5 @@ internal class GioKitNetworkAdapter(
         }
 
         super.visitFieldInsn(opcode, owner, name, descriptor)
-    }
-
-
-    override fun onMethodEnter() {
-        super.onMethodEnter()
-
-        when (injectData) {
-            GioKitInjectData.GioKitInjectVolleySuccess -> {
-                //deleteEventId
-                g("hook volley succeed callback:${injectData.targetClassName}#${injectData.targetMethodName}")
-                visitVarInsn(Opcodes.ALOAD, 0)
-                visitVarInsn(Opcodes.ALOAD, 1)
-                visitMethodInsn(
-                    Opcodes.INVOKESTATIC,
-                    injectData.injectClassName,
-                    injectData.injectMethodName,
-                    injectData.injectMethodDesc,
-                    false
-                )
-            }
-
-            GioKitInjectData.GioKitInjectVolleyFail -> {
-                g("hook volley error callback:${injectData.targetClassName}#${injectData.targetMethodName}")
-                //GioDatabase.deleteEvent
-                visitVarInsn(Opcodes.ALOAD, 0)
-                visitVarInsn(Opcodes.ALOAD, 1)
-                visitMethodInsn(
-                    Opcodes.INVOKESTATIC,
-                    injectData.injectClassName,
-                    injectData.injectMethodName,
-                    injectData.injectMethodDesc,
-                    false
-                )
-            }
-
-            else -> {}
-        }
     }
 }

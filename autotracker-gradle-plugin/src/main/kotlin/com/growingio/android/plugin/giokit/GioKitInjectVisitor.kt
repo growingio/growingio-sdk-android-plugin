@@ -56,9 +56,7 @@ internal class GioKitInjectVisitor(
             }
 
             GioKitInjectData.GioKitInjectOkhttpV3,
-            GioKitInjectData.GioKitInjectUrlConn,
-            GioKitInjectData.GioKitInjectVolleySuccess,
-            GioKitInjectData.GioKitInjectVolleyFail -> {
+            GioKitInjectData.GioKitInjectUrlConn-> {
                 GioKitNetworkAdapter(api, mv, access, methodName, descriptor, data)
             }
 
