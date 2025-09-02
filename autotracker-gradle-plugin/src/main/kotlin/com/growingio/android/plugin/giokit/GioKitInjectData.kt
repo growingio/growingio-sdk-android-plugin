@@ -121,6 +121,15 @@ internal sealed class GioKitInjectData(
         injectMethodDesc = "(Landroid/net/Uri;Lcom/growingio/android/sdk/track/middleware/GEvent;)V",
     )
 
+    object GioKitInjectDatabaseUpdate : GioKitInjectData(
+        targetClassName = "com/growingio/android/database/EventDataManager",
+        targetMethodName = "updateEventsWhenSendFailed",
+        targetMethodDesc = "(JLjava/lang/String;)I",
+        injectClassName = "com/growingio/giokit/hook/GioDatabase",
+        injectMethodName = "delayEvents",
+        injectMethodDesc = "(JLjava/lang/String;)V",
+    )
+
     object GioKitInjectDatabaseOverdue : GioKitInjectData(
         targetClassName = "com/growingio/android/database/EventDataManager",
         targetMethodName = "removeOverdueEvents",
