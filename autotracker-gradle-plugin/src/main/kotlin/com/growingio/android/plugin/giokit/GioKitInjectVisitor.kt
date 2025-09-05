@@ -51,14 +51,13 @@ internal class GioKitInjectVisitor(
             GioKitInjectData.GioKitInjectDatabaseInsert,
             GioKitInjectData.GioKitInjectDatabaseDeleteId,
             GioKitInjectData.GioKitInjectDatabaseRemove,
-            GioKitInjectData.GioKitInjectDatabaseOverdue -> {
+            GioKitInjectData.GioKitInjectDatabaseOverdue,
+            GioKitInjectData.GioKitInjectDatabaseUpdate -> {
                 GioKitDatabaseAdapter(api, mv, access, methodName, descriptor, data)
             }
 
             GioKitInjectData.GioKitInjectOkhttpV3,
-            GioKitInjectData.GioKitInjectUrlConn,
-            GioKitInjectData.GioKitInjectVolleySuccess,
-            GioKitInjectData.GioKitInjectVolleyFail -> {
+            GioKitInjectData.GioKitInjectUrlConn -> {
                 GioKitNetworkAdapter(api, mv, access, methodName, descriptor, data)
             }
 

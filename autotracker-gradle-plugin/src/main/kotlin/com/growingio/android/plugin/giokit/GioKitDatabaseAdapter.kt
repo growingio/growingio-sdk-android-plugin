@@ -56,6 +56,20 @@ internal class GioKitDatabaseAdapter(
                 )
             }
 
+            GioKitInjectData.GioKitInjectDatabaseUpdate -> {
+                //delay events
+                g("db update:${injectData.targetClassName}#${injectData.targetMethodName}")
+                visitVarInsn(Opcodes.LLOAD, 1)
+                visitVarInsn(Opcodes.ALOAD, 3)
+                visitMethodInsn(
+                    Opcodes.INVOKESTATIC,
+                    injectData.injectClassName,
+                    injectData.injectMethodName,
+                    injectData.injectMethodDesc,
+                    false
+                )
+            }
+
             GioKitInjectData.GioKitInjectDatabaseRemove -> {
                 g("db remove:${injectData.targetClassName}#${injectData.targetMethodName}")
                 //GioDatabase.deleteEvent
