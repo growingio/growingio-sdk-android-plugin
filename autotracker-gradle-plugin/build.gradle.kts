@@ -13,7 +13,7 @@ plugins {
     kotlin("jvm") version ("2.1.20")
     `java-gradle-plugin`
 
-    id("com.gradle.plugin-publish") version ("1.2.0")
+    id("com.gradle.plugin-publish") version ("2.0.0")
     id("com.github.gmazzo.buildconfig") version ("3.1.0")
 }
 
@@ -151,7 +151,7 @@ tasks.clean {
 // 2. 放断点
 // 3. 新建 remote JVM debug ,运行 debug
 // 4. 运行构建，开始调试 ./gradlew assembleDebug
-apply("publishMavenWithPluginMarker.gradle")
+// apply("publishMavenWithPluginMarker.gradle")
 
 // fix sign plugin error
 // val signingTasks = tasks.withType<Sign>()
